@@ -31,5 +31,9 @@ button {
 .active {
   font-weight: bold;
 }
+.toolbar {
+  display: inline-block;
+  border: solid;
+}
 
 </style>
