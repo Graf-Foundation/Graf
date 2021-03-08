@@ -1,14 +1,4 @@
-<template>
-  <div class="dropdown">
-  <button class="dropbtn"><img width = "20" src = "https://image.flaticon.com/icons/png/512/40/40031.png" alt= "not found" /></button>
-  <div class="dropdown-content">
-  <a href="#">Settings</a>
-  <a href="#">FAQ</a>
-  <a href="#">About</a>
-  </div>
-	
-  
-  <D3Network :net-nodes="nodes" :net-links="links" :options="options"/>
+<template>  
 <div>
   <div class="node-labeler">
     <input v-if="nodelabeler" v-model="newlabel" @keyup.enter="change_node_label"/>
@@ -40,7 +30,17 @@
   <div class="edge-labeler">
     <input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
   </div>
+
+  <div class="dropdown">
+    <button class="dropbtn"><img width = "20" src = "https://image.flaticon.com/icons/png/512/40/40031.png" alt= "not found" /></button>
+    <div class="dropdown-content">
+      <a href="#">Settings</a>
+      <a href="#">FAQ</a>
+      <a href="#">About</a>
+    </div>
+  </div>
 </div>
+
 </template>
 
 <script>
