@@ -15,8 +15,8 @@ export default{
   data: 
   function() {
     return {
-      activeTool: "node",
-      tools: ["node", "line", "text", "erase"]
+      activeTool: "Select",
+      tools: ["Select", "Node", "Edge", "Label", "Erase"]
     }
   }
 }
