@@ -5,18 +5,31 @@
             v-bind:class="{active: activeTool === tool}"
             v-on:click="activeTool = tool">
       {{tool}}
+      <img v-bind:src=icons[tool] />
     </button>
   </div>
 </template>
 
 <script>
+import select_logo from '../assets/select.svg';
+import node_logo from '../assets/node.svg';
+import edge_logo from '../assets/edge.svg';
+import label_logo from '../assets/label.svg';
+import erase_logo from '../assets/erase.svg';
 export default{
   name: 'Toolbar',
   data: 
   function() {
     return {
       activeTool: "Select",
-      tools: ["Select", "Node", "Edge", "Label", "Erase"]
+      tools: ["Select", "Node", "Edge", "Label", "Erase"],
+      icons: {
+        "Select" : select_logo,
+        "Node" : node_logo,
+        "Edge" : edge_logo,
+        "Label" : label_logo,
+        "Erase" : erase_logo,
+      }
     }
   }
 }
