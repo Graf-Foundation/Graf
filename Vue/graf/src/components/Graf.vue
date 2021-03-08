@@ -1,19 +1,19 @@
 <template>
-  <div>
-    <div class="node-labeler">
-      <input v-if="nodelabeler" v-model="newlabel" @keyup.enter="change_node_label"/>
-      <br>
-      <button v-if="nodelabeler" @click="change_node_label" style="height: 30px" >
-        Edit Node Label
-      </button>
-    </div>
-    <div class="edge-labeler">
-      <input v-if="edgelabeler" v-model="newlabel" @keyup.enter="change_edge_label"/>
-      <br>
-      <button v-if="edgelabeler" @click="change_edge_label" style="height: 30px" >
-        Edit Edge Label
-      </button>
-    </div>
+<div>
+  <div class="node-labeler">
+    <input v-if="nodelabeler" v-model="newlabel" @keyup.enter="change_node_label"/>
+    <br>
+    <button v-if="nodelabeler" @click="change_node_label" style="height: 30px" >
+      Edit Node Label
+    </button>
+  </div>
+  <div class="edge-labeler">
+    <input v-if="edgelabeler" v-model="newlabel" @keyup.enter="change_edge_label"/>
+    <br>
+    <button v-if="edgelabeler" @click="change_edge_label" style="height: 30px" >
+      Edit Edge Label
+    </button>
+  </div>
   <D3Network
     :net-nodes="nodes"
     :net-links="links"
@@ -21,11 +21,18 @@
     @node-click="enable_node_label"
     @link-click="enable_edge_label"
   />
+  <button
+  @click="onSaveImage();"
+  >Save Image</button>
+  <button
+  @click="onSaveGraf();"
+  >Save Graf</button>
 </div>
 </template>
 
 <script>
 import D3Network from 'vue-d3-network';
+import grafhelpers from '../middleware/helperFunctions';
 
 export default {
   name: 'Graf',
@@ -70,7 +77,7 @@ export default {
     options(){
       return{
         force: 3000,
-        size:{ w:600, h:600},
+        size:{ w: window.innerWidth, h: window.innerHeight - 200},
         nodeSize: this.nodeSize,
         nodeLabels: true,
         linkLabels:true,
@@ -81,6 +88,12 @@ export default {
     }
   },
   methods: {
+    onSaveImage() {
+      grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
+    },
+    onSaveGraf() {
+      grafhelpers.saveGraf(this.nodes, this.links);
+    },
     enable_node_label(event,node) {
       this.selected = node.index;
       this.nodelabeler = true;
