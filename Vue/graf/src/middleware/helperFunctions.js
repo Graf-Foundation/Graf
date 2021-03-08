@@ -30,10 +30,10 @@ class grafhelpers {
         link.download = "test_file";
         link.click();
     }
-    saveGraf(nodes, edges) {
+    saveGraf(nodes, links) {
 
         // translate json data to base64 encoded text
-        var graf = btoa(JSON.stringify({nodes, edges}));
+        var graf = btoa(JSON.stringify({nodes, links}));
 
         // set data type
         var linkSource = 'data:application/txt;base64,' + graf;
@@ -44,6 +44,9 @@ class grafhelpers {
         link.href = linkSource;
         link.download = "graf_data";
         link.click();
+    }
+    loadGraf(data) {
+        return JSON.parse(data);
     }
 }
 
