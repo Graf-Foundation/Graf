@@ -4,7 +4,6 @@
             v-bind:key="tool"
             v-bind:class="{active: activeTool === tool}"
             v-on:click="activeTool = tool">
-      {{tool}}
       <img v-bind:src=icons[tool] />
     </button>
   </div>
@@ -47,6 +46,11 @@ button {
 .toolbar {
   display: inline-block;
   border: solid;
+}
+img {
+  width: 20px;
+  height: 20px;
+  float: left;
 }
 
 </style>
