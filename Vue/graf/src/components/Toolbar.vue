@@ -41,7 +41,7 @@ button {
   font-weight: normal;
 }
 .active {
-  font-weight: bold;
+  background-color: LightGray;
 }
 .toolbar {
   display: inline-block;
