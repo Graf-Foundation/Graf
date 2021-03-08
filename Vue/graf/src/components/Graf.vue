@@ -27,6 +27,9 @@
   <button
   @click="onSaveGraf();"
   >Save Graf</button>
+  <div class="edge-labeler">
+    <input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
+  </div>
 </div>
 </template>
 
@@ -47,6 +50,7 @@ export default {
       edgelabeler: false,
       selected: -1,
       newlabel: "",
+      grafData: "",
       nodes: [
         { id: 1 },
         { id: 2 },
@@ -93,6 +97,12 @@ export default {
     },
     onSaveGraf() {
       grafhelpers.saveGraf(this.nodes, this.links);
+    },
+    onLoadGraf() {
+        var data = grafhelpers.loadGraf(this.grafData);
+        this.nodes = data.nodes;
+        this.links = data.links;
+        this.grafData = "";
     },
     enable_node_label(event,node) {
       this.selected = node.index;
