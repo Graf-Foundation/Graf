@@ -1,5 +1,5 @@
 <template>
-  <div id="toolbar">
+  <div id="toolbar" v-bind:class="{vertical: isVertical}">
     <div id="toolbarheader"></div>
     <button v-for="tool in tools"
             v-bind:key="tool"
@@ -7,6 +7,7 @@
             v-on:click="activeTool = tool">
       <img v-bind:src=icons[tool] v-bind:title="altTexts[tool]"/>
     </button>
+    <button v-on:click="changeVertical"><img src='l'/></button>
   </div>
 </template>
 
@@ -89,6 +90,7 @@ export default{
   data: 
   function() {
     return {
+      isVertical: false,
       activeTool: "Select",
       tools: ["Select", "Node", "Edge", "Label", "Erase"],
       icons: {
@@ -105,6 +107,11 @@ export default{
         "Label" : "(l)abel",
         "Erase" : "e(r)ase"
       }
+    }
+  },
+  methods: {
+    changeVertical: function(){
+      this.isVertical = !this.isVertical;
     }
   }
 }
@@ -135,6 +142,9 @@ img {
   width: 20px;
   height: 20px;
   float: left;
+}
+.vertical > button {
+  display: block;
 }
 
 </style>
