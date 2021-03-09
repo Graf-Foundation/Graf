@@ -133,6 +133,7 @@ button {
   display: inline-block;
   border: solid;
   position: absolute;
+  background-color: white;
 }
 #toolbarheader {
   padding: 10px;
