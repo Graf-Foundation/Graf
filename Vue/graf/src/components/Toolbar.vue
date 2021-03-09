@@ -7,7 +7,7 @@
             v-on:click="activeTool = tool">
       <img v-bind:src=icons[tool] v-bind:title="altTexts[tool]"/>
     </button>
-    <button v-on:click="changeVertical"><img src='l'/></button>
+    <button v-on:click="changeVertical" title="(v)ertical"><img src='l'/></button>
   </div>
 </template>
 
@@ -37,6 +37,9 @@ export default{
           break;
         case "r":
           this.$set(this,"activeTool","Erase");
+          break;
+        case "v":
+          this.changeVertical();
           break;
         default:
           break;
