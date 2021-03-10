@@ -1,16 +1,21 @@
 <template>
   <div id="app">
+    <header>
+      <Toolbar></Toolbar>
+    </header>
     <Graf/>
   </div>
 </template>
 
 <script>
 import Graf from './components/Graf.vue'
+import Toolbar from './components/Toolbar.vue'
 
 export default {
   name: 'App',
   components: {
-    Graf
+    Graf,
+    Toolbar
   }
 }
 </script>
