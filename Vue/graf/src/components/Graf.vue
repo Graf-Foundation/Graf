@@ -1,4 +1,4 @@
-<template>
+<template>  
 <div>
   <div class="node-labeler">
     <input v-if="nodelabeler" v-model="newlabel" @keyup.enter="change_node_label"/>
@@ -30,7 +30,17 @@
   <div class="edge-labeler">
     <input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
   </div>
+
+  <div class="dropdown">
+    <button class="dropbtn"><img width = "20" src = "https://image.flaticon.com/icons/png/512/40/40031.png" alt= "not found" /></button>
+    <div class="dropdown-content">
+      <a href="#">Settings</a>
+      <a href="#">FAQ</a>
+      <a href="#">About</a>
+    </div>
+  </div>
 </div>
+
 </template>
 
 <script>
@@ -138,5 +148,53 @@ export default {
 </script>
 
 <style scoped>
+
+/* Dropdown Button */
+.dropbtn {
+  background-color: white;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  /*right: 100px;*/
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown { 
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: fixed;
+  right: 10px;
+  top: 70px;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #41bb22c0;}
 
 </style>
