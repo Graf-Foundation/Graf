@@ -94,7 +94,6 @@ export default {
         size:{ w: window.innerWidth, h: window.innerHeight - 200},
         nodeSize: this.nodeSize,
         nodeLabels: true,
-        linkSize: this.linkSize,
         canvas: this.canvas,
         linkWidth: 3,
         fontSize: 20
@@ -139,9 +138,6 @@ export default {
       var t = this.nodes[0].name;
       this.nodes[0].name = "TEMP";
       this.nodes[0].name = t;
-      
-
-
     }
   }
 }
