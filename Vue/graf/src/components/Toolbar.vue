@@ -3,7 +3,7 @@
     <button v-for="tool in tools"
             v-bind:key="tool"
             v-bind:class="{active: activeTool === tool}"
-            v-on:click="activeTool = tool">
+            v-on:click="onToolChange(tool)">
       <img v-bind:src=icons[tool] v-bind:title="altTexts[tool]"/>
     </button>
   </div>
@@ -61,6 +61,12 @@ export default{
         "Erase" : "e(r)ase"
       }
     }
+  },
+  methods: {
+      onToolChange (tool) {
+          this.activeTool = tool;
+          this.$emit('example', tool);
+      }
   }
 }
 </script>      

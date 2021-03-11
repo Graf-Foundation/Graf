@@ -15,6 +15,7 @@
     </button>
   </div>
   <D3Network
+    id="grafNet"
     :net-nodes="nodes"
     :net-links="links"
     :options="options"
@@ -49,16 +50,21 @@ import grafhelpers from '../middleware/helperFunctions';
 
 export default {
   name: 'Graf',
-  props: {
-  },
   components: {
     D3Network
+  },
+  props: ['currentTool'],
+  mounted () {
+      document.getElementById("grafNet").addEventListener("click", function() {
+          this.useTool(this.currentTool);
+      }.bind(this), false);
   },
   data () {
     return {
       nodelabeler: false,
       edgelabeler: false,
       selected: -1,
+      selectedPrevious: null,
       newlabel: "",
       grafData: "",
       nodes: [
@@ -113,6 +119,26 @@ export default {
         this.nodes = data.nodes;
         this.links = data.links;
         this.grafData = "";
+    },
+    useTool(tool) {
+        switch(tool){
+            case "Node":
+                this.nodes.push({id:this.nodes.length + 1});
+                break;
+
+            case "Edge":
+                if(this.selectedPrevious == null) {
+                    this.selectedPrevious = this.selected + 1
+
+                } else if(this.selectedPrevious != this.selected + 1) {
+                    this.links.push({sid: this.selectedPrevious, tid: this.selected + 1, _color: 'black'});
+                    this.selectedPrevious = null;
+                }
+                break;
+
+            default:
+                break;
+        }
     },
     enable_node_label(event,node) {
       this.selected = node.index;
