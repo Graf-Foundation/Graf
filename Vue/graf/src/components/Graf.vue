@@ -94,6 +94,7 @@ export default {
         size:{ w: window.innerWidth, h: window.innerHeight - 200},
         nodeSize: this.nodeSize,
         nodeLabels: true,
+        linkLabls: true,
         canvas: this.canvas,
         linkWidth: 3,
         fontSize: 20
