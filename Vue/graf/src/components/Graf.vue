@@ -100,7 +100,7 @@ export default {
         size:{ w: window.innerWidth, h: window.innerHeight - 200},
         nodeSize: this.nodeSize,
         nodeLabels: true,
-        linkLabels:true,
+        linkLabels: true,
         canvas: this.canvas,
         linkWidth: 3,
         fontSize: 20
@@ -148,7 +148,7 @@ export default {
     change_node_label() {
       this.nodelabeler = false;
       this.nodes[this.selected].name = this.newlabel;
-      this.newlabel = ""
+      this.newlabel = "";
       this.selected = -1;
     },
     enable_edge_label(event,edge) {
@@ -159,8 +159,12 @@ export default {
     change_edge_label() {
       this.edgelabeler = false;
       this.links[this.selected].name = this.newlabel;
-      this.newlabel = ""
+      this.newlabel = "";
       this.selected = -1;
+
+      var t = this.nodes[0].name;
+      this.nodes[0].name = "TEMP";
+      this.nodes[0].name = t;
     }
   }
 }
