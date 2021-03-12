@@ -1,5 +1,29 @@
 
 class grafhelpers {
+
+    changeGrafColor() {}
+    convertGrafData(links) {
+        var data = {};
+        for(const edge in links) {
+
+            var lNode = links[edge].sid
+            var rNode = links[edge].tid
+
+            if(!(lNode in data)) {
+                data[lNode] = [rNode];
+            } else {
+                data[lNode].push(rNode);
+            }
+
+            if(!(rNode in data)) {
+                data[rNode] = [lNode];
+            } else {
+                data[rNode].push(lNode);
+            }
+        }
+
+        return data;
+    }
     screenshotGraf(svg) {
 
         // initialize temp img and canvs elements
