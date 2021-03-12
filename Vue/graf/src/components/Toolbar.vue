@@ -115,7 +115,7 @@ export default{
   methods: {
     changeVertical: function(){
       this.isVertical = !this.isVertical;
-    }
+    },
     onToolChange (tool) {
       this.activeTool = tool;
       this.$emit('example', tool);
