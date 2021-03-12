@@ -36,6 +36,9 @@ export default{
         case "r":
           this.$set(this,"activeTool","Erase");
           break;
+        case "a":
+          this.$set(this,"activeTool","Algorithm");
+          break;
         default:
           break;
       }
@@ -45,7 +48,7 @@ export default{
   function() {
     return {
       activeTool: "Select",
-      tools: ["Select", "Node", "Edge", "Label", "Erase"],
+      tools: ["Select", "Node", "Edge", "Label", "Erase", "Algorithm"],
       icons: {
         "Select" : select_logo,
         "Node" : node_logo,
@@ -58,7 +61,8 @@ export default{
         "Node" : "(n)ode",
         "Edge" : "(e)dge",
         "Label" : "(l)abel",
-        "Erase" : "e(r)ase"
+        "Erase" : "e(r)ase",
+        "Algorithm": "(a)lgorithm"
       }
     }
   },

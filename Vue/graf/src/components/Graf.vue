@@ -1,4 +1,4 @@
-<template>  
+<template>
 <div>
   <div class="node-labeler">
     <input v-if="nodelabeler" v-model="newlabel" @keyup.enter="change_node_label"/>
@@ -31,22 +31,13 @@
   <div class="edge-labeler">
     <input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
   </div>
-
-  <div class="dropdown">
-    <button class="dropbtn"><img width = "20" src = "https://image.flaticon.com/icons/png/512/40/40031.png" alt= "not found" /></button>
-    <div class="dropdown-content">
-      <a href="#">Settings</a>
-      <a href="#">FAQ</a>
-      <a href="#">About</a>
-    </div>
-  </div>
 </div>
-
 </template>
 
 <script>
 import D3Network from 'vue-d3-network';
 import grafhelpers from '../middleware/helperFunctions';
+import helperAlgs from "../middleware/algorithms";
 
 export default {
   name: 'Graf',
@@ -56,63 +47,79 @@ export default {
   props: ['currentTool'],
   mounted () {
       document.getElementById("grafNet").addEventListener("click", function() {
-          this.useTool(this.currentTool);
+            this.useTool(this.currentTool);
       }.bind(this), false);
+      document.addEventListener("keydown", function(event) {
+            switch(event.key) {
+                case "Shift":
+                    this.selectMultiple = true;
+                    break;
+                default:
+                    break;
+            }
+      }.bind(this), false)
+
+      document.addEventListener("keyup", function() {
+            this.selectMultiple = false;
+      }.bind(this), false)
   },
   data () {
     return {
-      nodelabeler: false,
-      edgelabeler: false,
-      selected: -1,
-      selectedPrevious: null,
-      newlabel: "",
-      grafData: "",
-      nodes: [
-        { id: 1 },
-        { id: 2 },
-        { id: 3 },
-        { id: 4 },
-        { id: 5 },
-        { id: 6 },
-        { id: 7 },
-        { id: 8 },
-        { id: 9 }
-      ],
-      links: [
-        { sid: 1, tid: 2, _color: 'black'},
-        { sid: 2, tid: 8, _color: 'black'},
-        { sid: 3, tid: 4, _color: 'black'},
-        { sid: 4, tid: 5, _color: 'black'},
-        { sid: 5, tid: 6, _color: 'black'},
-        { sid: 7, tid: 8, _color: 'black'},
-        { sid: 5, tid: 8, _color: 'black'},
-        { sid: 3, tid: 8, _color: 'black'},
-        { sid: 7, tid: 9, _color: 'black'}
-      ],
-      nodeSize:20,
-      canvas:false
+        nodelabeler: false,
+        edgelabeler: false,
+        selected: -1,
+        selectedPrevious: null,
+        newlabel: "",
+        grafData: "",
+        selectMultiple: false,
+        selectedNodes: new Set(),
+        pathActive: false,
+        nodes: [
+            { id: 1 },
+            { id: 2 },
+            { id: 3 },
+            { id: 4 },
+            { id: 5 },
+            { id: 6 },
+            { id: 7 },
+            { id: 8 },
+            { id: 9 }
+        ],
+        links: [
+            { sid: 1, tid: 2, _color: 'black'},
+            { sid: 2, tid: 8, _color: 'black'},
+            { sid: 3, tid: 4, _color: 'black'},
+            { sid: 4, tid: 5, _color: 'black'},
+            { sid: 5, tid: 6, _color: 'black'},
+            { sid: 7, tid: 8, _color: 'black'},
+            { sid: 5, tid: 8, _color: 'black'},
+            { sid: 3, tid: 8, _color: 'black'},
+            { sid: 7, tid: 9, _color: 'black'}
+        ],
+        nodeSize:20,
+        canvas:false
     };
   },
   computed:{
     options(){
-      return{
-        force: 3000,
-        size:{ w: window.innerWidth, h: window.innerHeight - 200},
-        nodeSize: this.nodeSize,
-        nodeLabels: true,
-        linkLabels:true,
-        canvas: this.canvas,
-        linkWidth: 3,
-        fontSize: 20
-      }
+        return{
+            force: 3000,
+            size:{ w: window.innerWidth, h: window.innerHeight - 200},
+            nodeSize: this.nodeSize,
+            nodeLabels: true,
+            linkLabels:true,
+            canvas: this.canvas,
+            linkWidth: 3,
+            fontSize: 20
+        }
     }
   },
   methods: {
     onSaveImage() {
-      grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
+        grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
     },
     onSaveGraf() {
-      grafhelpers.saveGraf(this.nodes, this.links);
+        grafhelpers.saveGraf(this.nodes, this.links);
     },
     onLoadGraf() {
         var data = grafhelpers.loadGraf(this.grafData);
@@ -121,7 +128,15 @@ export default {
         this.grafData = "";
     },
     useTool(tool) {
+        console.log(tool, this.selectMultiple);
         switch(tool){
+            case "Select":
+                if(this.selectMultiple) {
+                    this.selectedNodes.add(this.selected);
+                } else {
+                    this.selectedNodes = new Set();
+                }
+                break;
             case "Node":
                 this.nodes.push({id:this.nodes.length + 1});
                 break;
@@ -135,7 +150,38 @@ export default {
                     this.selectedPrevious = null;
                 }
                 break;
+            
+            case "Algorithm":
 
+                // If there is no red path on screen
+                if(!this.pathActive) {
+
+                    // Get start and end nodes
+                    var goals = Array.from(this.selectedNodes);
+
+                    // Find bfs path
+                    var path = helperAlgs.bfs(goals[0] + 1, goals[1] + 1, this.links);
+
+                    // Recolor all edges in path
+                    for (var i in path) {
+                        for (var j in this.links) {
+                            if ((path[i][0] == this.links[j].sid && path[i][1] == this.links[j].tid) || (path[i][1] == this.links[j].sid && path[i][0] == this.links[j].tid)) {
+                                this.links[j]._color = 'red';
+                                break;
+                            }
+                        }
+                    }
+                    this.selectedNodes = new Set();
+                    this.pathActive = true;
+
+                // Remove coloring and deactivate path
+                } else {
+                    for (j in this.links) {
+                        this.links[j]._color = 'black';
+                    }
+                    this.pathActive = false;
+                }
+                break;
             default:
                 break;
         }
@@ -168,20 +214,6 @@ export default {
 
 <style scoped>
 
-/* Dropdown Button */
-.dropbtn {
-  background-color: white;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  position: fixed;
-  right: 10px;
-  top: 10px;
-  /*right: 100px;*/
-}
-
-/* The container <div> - needed to position the dropdown content */
 .dropdown { 
   position: relative;
   display: inline-block;
