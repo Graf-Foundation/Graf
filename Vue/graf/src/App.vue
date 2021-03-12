@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <header>
-      <Toolbar></Toolbar>
+      <Toolbar @example="methodName"></Toolbar>
     </header>
-    <Graf/>
+    <Graf v-bind:currentTool="currentTool" />
   </div>
 </template>
 
@@ -13,9 +13,19 @@ import Toolbar from './components/Toolbar.vue'
 
 export default {
   name: 'App',
+  data () {
+      return {
+          currentTool: "Select"
+      }
+  },
   components: {
     Graf,
     Toolbar
+  },
+  methods: {
+      methodName (tool) {
+          this.currentTool = tool;
+      }
   }
 }
 </script>

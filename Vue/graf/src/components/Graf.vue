@@ -1,4 +1,4 @@
-<template>
+<template>  
 <div>
   <div class="node-labeler">
     <input v-if="nodelabeler" v-model="newlabel" @keyup.enter="change_node_label"/>
@@ -15,6 +15,7 @@
     </button>
   </div>
   <D3Network
+    id="grafNet"
     :net-nodes="nodes"
     :net-links="links"
     :options="options"
@@ -30,7 +31,17 @@
   <div class="edge-labeler">
     <input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
   </div>
+
+  <div class="dropdown">
+    <button class="dropbtn"><img width = "20" src = "https://image.flaticon.com/icons/png/512/40/40031.png" alt= "not found" /></button>
+    <div class="dropdown-content">
+      <a href="#">Settings</a>
+      <a href="#">FAQ</a>
+      <a href="#">About</a>
+    </div>
+  </div>
 </div>
+
 </template>
 
 <script>
@@ -39,16 +50,21 @@ import grafhelpers from '../middleware/helperFunctions';
 
 export default {
   name: 'Graf',
-  props: {
-  },
   components: {
     D3Network
+  },
+  props: ['currentTool'],
+  mounted () {
+      document.getElementById("grafNet").addEventListener("click", function() {
+          this.useTool(this.currentTool);
+      }.bind(this), false);
   },
   data () {
     return {
       nodelabeler: false,
       edgelabeler: false,
       selected: -1,
+      selectedPrevious: null,
       newlabel: "",
       grafData: "",
       nodes: [
@@ -84,7 +100,7 @@ export default {
         size:{ w: window.innerWidth, h: window.innerHeight - 200},
         nodeSize: this.nodeSize,
         nodeLabels: true,
-        linkLabels:true,
+        linkLabels: true,
         canvas: this.canvas,
         linkWidth: 3,
         fontSize: 20
@@ -104,6 +120,26 @@ export default {
         this.links = data.links;
         this.grafData = "";
     },
+    useTool(tool) {
+        switch(tool){
+            case "Node":
+                this.nodes.push({id:this.nodes.length + 1});
+                break;
+
+            case "Edge":
+                if(this.selectedPrevious == null) {
+                    this.selectedPrevious = this.selected + 1
+
+                } else if(this.selectedPrevious != this.selected + 1) {
+                    this.links.push({sid: this.selectedPrevious, tid: this.selected + 1, _color: 'black'});
+                    this.selectedPrevious = null;
+                }
+                break;
+
+            default:
+                break;
+        }
+    },
     enable_node_label(event,node) {
       this.selected = node.index;
       this.nodelabeler = true;
@@ -112,7 +148,7 @@ export default {
     change_node_label() {
       this.nodelabeler = false;
       this.nodes[this.selected].name = this.newlabel;
-      this.newlabel = ""
+      this.newlabel = "";
       this.selected = -1;
     },
     enable_edge_label(event,edge) {
@@ -123,13 +159,65 @@ export default {
     change_edge_label() {
       this.edgelabeler = false;
       this.links[this.selected].name = this.newlabel;
-      this.newlabel = ""
+      this.newlabel = "";
       this.selected = -1;
+
+      var t = this.nodes[0].name;
+      this.nodes[0].name = "TEMP";
+      this.nodes[0].name = t;
     }
   }
 }
 </script>
 
 <style scoped>
+
+/* Dropdown Button */
+.dropbtn {
+  background-color: white;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  /*right: 100px;*/
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown { 
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: fixed;
+  right: 10px;
+  top: 70px;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #41bb22c0;}
 
 </style>

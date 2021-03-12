@@ -4,7 +4,7 @@
     <button v-for="tool in tools"
             v-bind:key="tool"
             v-bind:class="{active: activeTool === tool}"
-            v-on:click="activeTool = tool">
+            v-on:click="onToolChange(tool)">
       <img v-bind:src=icons[tool] v-bind:title="altTexts[tool]"/>
     </button>
     <button v-on:click="changeVertical" title="(v)ertical"><img src='l'/></button>
@@ -115,6 +115,10 @@ export default{
   methods: {
     changeVertical: function(){
       this.isVertical = !this.isVertical;
+    }
+    onToolChange (tool) {
+      this.activeTool = tool;
+      this.$emit('example', tool);
     }
   }
 }
