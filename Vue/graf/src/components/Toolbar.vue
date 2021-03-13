@@ -1,22 +1,22 @@
 <template>
-  <div id="toolbar" v-bind:class="{vertical: isVertical}">
-    <div id="toolbarheader"></div>
-    <button v-for="tool in tools"
-            v-bind:key="tool"
-            v-bind:class="{active: activeTool === tool}"
-            v-on:click="onToolChange(tool)">
-      <img v-bind:src=icons[tool] v-bind:title="altTexts[tool]"/>
-    </button>
-    <button v-on:click="changeVertical" title="(v)ertical"><img src='l'/></button>
-  </div>
+  <div id="experiemntal">
+    <sui-menu style="width: max-content;">
+      <a
+        v-for="tool in tools"
+        is="sui-menu-item"
+        v-bind:key="tool"
+        @click="onToolChange(tool)"
+        :active="activeTool==tool"
+        icon
+      >
+				<sui-icon v-bind:name="icons[tool]"/>
+        <br>{{altTexts[tool]}}
+			</a>
+    </sui-menu>
+</div>
 </template>
 
 <script>
-import select_logo from '../assets/select.svg';
-import node_logo from '../assets/node.svg';
-import edge_logo from '../assets/edge.svg';
-import label_logo from '../assets/label.svg';
-import erase_logo from '../assets/erase.svg';
 export default{
   name: 'Toolbar',
   mounted() {
@@ -29,7 +29,7 @@ export default{
         case "n":
           this.$set(this,"activeTool","Node");
           break;
-        case "e": 
+        case "e":
           this.$set(this,"activeTool","Edge");
           break;
         case "l":
@@ -48,115 +48,40 @@ export default{
           break;
       }
     });
-    
-    //theres probably a way to do this with more vue stuff, but I'm not sure what it is.
-    dragElement(document.getElementById("toolbar"));
-
-    function dragElement(elmnt) {
-      var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-      if (document.getElementById(elmnt.id + "header")) {
-        // if present, the header is where you move the DIV from:
-        document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-      } else {
-        // otherwise, move the DIV from anywhere inside the DIV:
-        elmnt.onmousedown = dragMouseDown;
-      }
-
-      function dragMouseDown(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // get the mouse cursor position at startup:
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        // call a function whenever the cursor moves:
-        document.onmousemove = elementDrag;
-      }
-
-      function elementDrag(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
-        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-      }
-
-      function closeDragElement() {
-        // stop moving when mouse button is released:
-        document.onmouseup = null;
-        document.onmousemove = null;
-      }
-    }
   },
-  data: 
+  data:
   function() {
     return {
       isVertical: false,
       activeTool: "Select",
       tools: ["Select", "Node", "Edge", "Label", "Erase", "Algorithm"],
       icons: {
-        "Select" : select_logo,
-        "Node" : node_logo,
-        "Edge" : edge_logo,
-        "Label" : label_logo,
-        "Erase" : erase_logo
+        "Select" : 'mouse pointer',
+        "Node" : 'circle',
+        "Edge" : 'window minimize',
+        "Label" : 'pencil',
+        "Erase" : 'eraser',
+        "Algorithm" : 'code branch'
       },
       altTexts: {
-        "Select" : "(s)elect",
-        "Node" : "(n)ode",
-        "Edge" : "(e)dge",
-        "Label" : "(l)abel",
-        "Erase" : "e(r)ase",
-        "Algorithm": "(a)lgorithm"
+        "Select" : "(S)elect",
+        "Node" : "(N)ode",
+        "Edge" : "(E)dge",
+        "Label" : "(L)abel",
+        "Erase" : "E(r)ase",
+        "Algorithm": "(A)lgorithm"
       }
     }
   },
   methods: {
-    changeVertical: function(){
-      this.isVertical = !this.isVertical;
-    },
     onToolChange (tool) {
       this.activeTool = tool;
-      this.$emit('example', tool);
+      this.$emit('tool-change', tool);
     }
   }
 }
-</script>      
+</script>
 
 <style scoped>
-button {
-  display: inline-block;
-  margin: 5px;
-  font-weight: normal;
-}
-.active {
-  background-color: LightGray;
-}
-#toolbar {
-  display: inline-block;
-  border: solid;
-  position: absolute;
-  background-color: white;
-}
-#toolbarheader {
-  padding: 10px;
-  cursor: move;
-  z-index: 10;
-  background-color: black;
-  color: gray;
-}
-img {
-  width: 20px;
-  height: 20px;
-  float: left;
-}
-.vertical > button {
-  display: block;
-}
 
 </style>
