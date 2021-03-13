@@ -174,14 +174,18 @@ export default {
     },
     enable_node_label(event,node) {
       this.selected = node.index;
-      this.nodelabeler = true;
-      this.edgelabeler = false;
+      if (this.currentTool === 'Label') {
+        this.nodelabeler = true;
+        this.edgelabeler = false;
+      }
       this.newlabel = node.name;
     },
     enable_edge_label(event,edge) {
       this.selected = edge.index;
-      this.edgelabeler = true;
-      this.nodelabeler = false;
+      if (this.currentTool === 'Label') {
+        this.edgelabeler = true;
+        this.nodelabeler = false;
+      }
       this.newlabel = edge.name;
     },
     change_label() {
