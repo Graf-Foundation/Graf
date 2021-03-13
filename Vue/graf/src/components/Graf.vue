@@ -1,50 +1,53 @@
 <template>
-<div>
-  <div class="node-labeler">
-    <input v-if="nodelabeler" v-model="newlabel" @keyup.enter="change_node_label"/>
-    <br>
-    <button v-if="nodelabeler" @click="change_node_label" style="height: 30px" >
-      Edit Node Label
-    </button>
+  <div>
+    <center>
+
+      <header>
+        <Toolbar @tool-change="change_tool"></Toolbar>
+      </header>
+
+      <div class="labeler"  v-if="currentTool=='Label'" style="margin: 1em 0em 0em" >
+        <sui-input v-model="newlabel" @keyup.enter="change_label"/>
+        <br>
+        <sui-button
+          color="green" content="Edit Label" @click="change_label"
+          style="height: 30px"
+        />
+      </div>
+
+      <D3Network
+        id="grafNet"
+        :net-nodes="nodes"
+        :net-links="links"
+        :options="options"
+        @node-click="enable_node_label"
+        @link-click="enable_edge_label"
+      />
+
+      <div class="graf-labeler  ">
+        <sui-button @click="onSaveImage();" color="green" content="Save Image"/>
+        <sui-button @click="onSaveGraf();" color="green" content="Save Graph"/>
+        <br>
+        <sui-input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
+      </div>
+
+    </center>
   </div>
-  <div class="edge-labeler">
-    <input v-if="edgelabeler" v-model="newlabel" @keyup.enter="change_edge_label"/>
-    <br>
-    <button v-if="edgelabeler" @click="change_edge_label" style="height: 30px" >
-      Edit Edge Label
-    </button>
-  </div>
-  <D3Network
-    id="grafNet"
-    :net-nodes="nodes"
-    :net-links="links"
-    :options="options"
-    @node-click="enable_node_label"
-    @link-click="enable_edge_label"
-  />
-  <button
-  @click="onSaveImage();"
-  >Save Image</button>
-  <button
-  @click="onSaveGraf();"
-  >Save Graf</button>
-  <div class="edge-labeler">
-    <input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
-  </div>
-</div>
 </template>
 
 <script>
 import D3Network from 'vue-d3-network';
 import grafhelpers from '../middleware/helperFunctions';
 import helperAlgs from "../middleware/algorithms";
+import Toolbar from '../components/Toolbar.vue'
+
 
 export default {
   name: 'Graf',
   components: {
-    D3Network
+    D3Network,
+    Toolbar
   },
-  props: ['currentTool'],
   mounted () {
       document.getElementById("grafNet").addEventListener("click", function() {
             this.useTool(this.currentTool);
@@ -65,6 +68,7 @@ export default {
   },
   data () {
     return {
+        currentTool: "",
         nodelabeler: false,
         edgelabeler: false,
         selected: -1,
@@ -74,28 +78,8 @@ export default {
         selectMultiple: false,
         selectedNodes: new Set(),
         pathActive: false,
-        nodes: [
-            { id: 1 },
-            { id: 2 },
-            { id: 3 },
-            { id: 4 },
-            { id: 5 },
-            { id: 6 },
-            { id: 7 },
-            { id: 8 },
-            { id: 9 }
-        ],
-        links: [
-            { sid: 1, tid: 2, _color: 'black'},
-            { sid: 2, tid: 8, _color: 'black'},
-            { sid: 3, tid: 4, _color: 'black'},
-            { sid: 4, tid: 5, _color: 'black'},
-            { sid: 5, tid: 6, _color: 'black'},
-            { sid: 7, tid: 8, _color: 'black'},
-            { sid: 5, tid: 8, _color: 'black'},
-            { sid: 3, tid: 8, _color: 'black'},
-            { sid: 7, tid: 9, _color: 'black'}
-        ],
+        nodes: [{ id: 1 }],
+        links: [],
         nodeSize:20,
         canvas:false
     };
@@ -127,6 +111,8 @@ export default {
         this.links = data.links;
         this.grafData = "";
     },
+    // TODO: place these as individual methods in a js file and import them
+    // TODO: erase tool
     useTool(tool) {
 
         switch(tool){
@@ -150,7 +136,7 @@ export default {
                     this.selectedPrevious = null;
                 }
                 break;
-            
+
             case "Algorithm":
 
                 // If there is no red path on screen
@@ -211,41 +197,47 @@ export default {
         }
     },
     enable_node_label(event,node) {
-      if (this.currentTool !== 'Label') return;
       this.selected = node.index;
-      this.nodelabeler = true;
+      if (this.currentTool === 'Label') {
+        this.nodelabeler = true;
+        this.edgelabeler = false;
+      }
       this.newlabel = node.name;
     },
-    change_node_label() {
-      this.nodelabeler = false;
-      this.nodes[this.selected].name = this.newlabel;
-      this.newlabel = "";
-      this.selected = -1;
-    },
     enable_edge_label(event,edge) {
-      if (this.currentTool !== 'Label') return;
       this.selected = edge.index;
-      this.edgelabeler = true;
+      if (this.currentTool === 'Label') {
+        this.edgelabeler = true;
+        this.nodelabeler = false;
+      }
       this.newlabel = edge.name;
     },
-    change_edge_label() {
-      this.nodelabeler = false;
-      this.edgelabeler = false;
-      this.links[this.selected].name = this.newlabel;
-      this.newlabel = "";
-      this.selected = -1;
-
+    change_label() {
+      if(this.edgelabeler) {
+        this.edgelabeler = false;
+        this.links[this.selected].name = this.newlabel;
+        this.newlabel = "";
+        this.selected = -1;
+      }
+      if(this.nodelabeler) {
+        this.nodelabeler = false;
+        this.nodes[this.selected].name = this.newlabel;
+        this.newlabel = "";
+        this.selected = -1;
+      }
       var t = this.nodes[0].name;
       this.nodes[0].name = "TEMP";
       this.nodes[0].name = t;
+    },
+    change_tool (tool) {
+        this.currentTool = tool;
     }
   }
 }
 </script>
 
 <style scoped>
-
-.dropdown { 
+.dropdown {
   position: relative;
   display: inline-block;
 }

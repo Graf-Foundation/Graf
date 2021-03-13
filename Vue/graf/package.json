@@ -5,13 +5,16 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "sh deploy.sh"
   },
   "dependencies": {
     "canvg": "^3.0.7",
     "core-js": "^3.6.5",
     "download": "^8.0.0",
     "queue": "^6.0.2",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-vue": "^0.11.0",
     "vue": "^2.6.11",
     "vue-d3-network": "^0.1.28"
   },
