@@ -7,7 +7,7 @@
       </header>
 
       <div class="labeler"  v-if="currentTool=='Label'" style="margin: 1em 0em 0em" >
-        <sui-input v-model="newlabel" @keyup.enter="change_label"/>
+        <sui-input v-model="newlabel" @keypress.stop @keyup.enter="change_label"/>
         <br>
         <sui-button
           color="green" content="Edit Label" @click="change_label"
