@@ -1,14 +1,14 @@
 <template>
 <div>
   <div class="node-labeler">
-    <input v-if="nodelabeler" v-model="newlabel" @keyup.enter="change_node_label"/>
+    <input v-if="nodelabeler" v-model="newlabel" @keypress.stop/>
     <br>
     <button v-if="nodelabeler" @click="change_node_label" style="height: 30px" >
       Edit Node Label
     </button>
   </div>
   <div class="edge-labeler">
-    <input v-if="edgelabeler" v-model="newlabel" @keyup.enter="change_edge_label"/>
+    <input v-if="edgelabeler" v-model="newlabel" @keypress.stop @keyup.enter="change_edge_label"/>
     <br>
     <button v-if="edgelabeler" @click="change_edge_label" style="height: 30px" >
       Edit Edge Label
