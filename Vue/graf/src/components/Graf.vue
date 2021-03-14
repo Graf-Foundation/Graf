@@ -114,7 +114,7 @@ export default {
     // TODO: place these as individual methods in a js file and import them
     // TODO: erase tool
     useTool(tool) {
-        console.log(tool, this.selectMultiple);
+
         switch(tool){
             case "Select":
                 if(this.selectMultiple) {
@@ -166,6 +166,30 @@ export default {
                         this.links[j]._color = 'black';
                     }
                     this.pathActive = false;
+                }
+                break;
+            case "Erase":
+                console.log(this.selected);
+                if (this.selected != -1) {
+                    console.log(this.selected);
+                    // remove edges
+                    var new_links = []
+                    for (i in this.links) {
+                        if (this.links[i].sid != this.selected + 1 && this.links[i].tid != this.selected + 1) {
+                            console.log(i, this.links.length, this.selected, this.links[i].sid, this.links[i].tid);
+                            new_links.push(this.links[i]);
+                        }
+                    }
+                    this.links = JSON.parse(JSON.stringify(new_links));
+
+                    // remove node
+                    for (i in this.nodes) {
+                        console.log(i, this.selected);
+                        if (i == this.selected) {
+                            this.nodes.splice(i, 1);
+                            break;
+                        }
+                    }
                 }
                 break;
             default:
