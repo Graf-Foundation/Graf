@@ -2,12 +2,7 @@
   <div id="app">
     <div id="Router">
       <router-view/>
-      <graf/>
     </div>
-    
-    
-    
-    <!--<Graf/>-->
   </div>
 </template>
 

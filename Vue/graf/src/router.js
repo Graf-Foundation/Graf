@@ -9,7 +9,7 @@ export default new Router({
     base: process.env.BASE_URL,
     routes: [
         {
-            path: "/graf",
+            path: "/",
             alias: "/graf",
             name: "Graf",
             component: () => import("./components/Graf")
@@ -20,8 +20,8 @@ export default new Router({
             component: () => import("./components/About"),
             //beforeEnter: authGuard
         }
-    
-    
+
+
     ]
 })
 ;
