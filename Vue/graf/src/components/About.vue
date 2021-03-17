@@ -85,6 +85,14 @@
         </div>
       </div>
     </div>
+    <div class = "row">
+      <center>
+        <div class = "return">
+          <router-link to="/">Return to main site</router-link>
+        </div>
+      </center>
+
+    </div>
     <!--<div class="row">
       <div class="column2">
         <div class="card">
@@ -134,6 +142,7 @@ html {
 .card {
   box-shadow: 0 4px 8px 0 rgba(20, 22, 24, 0.664);
   margin: 8px;
+  height: 350px;
   background-color: white; 
 }
 
@@ -157,6 +166,11 @@ html {
 
 .title {
   color: rgb(0, 0, 0);
+}
+
+.return{
+  position: middle;
+  bottom: 10px;
 }
 
 .description {
@@ -193,3 +207,4 @@ html {
   }
 }
 </style>
+
