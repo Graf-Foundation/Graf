@@ -1,7 +1,13 @@
 <template>
   <div id="app">
-    <!-- TODO: Replace with a vue router -->
-    <Graf/>
+    <div id="Router">
+      <router-view/>
+      <graf/>
+    </div>
+    
+    
+    
+    <!--<Graf/>-->
   </div>
 </template>
 
@@ -25,6 +31,6 @@ export default {
   overflow-x: scroll;
   width: 100%;
   height: 100%;
-  background:  #d4fbb2;
+  background:  #ffffff;
 }
 </style>
