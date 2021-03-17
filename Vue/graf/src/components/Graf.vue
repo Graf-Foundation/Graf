@@ -1,5 +1,13 @@
 <template>
   <div>
+    <div class="dropdown">
+    <button class="dropbtn"><img width = "20" src = "../assets/gear.png" alt= "Stinky car" /></button>
+      <div class="dropdown-content">
+        <router-link to="/about">About</router-link>
+        <a href="#">FAQ</a>
+        <a href="#">Other</a>
+      </div>
+		</div>
     <center>
 
       <header>
@@ -40,6 +48,7 @@ import D3Network from 'vue-d3-network';
 import grafhelpers from '../middleware/helperFunctions';
 import helperAlgs from "../middleware/algorithms";
 import Toolbar from '../components/Toolbar.vue'
+//import About from 'About.vue'
 
 
 export default {
@@ -84,6 +93,8 @@ export default {
         canvas:false
     };
   },
+  //props: ["toggle"],
+
   computed:{
     options(){
         return{
@@ -234,10 +245,25 @@ export default {
     }
   }
 }
+  
 </script>
 
 <style scoped>
-.dropdown {
+/* Dropdown Button */
+.dropbtn {
+  background-color: white;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  /*right: 100px;*/
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown { 
   position: relative;
   display: inline-block;
 }
@@ -247,7 +273,6 @@ export default {
   display: none;
   position: fixed;
   right: 10px;
-  top: 70px;
   top: 63px;
   background-color: #f1f1f1;
   min-width: 160px;
