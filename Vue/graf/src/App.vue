@@ -7,13 +7,10 @@
 </template>
 
 <script>
-import Graf from './components/Graf.vue'
 
 export default {
   name: 'App',
-  components: {
-    Graf
-  }
+  components: {}
 }
 </script>
 
