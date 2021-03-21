@@ -15,24 +15,21 @@
       </header>
 
       <div class="labeler"  v-if="currentTool=='Label'" style="margin: 1em 0em 0em" >
-        <sui-input v-model="newlabel" @keypress.stop @keyup.enter="change_label"/>
+        <sui-input v-model="selection.selectedCurrent.name" @keypress.stop @keyup.enter="close_labeler"/>
         <br>
-        <sui-button
-          color="green" content="Edit Label" @click="change_label"
-          style="height: 30px"
-        />
+        Change Label
       </div>
 
       <D3Network
         id="grafNet"
-        :net-nodes="nodes"
-        :net-links="links"
+        :net-nodes="graf.nodes"
+        :net-links="graf.links"
         :options="options"
-        @node-click="enable_node_label"
-        @link-click="enable_edge_label"
+        @node-click="handle_node_click"
+        @link-click="handle_edge_click"
       />
 
-      <div class="graf-labeler  ">
+      <div class="graf-labeler">
         <sui-button @click="onSaveImage();" color="green" content="Save Image"/>
         <sui-button @click="onSaveGraf();" color="green" content="Save Graph"/>
         <br>
@@ -46,8 +43,8 @@
 <script>
 import D3Network from 'vue-d3-network';
 import grafhelpers from '../middleware/helperFunctions';
-import helperAlgs from "../middleware/algorithms";
 import Toolbar from '../components/Toolbar.vue'
+import GrafTools from '../graf_tools.js'
 //import About from 'About.vue'
 
 
@@ -64,7 +61,7 @@ export default {
       document.addEventListener("keydown", function(event) {
             switch(event.key) {
                 case "Shift":
-                    this.selectMultiple = true;
+                    this.selection.selectMultiple = true;
                     break;
                 default:
                     break;
@@ -72,7 +69,7 @@ export default {
       }.bind(this), false)
 
       document.addEventListener("keyup", function() {
-            this.selectMultiple = false;
+            this.selection.selectMultiple = false;
       }.bind(this), false)
   },
   data () {
@@ -80,27 +77,30 @@ export default {
         currentTool: "",
         nodelabeler: false,
         edgelabeler: false,
-        selected: -1,
-        selectedPrevious: null,
-        newlabel: "",
         grafData: "",
-        selectMultiple: false,
-        selectedNodes: new Set(),
         pathActive: false,
-        nodes: [{ id: 1 }],
-        links: [],
-        nodeSize:20,
-        canvas:false
+        selection: {
+          selectedCurrent: null, //
+          selectedLast: null, //
+          selectMultiple: true,
+          selectedNodes: new Set(),
+          selectedEdges: new Set()
+        },
+        graf: {
+          nodes: [{ id: 0 }],
+          links: [],
+          nodeSize:20,
+          canvas:false
+        }
     };
   },
-  //props: ["toggle"],
 
   computed:{
     options(){
         return{
             force: 3000,
             size:{ w: window.innerWidth, h: window.innerHeight - 200},
-            nodeSize: this.nodeSize,
+            nodeSize: this.graf.nodeSize,
             nodeLabels: true,
             linkLabels:true,
             canvas: this.canvas,
@@ -114,138 +114,51 @@ export default {
         grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
     },
     onSaveGraf() {
-        grafhelpers.saveGraf(this.nodes, this.links);
+        grafhelpers.saveGraf(this.graf.nodes, this.links);
     },
     onLoadGraf() {
         var data = grafhelpers.loadGraf(this.grafData);
-        this.nodes = data.nodes;
+        this.graf.nodes = data.nodes;
         this.links = data.links;
         this.grafData = "";
     },
     // TODO: place these as individual methods in a js file and import them
     // TODO: erase tool
     useTool(tool) {
-
         switch(tool){
-            case "Select":
-                if(this.selectMultiple) {
-                    this.selectedNodes.add(this.selected);
-                } else {
-                    this.selectedNodes = new Set();
-                }
-                break;
-            case "Node":
-                this.nodes.push({id:this.nodes.length + 1});
-                break;
-
-            case "Edge":
-                if(this.selectedPrevious == null) {
-                    this.selectedPrevious = this.selected + 1
-
-                } else if(this.selectedPrevious != this.selected + 1) {
-                    this.links.push({sid: this.selectedPrevious, tid: this.selected + 1, _color: 'black'});
-                    this.selectedPrevious = null;
-                }
-                break;
-
-            case "Algorithm":
-
-                // If there is no red path on screen
-                if(!this.pathActive) {
-
-                    // Get start and end nodes
-                    var goals = Array.from(this.selectedNodes);
-
-                    // Find bfs path
-                    var path = helperAlgs.bfs(goals[0] + 1, goals[1] + 1, this.links);
-
-                    // Recolor all edges in path
-                    for (var i in path) {
-                        for (var j in this.links) {
-                            if ((path[i][0] == this.links[j].sid && path[i][1] == this.links[j].tid) || (path[i][1] == this.links[j].sid && path[i][0] == this.links[j].tid)) {
-                                this.links[j]._color = 'red';
-                                break;
-                            }
-                        }
-                    }
-                    this.selectedNodes = new Set();
-                    this.pathActive = true;
-
-                // Remove coloring and deactivate path
-                } else {
-                    for (j in this.links) {
-                        this.links[j]._color = 'black';
-                    }
-                    this.pathActive = false;
-                }
-                break;
-            case "Erase":
-                console.log(this.selected);
-                if (this.selected != -1) {
-                    console.log(this.selected);
-                    // remove edges
-                    var new_links = []
-                    for (i in this.links) {
-                        if (this.links[i].sid != this.selected + 1 && this.links[i].tid != this.selected + 1) {
-                            console.log(i, this.links.length, this.selected, this.links[i].sid, this.links[i].tid);
-                            new_links.push(this.links[i]);
-                        }
-                    }
-                    this.links = JSON.parse(JSON.stringify(new_links));
-
-                    // remove node
-                    for (i in this.nodes) {
-                        console.log(i, this.selected);
-                        if (i == this.selected) {
-                            this.nodes.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
+          case "Node":
+            GrafTools.new_node(this.graf);
+            break;
+          case "Edge":
+            GrafTools.new_edge(this.graf, this.selection);
+            break;
+          case "Algorithm":
+            GrafTools.algorithm();
+            break;
+          case "Erase":
+            GrafTools.erase(this.graf, this.selection);
+            break;
+          default:
+            break;
         }
     },
-    enable_node_label(event,node) {
-      this.selected = node.index;
-      if (this.currentTool === 'Label') {
-        this.nodelabeler = true;
-        this.edgelabeler = false;
-      }
-      this.newlabel = node.name;
+    handle_node_click(event,node) {
+      // Only for creation of edges
+      this.selection.selectedLast = this.selection.selectedCurrent;
+      this.selection.selectedCurrent = node;
+      GrafTools.update_selection(node, 'node', this.selection);
     },
-    enable_edge_label(event,edge) {
-      this.selected = edge.index;
-      if (this.currentTool === 'Label') {
-        this.edgelabeler = true;
-        this.nodelabeler = false;
-      }
-      this.newlabel = edge.name;
-    },
-    change_label() {
-      if(this.edgelabeler) {
-        this.edgelabeler = false;
-        this.links[this.selected].name = this.newlabel;
-        this.newlabel = "";
-        this.selected = -1;
-      }
-      if(this.nodelabeler) {
-        this.nodelabeler = false;
-        this.nodes[this.selected].name = this.newlabel;
-        this.newlabel = "";
-        this.selected = -1;
-      }
-      var t = this.nodes[0].name;
-      this.nodes[0].name = "TEMP";
-      this.nodes[0].name = t;
+    handle_edge_click(event,edge) {
+      GrafTools.update_selection(edge, 'edge', this.selection);
     },
     change_tool (tool) {
+        GrafTools.clear_selection(this.selection)
         this.currentTool = tool;
-    }
+    },
+
   }
 }
-  
+
 </script>
 
 <style scoped>
@@ -263,7 +176,7 @@ export default {
 }
 
 /* The container <div> - needed to position the dropdown content */
-.dropdown { 
+.dropdown {
   position: relative;
   display: inline-block;
 }
