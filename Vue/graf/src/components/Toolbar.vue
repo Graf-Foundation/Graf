@@ -24,22 +24,22 @@ export default{
       //may want to consider making a class for scalability when we begin to add more features
       switch(event.key){
         case "s":
-          this.$set(this,"activeTool","Select");
+          this.onToolChange("Select");
           break;
         case "n":
-          this.$set(this,"activeTool","Node");
+          this.onToolChange("Node");
           break;
         case "e":
-          this.$set(this,"activeTool","Edge");
+          this.onToolChange("Edge");
           break;
         case "l":
-          this.$set(this,"activeTool","Label");
+          this.onToolChange("Label");
           break;
         case "r":
-          this.$set(this,"activeTool","Erase");
+          this.onToolChange("Erase");
           break;
         case "a":
-          this.$set(this,"activeTool","Algorithm");
+          this.onToolChange("Algorithm");
           break;
         case "v":
           this.changeVertical();
