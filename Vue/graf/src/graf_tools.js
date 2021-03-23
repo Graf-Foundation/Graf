@@ -47,44 +47,24 @@ class GrafTools {
     graf.links = this.rebuildLinks(graf);
   }
   removeNode(graf, nodeId) {
+    graf.links = this.rebuildLinks(graf, nodeId);
     let index = graf.nodes.findIndex((node) => { return node.id === nodeId });
     if (index > -1)
       graf.nodes.splice(index, 1);
-    graf.links = this.rebuildLinks(graf);
-    graf.nodes = this.rebuildNodes(graf);
   }
-  rebuildLinks(graf) {
+  rebuildLinks(graf, nodeId) {
     let newLinks = [];
-    var count = 0;
+    //var count = 1;
     for (let link of graf.links) {
-      if (this.nodeExists(link.sid, graf) && this.nodeExists(link.tid, graf)) {
-        link.id = count;
-        count++;
+      //if (this.nodeExists(link.sid, graf) && this.nodeExists(link.tid, graf)) {
+      if(link.sid != nodeId && link.tid != nodeId) {
+        //link.id = count;
+        //count++;
         newLinks.push(link);
       }
     }
     return newLinks;
   }
-  rebuildNodes(graf) {
-    let newNodes = [];
-    let newLinks = [];
-    var count = 0;
-    for (let node of graf.nodes) {
-      this.fixLinks(newLinks, node.id, count);
-      node.id = count;
-      count++;
-      newNodes.push(node);
-    }
-    graf.links = newLinks;
-    return newNodes
-  }
-  fixLinks(links, oldId, newId) {
-    for(let link in links) {
-      if(link.sid == oldId) link.sid = newId;
-      if(link.tid == oldId) link.tid = newId;
-    }
-  }
-
 
 
   // TODO: This doesn't work and isnt well abstracted, remember the end goal is to have a scripting language for graphs
