@@ -30,7 +30,7 @@ class GrafTools {
     }
     // Remove selected Edges
     for(let edge of selection.selectedEdges) {
-      graf.links.splice(edge.index,1);
+      this.removeLink(graf, edge.id)
       //selection.selectedEdges.delete(edge);
     }
     this.clear_selection(selection);
@@ -41,16 +41,19 @@ class GrafTools {
     return (index > -1);
   }
   removeLink(graf, linkId) {
-    let index = graf.links.findIndex((link) => { return link.id === linkId });
-    if (index > -1)
-      graf.links.splice(index, 1);
-    graf.links = this.rebuildLinks(graf);
+    let newLinks = [];
+    for (let link of graf.links) {
+      if(link.id != linkId) {
+        newLinks.push(link);
+      }
+    }
+    return newLinks;
   }
   removeNode(graf, nodeId) {
-    graf.links = this.rebuildLinks(graf, nodeId);
     let index = graf.nodes.findIndex((node) => { return node.id === nodeId });
     if (index > -1)
-      graf.nodes.splice(index, 1);
+      graf.links = this.rebuildLinks(graf, nodeId);
+      graf.nodes = this.rebuildNodes(graf, nodeId);
   }
   rebuildLinks(graf, nodeId) {
     let newLinks = [];
@@ -64,6 +67,14 @@ class GrafTools {
       }
     }
     return newLinks;
+  }
+  rebuildNodes(graf, nodeId) {
+    let newNodes = [];
+    for(let node of graf.nodes) {
+      if(node.id != nodeId)
+        newNodes.push(node)
+    }
+    return newNodes;
   }
 
 
