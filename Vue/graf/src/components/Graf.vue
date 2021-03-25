@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="dropdown">
-    <button class="dropbtn"><img width = "20" src = "../assets/gear.png" alt= "Stinky car" /></button>
+    <button class="dropbtn"><img width = "20" src = "../assets/gear.png" /></button>
       <div class="dropdown-content">
         <router-link to="/about">About</router-link>
         <a href="#">FAQ</a>
