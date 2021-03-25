@@ -126,21 +126,21 @@
             <img src="../assets/Face2.png" >
           </div>
           <div class="content">
-            <a class="header">James Weir</a>
+            <a class="header">Joseph Casente</a>
             <div class="meta">
-              <span class="date">Project Leader</span>
+              <span class="date">Fell down the stairs</span>
             </div>
             <div class="description">
-              Some info would be here I guess.
+              Info.
             </div>
           </div>
           <div class="extra content">
-            <a href="mailto:weirj@rpi.edu">
+            <a href="mailto:casenj@rpi.edu">
               <i class="at icon"></i>
-              weirj@rpi.edu
+              casenj@rpi.edu
             <br>
             </a>
-            <a href="https://github.com/JPWeir">
+            <a href="https://github.com/jcasente">
               <i class="github square icon"></i>
               GitHub
             </a>
@@ -154,21 +154,21 @@
             <img src="../assets/Face2.png" >
           </div>
           <div class="content">
-            <a class="header">James Weir</a>
+            <a class="header">Micheal Fitzgerald</a>
             <div class="meta">
-              <span class="date">Project Leader</span>
+              <span class="date">Design :(</span>
             </div>
             <div class="description">
-              Some info would be here I guess.
+                Info.
             </div>
           </div>
           <div class="extra content">
-            <a href="mailto:weirj@rpi.edu">
+            <a href="mailto:fitzgm6@rpi.edu">
               <i class="at icon"></i>
-              weirj@rpi.edu
+              fitzgm6@rpi.edu
             <br>
             </a>
-            <a href="https://github.com/JPWeir">
+            <a href="https://github.com/fitzichael">
               <i class="github square icon"></i>
               GitHub
             </a>
@@ -177,63 +177,7 @@
       </div>
     </div>
   
-  <!--
-
-
-      <div class="column">
-        <div class="card">
-          <img src="../assets/Face.png" alt="Max" style="width:50%" />
-          <div class="container">
-            <h2 class="name">Max Herman</h2>
-            <p class="title">Node guy</p>
-            <p class="description">Info</p>
-            <p>hermam3@rpi.edu</p>
-            <p><a class="button" href="mailto:hermam3@rpi.edu">Contact</a></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="card">
-          <img src="../assets/Face.png" alt="Max" style="width:50%" />
-          <div class="container">
-            <h2 class="name">Max Stewart Steele</h2>
-            <p class="title">Made this page</p>
-            <p class="description">More info</p>
-            <p>stewam8@rpi.edu</p>
-            <p><a class="button" href="mailto:stewam8@rpi.edu">Contact</a></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="card">
-          <img src="../assets/Face.png" alt="Micheal" style="width:50%" />
-          <div class="container">
-            <h2 class="name">Michael Fitzgerald</h2>
-            <p class="title">Doesn't like design</p>
-            <p class="description">INFO</p>
-            <p>fitzgm6@rpi.edu</p>
-            <p><a class="button" href="mailto:fitzgm6@rpi.edu">Contact</a></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="card">
-          <img src="../assets/Face.png" alt="Joseph" style="width:50%" />
-          <div class="container">
-            <h2 class="name">Joseph Casente</h2>
-            <p class="title">Fell down the stairs</p>
-            <p class="description">INFO in text form</p>
-            <p>casenj@rpi.edu</p>
-            <p><a class="button" href="mailto:casenj@rpi.edu">Contact</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class = "row">
-      -->
+ 
     <br>
     <br>
     <br>
@@ -252,14 +196,6 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
-}
-
-html {
-  box-sizing: border-box;
-}
 
 .about-section {
   padding: 50px;
@@ -268,11 +204,5 @@ html {
   color: white;
 }
 
-@media screen and (max-width: 650px) {
-  .column {
-    width: 100%;
-    display: block;
-  }
-}
 </style>
 
