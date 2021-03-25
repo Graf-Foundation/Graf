@@ -28,7 +28,7 @@
               weirj@rpi.edu
             <br>
             </a>
-            <a href="https://github.com/JPWeir">
+            <a href="https://github.com/JPWeir" target = "_blank" rel="noopener noreferrer">
               <i class="github square icon"></i>
               GitHub
             </a>
@@ -56,7 +56,7 @@
               desman@rpi.edu
             <br>
             </a>
-            <a href="https://github.com/N-Desmarais">
+            <a href="https://github.com/N-Desmarais" target = "_blank" rel="noopener noreferrer">
               <i class="github square icon"></i>
               GitHub
             </a>
@@ -84,7 +84,7 @@
               hermam3@rpi.edu
             <br>
             </a>
-            <a href="https://github.com/max-herman">
+            <a href="https://github.com/max-herman" target = "_blank" rel="noopener noreferrer">
               <i class="github square icon"></i>
               GitHub
             </a>
@@ -112,7 +112,7 @@
               stewam8@rpi.edu
             <br>
             </a>
-            <a href="https://github.com/maxstewartsteele">
+            <a href="https://github.com/maxstewartsteele" target = "_blank" rel="noopener noreferrer">
               <i class="github square icon"></i>
               GitHub
             </a>
@@ -140,7 +140,7 @@
               casenj@rpi.edu
             <br>
             </a>
-            <a href="https://github.com/jcasente">
+            <a href="https://github.com/jcasente" target = "_blank" rel="noopener noreferrer">
               <i class="github square icon"></i>
               GitHub
             </a>
@@ -168,7 +168,7 @@
               fitzgm6@rpi.edu
             <br>
             </a>
-            <a href="https://github.com/fitzichael">
+            <a href="https://github.com/fitzichael" target = "_blank" rel="noopener noreferrer">
               <i class="github square icon"></i>
               GitHub
             </a>
