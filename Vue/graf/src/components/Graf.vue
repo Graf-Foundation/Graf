@@ -1,5 +1,13 @@
 <template>
   <div>
+    <div v-bind:class="{overlay: menuActive}" v-show="menuActive">
+      <div v-bind:class="{overlaytext: menuActive}">
+        Welcome to Graf!
+      </div>
+      <div v-bind:class="{overlayoptions: menuActive}">
+        <div v-on:click="menuActive = false">Click Here To Get Started</div>
+      </div>
+    </div>
     <div class="dropdown">
     <button class="dropbtn"><img width = "20" src = "../assets/gear.png" alt= "Stinky car" /></button>
       <div class="dropdown-content">
@@ -79,6 +87,7 @@ export default {
         edgelabeler: false,
         grafData: "",
         pathActive: false,
+        menuActive: true,
         selection: {
           selectedCurrent: null, //
           selectedLast: null, //
@@ -162,6 +171,49 @@ export default {
 </script>
 
 <style scoped>
+
+
+.overlay {
+  position: fixed;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 20;
+}
+.overlaytext {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  font-size: 50px;
+  color:white;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%,-50%);
+  cursor: default;
+}
+.overlayoptions {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  font-size: 50px;
+  color:white;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%,-50%);
+}
+.overlayoptions > div {
+  display: inline-block;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.overlayoptions > div:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* Dropdown Button */
 .dropbtn {
   background-color: white;
