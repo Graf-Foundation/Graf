@@ -11,7 +11,147 @@
       <div class="column">
         <div class="ui fluid card">
           <div class="image">
-            <img src="../assets/Face.png" >
+            <img src="../assets/Face2.png" >
+          </div>
+          <div class="content">
+            <a class="header">James Weir</a>
+            <div class="meta">
+              <span class="date">Project Leader</span>
+            </div>
+            <div class="description">
+              Some info would be here I guess.
+            </div>
+          </div>
+          <div class="extra content">
+            <a href="mailto:weirj@rpi.edu">
+              <i class="at icon"></i>
+              weirj@rpi.edu
+            <br>
+            </a>
+            <a href="https://github.com/JPWeir">
+              <i class="github square icon"></i>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="ui fluid card">
+          <div class="image">
+            <img src="../assets/Face2.png" >
+          </div>
+          <div class="content">
+            <a class="header">Nicholas Desmarais</a>
+            <div class="meta">
+              <span class="date">Dad</span>
+            </div>
+            <div class="description">
+              Info.
+            </div>
+          </div>
+          <div class="extra content">
+            <a href="mailto:desman@rpi.edu">
+              <i class="at icon"></i>
+              desman@rpi.edu
+            <br>
+            </a>
+            <a href="https://github.com/N-Desmarais">
+              <i class="github square icon"></i>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="ui fluid card">
+          <div class="image">
+            <img src="../assets/Face2.png" >
+          </div>
+          <div class="content">
+            <a class="header">Max Herman</a>
+            <div class="meta">
+              <span class="date">Node Guy</span>
+            </div>
+            <div class="description">
+              Info.
+            </div>
+          </div>
+          <div class="extra content">
+            <a href="mailto:hermam3@rpi.edu">
+              <i class="at icon"></i>
+              hermam3@rpi.edu
+            <br>
+            </a>
+            <a href="https://github.com/max-herman">
+              <i class="github square icon"></i>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="ui fluid card">
+          <div class="image">
+            <img src="../assets/Face2.png" >
+          </div>
+          <div class="content">
+            <a class="header">Max Stewart Steele</a>
+            <div class="meta">
+              <span class="date">Made this page again</span>
+            </div>
+            <div class="description">
+              Info.
+            </div>
+          </div>
+          <div class="extra content">
+            <a href="mailto:stewam8@rpi.edu">
+              <i class="at icon"></i>
+              stewam8@rpi.edu
+            <br>
+            </a>
+            <a href="https://github.com/maxstewartsteele">
+              <i class="github square icon"></i>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="ui fluid card">
+          <div class="image">
+            <img src="../assets/Face2.png" >
+          </div>
+          <div class="content">
+            <a class="header">James Weir</a>
+            <div class="meta">
+              <span class="date">Project Leader</span>
+            </div>
+            <div class="description">
+              Some info would be here I guess.
+            </div>
+          </div>
+          <div class="extra content">
+            <a href="mailto:weirj@rpi.edu">
+              <i class="at icon"></i>
+              weirj@rpi.edu
+            <br>
+            </a>
+            <a href="https://github.com/JPWeir">
+              <i class="github square icon"></i>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="ui fluid card">
+          <div class="image">
+            <img src="../assets/Face2.png" >
           </div>
           <div class="content">
             <a class="header">James Weir</a>
@@ -38,32 +178,7 @@
     </div>
   
   <!--
-    <div class="row">
-      <div class="column">
-        <div class="card">
-          <img src="../assets/Face.png" alt="James" style="width:50%" />
-          <div class="container">
-            <h2 class="name">James Weir</h2>
-            <p class="title">Project Leader</p>
-            <p class="description">Some info would be here I guess.</p>
-            <p>weirj@rpi.edu</p>
-            <p><a class="button" href="mailto:weirj@rpi.edu">Contact</a></p>
-          </div>
-        </div>
-      </div>
 
-      <div class="column">
-        <div class="card">
-          <img src="../assets/Face.png" alt="Nic" style="width:50%" />
-          <div class="container">
-            <h2 class="name">Nicholas Desmarais</h2>
-            <p class="title">Dad</p>
-            <p class="description">Some info</p>
-            <p>desman@rpi.edu</p>
-            <p><a class="button" href="mailto:desman@rpi.edu">Contact</a></p>
-          </div>
-        </div>
-      </div>
 
       <div class="column">
         <div class="card">
@@ -119,9 +234,12 @@
     </div>
     <div class = "row">
       -->
+    <br>
+    <br>
+    <br>
     <center>
         <div>
-        <router-link to="/">Return to main site</router-link>
+            <router-link to="/">Return to main site --></router-link>
         </div>
     </center>
   </div>
