@@ -60,17 +60,14 @@ export default {
             this.useTool(this.currentTool);
       }.bind(this), false);
       document.addEventListener("keydown", function(event) {
-            switch(event.key) {
-                case "Shift":
-                    this.selection.selectMultiple = true;
+            switch(event.code) {
+                case "Escape":
+                    GrafTools.clear_selection(this.graf, this.selection)
+                    this.selection.selectMultiple = false;
                     break;
                 default:
                     break;
             }
-      }.bind(this), false)
-
-      document.addEventListener("keyup", function() {
-            this.selection.selectMultiple = false;
       }.bind(this), false)
   },
   data () {
@@ -131,17 +128,26 @@ export default {
     // TODO: place these as individual methods in a js file and import them
     // TODO: erase tool
     useTool(tool) {
+        console.log(tool);
         switch(tool){
+          case "Select":
+            this.selection.selectMultiple = true;
+            break;
           case "Node":
+            this.selection.selectMultiple = false;
             GrafTools.new_node(this.graf);
             break;
           case "Edge":
+            this.selection.selectMultiple = false;
             GrafTools.new_edge(this.graf, this.selection);
             break;
           case "Algorithm":
+            this.selection.selectMultiple = false;
             GrafTools.algorithm();
             break;
           case "Erase":
+            this.selection.selectMultiple = false;
+            console.log("erase1");
             GrafTools.erase(this.graf, this.selection);
             break;
           default:
@@ -149,16 +155,18 @@ export default {
         }
     },
     handle_node_click(event,node) {
-      // Only for creation of edges
-      this.selection.selectedLast = this.selection.selectedCurrent;
-      this.selection.selectedCurrent = node;
-      GrafTools.update_selection(node, 'node', this.selection);
+        this.selection.selectedLast = this.selection.selectedCurrent;
+        this.selection.selectedCurrent = node;
+        if(this.currentTool == 'Select')
+            GrafTools.update_selection(this.graf, node, 'node', this.selection);
+        console.log(this.selection.selectedNodes)
     },
     handle_edge_click(event,edge) {
-      GrafTools.update_selection(edge, 'edge', this.selection);
+        if(this.currentTool == 'Select')
+            GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
     },
     change_tool (tool) {
-        GrafTools.clear_selection(this.selection)
+        //GrafTools.clear_selection(this.graf, this.selection)
         this.currentTool = tool;
     },
 

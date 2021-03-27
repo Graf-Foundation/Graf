@@ -1,14 +1,49 @@
 class GrafTools {
   // Tools
-  clear_selection(selection) {
+  clear_selection(graf, selection) {
+    this.color_graf(graf, 'black', 'node', new Set(graf.nodes));
+    this.color_graf(graf, 'black', 'edge', new Set(graf.links));
     selection.selectedNodes = new Set();
     selection.selectedEdges = new Set();
   }
 
-  update_selection(selected, type, selection) {
-    if(!selection.selectMultiple) this.clear_selection(selection);
-    if(type == 'node') selection.selectedNodes.add(selected);
-    if(type == 'edge') selection.selectedEdges.add(selected);
+  update_selection(graf, selected, type, selection) {
+    if(!selection.selectMultiple) {
+        this.clear_selection(graf, selection);
+        return
+    }
+
+    if(type == 'node') {
+        if(graf.nodes[selected.index]._color != 'black' && graf.nodes[selected.index]._color != undefined)
+            this.color_graf(graf, 'black', 'node', new Set([selected]));
+        else 
+            this.color_graf(graf, 'red', 'node', new Set([selected]));
+        selection.selectedNodes.add(selected);
+    }
+    if(type == 'edge') {
+        if(graf.links[selected.index]._color != 'black' && graf.links[selected.index]._color != undefined)
+            this.color_graf(graf, 'black', 'edge', new Set([selected]));
+        else 
+            this.color_graf(graf, 'red', 'edge', new Set([selected]));
+        selection.selectedEdges.add(selected);
+    }
+  }
+
+  color_graf(graf, color, type, selection) {
+    if(type == 'node') {
+        for(var node in graf.nodes) {
+            if(selection.has(graf.nodes[node]))
+                graf.nodes[node]._color = color;
+        }
+        graf.nodes = this.rebuildNodes(graf, undefined);
+    }
+    if(type == 'edge') {
+        for(var edge in graf.links) {
+            if(selection.has(graf.links[edge]))
+                graf.links[edge]._color = color;
+        }
+        graf.links = this.rebuildLinks(graf, undefined);
+    }
   }
 
   new_node(graf) {
@@ -23,6 +58,8 @@ class GrafTools {
     }
   }
   erase(graf, selection) {
+    console.log("erase2");
+    console.log(selection.selectedNodes)
     // Remove selected Nodes and attached Edges
     for(let node of selection.selectedNodes) {
       this.removeNode(graf, node.id)
@@ -33,7 +70,7 @@ class GrafTools {
       this.removeLink(graf, edge.id)
       //selection.selectedEdges.delete(edge);
     }
-    this.clear_selection(selection);
+    this.clear_selection(graf, selection);
   }
 
   nodeExists(nodeId, graf) {
