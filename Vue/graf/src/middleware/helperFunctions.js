@@ -66,7 +66,7 @@ class grafhelpers {
         var link = document.createElement('a');
         document.body.appendChild(link);
         link.href = linkSource;
-        link.download = "graf_data";
+        link.download = "graf_data.graf";
         link.click();
     }
     loadGraf(data) {

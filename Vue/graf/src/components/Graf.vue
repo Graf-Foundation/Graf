@@ -146,13 +146,13 @@ export default {
       // Only for creation of edges
       this.selection.selectedLast = this.selection.selectedCurrent;
       this.selection.selectedCurrent = node;
-      GrafTools.update_selection(node, 'node', this.selection);
+      GrafTools.update_selection(this.graf, node, 'node', this.selection);
     },
     handle_edge_click(event,edge) {
-      GrafTools.update_selection(edge, 'edge', this.selection);
+      GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
     },
     change_tool (tool) {
-        GrafTools.clear_selection(this.selection)
+        GrafTools.clear_selection(this.graf, this.selection)
         this.currentTool = tool;
     },
 
