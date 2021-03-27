@@ -58,19 +58,7 @@ export default {
       document.getElementById("grafNet").addEventListener("click", function() {
             this.useTool(this.currentTool);
       }.bind(this), false);
-      document.addEventListener("keydown", function(event) {
-            switch(event.key) {
-                case "Shift":
-                    this.selection.selectMultiple = true;
-                    break;
-                default:
-                    break;
-            }
-      }.bind(this), false)
 
-      document.addEventListener("keyup", function() {
-            this.selection.selectMultiple = false;
-      }.bind(this), false)
   },
   data () {
     return {
@@ -144,12 +132,16 @@ export default {
     },
     handle_node_click(event,node) {
       // Only for creation of edges
-      this.selection.selectedLast = this.selection.selectedCurrent;
-      this.selection.selectedCurrent = node;
-      GrafTools.update_selection(this.graf, node, 'node', this.selection);
+      if(this.currentTool == 'Select') {
+        this.selection.selectedLast = this.selection.selectedCurrent;
+        this.selection.selectedCurrent = node;
+        GrafTools.update_selection(this.graf, node, 'node', this.selection);
+      }
     },
     handle_edge_click(event,edge) {
-      GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
+      if(this.currentTool == 'Select') {
+        GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
+      }
     },
     change_tool (tool) {
         GrafTools.clear_selection(this.graf, this.selection)
