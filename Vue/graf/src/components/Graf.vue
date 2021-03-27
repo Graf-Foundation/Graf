@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="dropdown">
-    <button class="dropbtn"><img width = "20" src = "../assets/gear.png" alt= "Stinky car" /></button>
+    <button class="dropbtn"><img width = "20" src = "../assets/gear.png" /></button>
       <div class="dropdown-content">
         <router-link to="/about">About</router-link>
         <a href="#">FAQ</a>
@@ -32,6 +32,7 @@
       <div class="graf-labeler">
         <sui-button @click="onSaveImage();" color="green" content="Save Image"/>
         <sui-button @click="onSaveGraf();" color="green" content="Save Graph"/>
+        <sui-button @click="onResetGraf();" color="green" content="Reset Graph"/>
         <br>
         <sui-input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
       </div>
@@ -119,7 +120,12 @@ export default {
     onLoadGraf() {
         var data = grafhelpers.loadGraf(this.grafData);
         this.graf.nodes = data.nodes;
-        this.links = data.links;
+        this.graf.links = data.links;
+        this.grafData = "";
+    },
+    onResetGraf() {
+        this.graf.nodes = [{ id: 0 }];
+        this.graf.links = [];
         this.grafData = "";
     },
     // TODO: place these as individual methods in a js file and import them
