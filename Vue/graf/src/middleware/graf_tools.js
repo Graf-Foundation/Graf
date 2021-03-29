@@ -1,4 +1,7 @@
+import helperAlgs from '../middleware/algorithms.js'
+
 class GrafTools {
+
   // Tools
   clear_selection(graf, selection) {
     this.color_graf(graf, 'black', 'node', new Set(graf.nodes));
@@ -46,6 +49,43 @@ class GrafTools {
     }
   }
 
+  match_ids_to_graf(graf, selection) {
+    var matches = new Set();
+
+    for(var node1 in graf.nodes) {
+        for(var node2 in selection) {
+            if(graf.nodes[node1].id === selection[node2].id)
+                matches.add(graf.nodes[node1]);
+        }
+    }
+
+    return matches;
+  }
+
+  getEdge(graf, selection) {
+      for(var edge in graf.links) {
+          if(graf.links[edge].sid === selection[0].id && graf.links[edge].tid === selection[1].id || graf.links[edge].tid === selection[0].id && graf.links[edge].sid === selection[1].id) {
+              return graf.links[edge];
+          }
+      }
+  }
+
+  update_distances(graf, data, type) {
+    var sep = ":\n ";
+    if(type) {
+        data.forEach(function(value, key) {
+            let index = graf.nodes.findIndex((node) => { return node.id === key });
+            graf.nodes[index].name += sep + (value.length - 1);
+        });
+    } else {
+        for(var node in graf.nodes) {
+            var name = graf.nodes[node].name;
+            if(name.indexOf(sep) > -1)
+                graf.nodes[node].name = name.slice(0, name.lastIndexOf(sep));
+        }
+    }
+  }
+
   new_node(graf) {
     graf.nodes.push({id:graf.nodes.length});
   }
@@ -58,8 +98,6 @@ class GrafTools {
     }
   }
   erase(graf, selection) {
-    console.log("erase2");
-    console.log(selection.selectedNodes)
     // Remove selected Nodes and attached Edges
     for(let node of selection.selectedNodes) {
       this.removeNode(graf, node.id)
@@ -113,40 +151,12 @@ class GrafTools {
     }
     return newNodes;
   }
-
-
-  // TODO: This doesn't work and isnt well abstracted, remember the end goal is to have a scripting language for graphs
-  // This function should realy only take a graph and an algorithm as input, as well as any neceesary info for the algorithm
-
-  algorithm() {
-    // If there is no red path on screen
-    // if(!this.pathActive) {
-    //
-    //     // Get start and end nodes
-    //     var goals = Array.from(this.selectedNodes);
-    //
-    //     // Find bfs path
-    //     var path = helperAlgs.bfs(goals[0] + 1, goals[1] + 1, this.links);
-    //
-    //     // Recolor all edges in path
-    //     for (var i in path) {
-    //         for (var j in this.links) {
-    //             if ((path[i][0] == this.links[j].sid && path[i][1] == this.links[j].tid) || (path[i][1] == this.links[j].sid && path[i][0] == this.links[j].tid)) {
-    //                 this.links[j]._color = 'red';
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     this.selectedNodes = new Set();
-    //     this.pathActive = true;
-    //
-    // // Remove coloring and deactivate path
-    // } else {
-    //     for (j in this.links) {
-    //         this.links[j]._color = 'black';
-    //     }
-    //     this.pathActive = false;
-    // }
+  algorithm(graf, selection) {
+    if(selection.selectedNodes.size === 1) {
+        helperAlgs.searchAlg(graf, selection);
+    } else if(selection.selectedNodes.size === 2) {
+        helperAlgs.shortestPath(graf, selection);
+    }
   }
 }
 

@@ -8,6 +8,11 @@
         <a href="#">Other</a>
       </div>
 		</div>
+    
+    <div>
+        <button @click="onAlgorithmChange('bfs');">BFS search</button>
+        <button @click="onAlgorithmChange('djikstra');">Djikstra</button>
+    </div>
     <center>
 
       <header>
@@ -45,7 +50,7 @@
 import D3Network from 'vue-d3-network';
 import grafhelpers from '../middleware/helperFunctions';
 import Toolbar from '../components/Toolbar.vue'
-import GrafTools from '../graf_tools.js'
+import GrafTools from '../middleware/graf_tools.js'
 //import About from 'About.vue'
 
 
@@ -62,6 +67,7 @@ export default {
       document.addEventListener("keydown", function(event) {
             switch(event.code) {
                 case "Escape":
+                    GrafTools.update_distances(this.graf, null, false);
                     GrafTools.clear_selection(this.graf, this.selection)
                     this.selection.selectMultiple = false;
                     break;
@@ -76,8 +82,8 @@ export default {
         nodelabeler: false,
         edgelabeler: false,
         grafData: "",
-        pathActive: false,
         selection: {
+          selectedAlgorithm: null,
           selectedCurrent: null, //
           selectedLast: null, //
           selectMultiple: true,
@@ -85,10 +91,12 @@ export default {
           selectedEdges: new Set()
         },
         graf: {
-          nodes: [{ id: 0 }],
-          links: [],
+          nodes: [{ id: 0 }, {id: 1}],
+          links: [{sid: 0, tid: 1, _color: 'black'},
+                  {sid: 1, tid: 0, _color: 'black'}],
           nodeSize:20,
-          canvas:false
+          canvas:false,
+          pathActive: false
         }
     };
   },
@@ -112,12 +120,11 @@ export default {
         grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
     },
     onSaveGraf() {
-        grafhelpers.saveGraf(this.graf.nodes, this.links);
+        grafhelpers.saveGraf(this.graf);
     },
     onLoadGraf() {
         var data = grafhelpers.loadGraf(this.grafData);
-        this.graf.nodes = data.nodes;
-        this.graf.links = data.links;
+        this.graf = data;
         this.grafData = "";
     },
     onResetGraf() {
@@ -125,12 +132,15 @@ export default {
         this.graf.links = [];
         this.grafData = "";
     },
+    onAlgorithmChange(alg) {
+        this.selection.selectedAlgorithm = alg;
+    },
     // TODO: place these as individual methods in a js file and import them
     // TODO: erase tool
     useTool(tool) {
-        console.log(tool);
         switch(tool){
           case "Select":
+            this.pathActive
             this.selection.selectMultiple = true;
             break;
           case "Node":
@@ -143,11 +153,10 @@ export default {
             break;
           case "Algorithm":
             this.selection.selectMultiple = false;
-            GrafTools.algorithm();
+            GrafTools.algorithm(this.graf, this.selection);
             break;
           case "Erase":
             this.selection.selectMultiple = false;
-            console.log("erase1");
             GrafTools.erase(this.graf, this.selection);
             break;
           default:
@@ -159,7 +168,6 @@ export default {
         this.selection.selectedCurrent = node;
         if(this.currentTool == 'Select')
             GrafTools.update_selection(this.graf, node, 'node', this.selection);
-        console.log(this.selection.selectedNodes)
     },
     handle_edge_click(event,edge) {
         if(this.currentTool == 'Select')

@@ -4,21 +4,21 @@ class grafhelpers {
     changeGrafColor() {}
     convertGrafData(links) {
         var data = {};
-        for(const edge in links) {
+        for(var edge in links) {
 
             var lNode = links[edge].sid
             var rNode = links[edge].tid
 
             if(!(lNode in data)) {
-                data[lNode] = [rNode];
+                data[lNode] = new Set([rNode]);
             } else {
-                data[lNode].push(rNode);
+                data[lNode].add(rNode);
             }
 
             if(!(rNode in data)) {
-                data[rNode] = [lNode];
+                data[rNode] = new Set([lNode]);
             } else {
-                data[rNode].push(lNode);
+                data[rNode].add(lNode);
             }
         }
 
@@ -54,10 +54,10 @@ class grafhelpers {
         link.download = "test_file";
         link.click();
     }
-    saveGraf(nodes, links) {
+    saveGraf(data) {
 
         // translate json data to base64 encoded text
-        var graf = btoa(JSON.stringify({nodes, links}));
+        var graf = btoa(JSON.stringify(data));
 
         // set data type
         var linkSource = 'data:application/txt;base64,' + graf;
