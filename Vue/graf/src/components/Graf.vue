@@ -75,6 +75,9 @@ export default {
                     break;
             }
       }.bind(this), false)
+			document.addEventListener("keyup", function() {
+			this.selection.selectMultiple = false;
+      }.bind(this), false)
   },
   data () {
     return {
@@ -91,9 +94,8 @@ export default {
           selectedEdges: new Set()
         },
         graf: {
-          nodes: [{ id: 0 }, {id: 1}],
-          links: [{sid: 0, tid: 1, _color: 'black'},
-                  {sid: 1, tid: 0, _color: 'black'}],
+          nodes: [{ id: 0 }],
+          links: [],
           nodeSize:20,
           aggCount: 2,
           canvas:false,
