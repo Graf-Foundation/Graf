@@ -40,7 +40,6 @@ class helperAlgs {
         queue.push(start);
 
         while(queue.length > 0) {
-            console.log(visited);
             var state = queue.shift();
 
             if (!(visited.has(state.node))) {

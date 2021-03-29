@@ -20,7 +20,7 @@
       </header>
 
       <div class="labeler"  v-if="currentTool=='Label'" style="margin: 1em 0em 0em" >
-        <sui-input v-model="selection.selectedCurrent.name" @keypress.stop @keyup.enter="close_labeler"/>
+        <sui-input v-model="selection.selectedCurrent.name" @keypress.stop />
         <br>
         Change Label
       </div>
@@ -153,7 +153,6 @@ export default {
             break;
           case "Edge":
             this.selection.selectMultiple = false;
-            console.log("Edge", this.selection, this.selection.selectedLast, this.selection.selectedCurrent);
             GrafTools.new_edge(this.graf, this.selection);
             break;
           case "Algorithm":
