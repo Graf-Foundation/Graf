@@ -38,9 +38,23 @@
          class = "ui simple dropdown item">
         <i class = 'window minimize icon'></i>
         <br>(E)dge
-        <div class="menu">
-          <a class="item">Undirected</a>
-          <a class="item">Directed</a>
+        <div class="menu">  
+          
+          <a 
+          @click='onEdgeTypeChange("Undirected")'
+          class="item"
+          >
+          Undirected
+          </a>
+
+
+          <a 
+          @click='onEdgeTypeChange("Directed")'
+          class="item"
+          >
+          Directed
+          </a>
+          
         </div>
       </a>
       <a 
@@ -75,13 +89,15 @@
           >BFS search
           </a>
 
+          <a class="item">DFS search</a>
+          
           <a 
           @click="onAlgorithmChange('djikstra')"
           class="item"
-          >DFS search
+          >
+          Djikstra
           </a>
           
-          <a class="item">Djikstra</a>
           <a class="item">Kosaraju</a>
         </div>
       </a>
@@ -150,6 +166,14 @@ export default{
     onToolChange (tool) {
       this.activeTool = tool;
       this.$emit('tool-change', tool);
+    },
+    onAlgorithmChange(alg){
+      console.log(alg);
+      //SOMEONE MAKE THIS DO WHAT IT IS SUPPOSE TO DO 
+    },
+    onEdgeTypeChange(edgeType){
+      console.log(edgeType);
+      //This should do something too
     }
   }
 }
