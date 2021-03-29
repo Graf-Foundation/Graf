@@ -75,6 +75,9 @@ export default {
                     break;
             }
       }.bind(this), false)
+			document.addEventListener("keyup", function() {
+			this.selection.selectMultiple = false;
+      }.bind(this), false)
   },
   data () {
     return {
