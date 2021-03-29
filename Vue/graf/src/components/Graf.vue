@@ -1,17 +1,29 @@
 <template>
   <div>
-    <div class="dropdown">
+    <div class="ui right pointing right floated dropdown icon button">
+      <div class = "ui simple dropdown item">
+        <i class="settings icon"></i>
+        <div class="menu">
+        <router-link to="/about" class = "item">About</router-link>
+        <a class="item">Kosaraju</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="dropdown">
     <button class="dropbtn"><img width = "20" src = "../assets/gear.png" /></button>
       <div class="dropdown-content">
         <router-link to="/about">About</router-link>
         <a href="#">FAQ</a>
         <a href="#">Other</a>
       </div>
-		</div>
+		</div> -->
     
     <div>
+        <!--This should now be implemented as part of TOOLBAR 
         <button @click="onAlgorithmChange('bfs');">BFS search</button>
         <button @click="onAlgorithmChange('djikstra');">Djikstra</button>
+        -->
     </div>
     <center>
 
