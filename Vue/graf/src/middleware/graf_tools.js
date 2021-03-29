@@ -105,8 +105,9 @@ class GrafTools {
       //selection.selectedNodes.delete(node);
     }
     // Remove selected Edges
+    console.log(selection.selectedEdges)
     for(let edge of selection.selectedEdges) {
-      this.removeLink(graf, edge.id)
+      graf.links = this.removeLink(graf, edge.id)
       //selection.selectedEdges.delete(edge);
     }
     this.clear_selection(graf, selection);

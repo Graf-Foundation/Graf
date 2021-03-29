@@ -97,7 +97,7 @@ export default {
           nodes: [{ id: 0 }],
           links: [],
           nodeSize:20,
-          aggCount: 2,
+          aggCount: 1,
           canvas:false,
           pathActive: false
         }
@@ -182,6 +182,7 @@ export default {
     change_tool (tool) {
         //GrafTools.clear_selection(this.graf, this.selection)
         this.currentTool = tool;
+        this.useTool(tool);
     },
 
   }
