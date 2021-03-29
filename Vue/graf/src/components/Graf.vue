@@ -1,14 +1,15 @@
 <template>
   <div>
-    <div class="ui right pointing right floated dropdown icon button">
-      <div class = "ui simple dropdown item">
-        <i class="settings icon"></i>
-        <div class="menu">
-        <router-link to="/about" class = "item">About</router-link>
-        <a class="item">Kosaraju</a>
-        </div>
-      </div>
-    </div>
+    <sui-dropdown class="right floated icon" icon="settings" button pointing="top left">
+      <sui-dropdown-menu>
+        <sui-dropdown-item>
+          <router-link to="/about">About</router-link>
+          </sui-dropdown-item>
+
+        <sui-dropdown-item>Settings</sui-dropdown-item>
+        <sui-dropdown-item>FAQ</sui-dropdown-item>
+      </sui-dropdown-menu>
+    </sui-dropdown>
 
     <!-- <div class="dropdown">
     <button class="dropbtn"><img width = "20" src = "../assets/gear.png" /></button>
@@ -20,10 +21,8 @@
 		</div> -->
     
     <div>
-        <!--This should now be implemented as part of TOOLBAR 
         <button @click="onAlgorithmChange('bfs');">BFS search</button>
         <button @click="onAlgorithmChange('djikstra');">Djikstra</button>
-        -->
     </div>
     <center>
 
@@ -147,6 +146,8 @@ export default {
         this.grafData = "";
     },
     onAlgorithmChange(alg) {
+        console.log("ñññññ");
+        console.log(alg);
         this.selection.selectedAlgorithm = alg;
     },
     // TODO: place these as individual methods in a js file and import them
