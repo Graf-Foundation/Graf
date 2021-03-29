@@ -42,9 +42,11 @@ class GrafTools {
         graf.nodes = this.rebuildNodes(graf, undefined);
     }
     if(type == 'edge') {
+        console.log(selection)
         for(var edge in graf.links) {
-            if(selection.has(graf.links[edge]))
+            if(selection.has(graf.links[edge])) {
                 graf.links[edge]._color = color;
+            }
         }
         graf.links = this.rebuildLinks(graf, undefined);
     }
@@ -61,6 +63,16 @@ class GrafTools {
     }
 
     return matches;
+  }
+  getEdgesFromPath(graf, path) {
+    var edges = new Set();
+    var i = 0, j = 1;
+    while(j < path.length) {
+        edges.add(this.getEdge(graf, [path[i], path[j]]));
+        i += 1;
+        j += 1;
+    }
+    return edges;
   }
 
   getEdge(graf, selection) {

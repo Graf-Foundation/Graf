@@ -11,14 +11,7 @@ class helperAlgs {
         var path = this.algs[selection.selectedAlgorithm](Array.from(selection.selectedNodes), graf.links);
         // Recolor all edges in path
         grafTools.color_graf(graf, 'red', 'node', grafTools.match_ids_to_graf(graf, path));
-        var edges = new Set();
-        var i = 0, j = 1;
-        while(j < path.length) {
-            edges.add(grafTools.getEdge(graf, [path[i], path[j]]));
-            i += 1;
-            j += 1;
-        }
-        grafTools.color_graf(graf, "red", "edge", edges);
+        grafTools.color_graf(graf, "red", "edge", grafTools.getEdgesFromPath(graf, path));
     }
 
     searchAlg(graf, selection) {
