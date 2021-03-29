@@ -8,6 +8,11 @@
         <a href="#">Other</a>
       </div>
 		</div>
+    
+    <div>
+        <button @click="onAlgorithmChange('bfs');">BFS search</button>
+        <button @click="onAlgorithmChange('djikstra');">Djikstra</button>
+    </div>
     <center>
 
       <header>
@@ -45,7 +50,7 @@
 import D3Network from 'vue-d3-network';
 import grafhelpers from '../middleware/helperFunctions';
 import Toolbar from '../components/Toolbar.vue'
-import GrafTools from '../graf_tools.js'
+import GrafTools from '../middleware/graf_tools.js'
 //import About from 'About.vue'
 
 
@@ -60,17 +65,15 @@ export default {
             this.useTool(this.currentTool);
       }.bind(this), false);
       document.addEventListener("keydown", function(event) {
-            switch(event.key) {
-                case "Shift":
-                    this.selection.selectMultiple = true;
+            switch(event.code) {
+                case "Escape":
+                    GrafTools.update_distances(this.graf, null, false);
+                    GrafTools.clear_selection(this.graf, this.selection)
+                    this.selection.selectMultiple = false;
                     break;
                 default:
                     break;
             }
-      }.bind(this), false)
-
-      document.addEventListener("keyup", function() {
-            this.selection.selectMultiple = false;
       }.bind(this), false)
   },
   data () {
@@ -79,8 +82,8 @@ export default {
         nodelabeler: false,
         edgelabeler: false,
         grafData: "",
-        pathActive: false,
         selection: {
+          selectedAlgorithm: null,
           selectedCurrent: null, //
           selectedLast: null, //
           selectMultiple: true,
@@ -88,10 +91,12 @@ export default {
           selectedEdges: new Set()
         },
         graf: {
-          nodes: [{ id: 0 }],
-          links: [],
+          nodes: [{ id: 0 }, {id: 1}],
+          links: [{sid: 0, tid: 1, _color: 'black'},
+                  {sid: 1, tid: 0, _color: 'black'}],
           nodeSize:20,
-          canvas:false
+          canvas:false,
+          pathActive: false
         }
     };
   },
@@ -115,12 +120,11 @@ export default {
         grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
     },
     onSaveGraf() {
-        grafhelpers.saveGraf(this.graf.nodes, this.links);
+        grafhelpers.saveGraf(this.graf);
     },
     onLoadGraf() {
         var data = grafhelpers.loadGraf(this.grafData);
-        this.graf.nodes = data.nodes;
-        this.graf.links = data.links;
+        this.graf = data;
         this.grafData = "";
     },
     onResetGraf() {
@@ -128,20 +132,31 @@ export default {
         this.graf.links = [];
         this.grafData = "";
     },
+    onAlgorithmChange(alg) {
+        this.selection.selectedAlgorithm = alg;
+    },
     // TODO: place these as individual methods in a js file and import them
     // TODO: erase tool
     useTool(tool) {
         switch(tool){
+          case "Select":
+            this.pathActive
+            this.selection.selectMultiple = true;
+            break;
           case "Node":
+            this.selection.selectMultiple = false;
             GrafTools.new_node(this.graf);
             break;
           case "Edge":
+            this.selection.selectMultiple = false;
             GrafTools.new_edge(this.graf, this.selection);
             break;
           case "Algorithm":
-            GrafTools.algorithm();
+            this.selection.selectMultiple = false;
+            GrafTools.algorithm(this.graf, this.selection);
             break;
           case "Erase":
+            this.selection.selectMultiple = false;
             GrafTools.erase(this.graf, this.selection);
             break;
           default:
@@ -149,16 +164,17 @@ export default {
         }
     },
     handle_node_click(event,node) {
-      // Only for creation of edges
-      this.selection.selectedLast = this.selection.selectedCurrent;
-      this.selection.selectedCurrent = node;
-      GrafTools.update_selection(node, 'node', this.selection);
+        this.selection.selectedLast = this.selection.selectedCurrent;
+        this.selection.selectedCurrent = node;
+        if(this.currentTool == 'Select')
+            GrafTools.update_selection(this.graf, node, 'node', this.selection);
     },
     handle_edge_click(event,edge) {
-      GrafTools.update_selection(edge, 'edge', this.selection);
+        if(this.currentTool == 'Select')
+            GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
     },
     change_tool (tool) {
-        GrafTools.clear_selection(this.selection)
+        //GrafTools.clear_selection(this.graf, this.selection)
         this.currentTool = tool;
     },
 
