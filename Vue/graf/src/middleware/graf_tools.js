@@ -8,6 +8,7 @@ class GrafTools {
     this.color_graf(graf, 'black', 'edge', new Set(graf.links));
     selection.selectedNodes = new Set();
     selection.selectedEdges = new Set();
+    selection.selectedCurrent = null;
   }
 
   update_selection(graf, selected, type, selection) {
@@ -87,7 +88,7 @@ class GrafTools {
   }
 
   new_node(graf) {
-    graf.nodes.push({id:graf.nodes.length});
+    graf.nodes.push({id:graf.aggCount});
   }
 
   new_edge(graf, selection) {

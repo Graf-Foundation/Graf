@@ -95,6 +95,7 @@ export default {
           links: [{sid: 0, tid: 1, _color: 'black'},
                   {sid: 1, tid: 0, _color: 'black'}],
           nodeSize:20,
+          aggCount: 2,
           canvas:false,
           pathActive: false
         }
@@ -146,9 +147,11 @@ export default {
           case "Node":
             this.selection.selectMultiple = false;
             GrafTools.new_node(this.graf);
+            this.graf.aggCount += 1;
             break;
           case "Edge":
             this.selection.selectMultiple = false;
+            console.log("Edge", this.selection, this.selection.selectedLast, this.selection.selectedCurrent);
             GrafTools.new_edge(this.graf, this.selection);
             break;
           case "Algorithm":
@@ -158,6 +161,7 @@ export default {
           case "Erase":
             this.selection.selectMultiple = false;
             GrafTools.erase(this.graf, this.selection);
+            GrafTools.clear_selection(this.graf, this.selection)
             break;
           default:
             break;
