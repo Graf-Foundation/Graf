@@ -11,19 +11,12 @@
       </sui-dropdown-menu>
     </sui-dropdown>
 
-    <!-- <div class="dropdown">
-    <button class="dropbtn"><img width = "20" src = "../assets/gear.png" /></button>
-      <div class="dropdown-content">
-        <router-link to="/about">About</router-link>
-        <a href="#">FAQ</a>
-        <a href="#">Other</a>
-      </div>
-		</div> -->
     
-    <div>
+    <!-- <div>
         <button @click="onAlgorithmChange('bfs');">BFS search</button>
         <button @click="onAlgorithmChange('djikstra');">Djikstra</button>
-    </div>
+    </div> -->
+
     <center>
 
       <header>
@@ -145,6 +138,7 @@ export default {
         this.graf.nodes = [{ id: 0 }];
         this.graf.links = [];
         this.grafData = "";
+        this.graf.aggCount = 1;
     },
     onAlgorithmChange(alg) {
         this.selection.selectedAlgorithm = alg;
