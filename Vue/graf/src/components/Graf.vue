@@ -19,11 +19,7 @@
         <a href="#">Other</a>
       </div>
 		</div> -->
-    
-    <div>
-        <button @click="onAlgorithmChange('bfs');">BFS search</button>
-        <button @click="onAlgorithmChange('djikstra');">Djikstra</button>
-    </div>
+
     <center>
 
       <header>
