@@ -27,7 +27,7 @@
     <center>
 
       <header>
-        <Toolbar @tool-change="change_tool"></Toolbar>
+        <Toolbar @tool-change="change_tool" @alg-change="onAlgorithmChange"></Toolbar>
       </header>
 
       <div class="labeler"  v-if="currentTool=='Label'" style="margin: 1em 0em 0em" >
