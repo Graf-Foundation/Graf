@@ -1,13 +1,24 @@
 <template>
   <div>
-    <div class="dropdown">
+    <sui-dropdown class="right floated icon" icon="settings" button pointing="top left">
+      <sui-dropdown-menu>
+        <sui-dropdown-item>
+          <router-link to="/about">About</router-link>
+          </sui-dropdown-item>
+
+        <sui-dropdown-item>Settings</sui-dropdown-item>
+        <sui-dropdown-item>FAQ</sui-dropdown-item>
+      </sui-dropdown-menu>
+    </sui-dropdown>
+
+    <!-- <div class="dropdown">
     <button class="dropbtn"><img width = "20" src = "../assets/gear.png" /></button>
       <div class="dropdown-content">
         <router-link to="/about">About</router-link>
         <a href="#">FAQ</a>
         <a href="#">Other</a>
       </div>
-		</div>
+		</div> -->
     
     <div>
         <button @click="onAlgorithmChange('bfs');">BFS search</button>
@@ -136,6 +147,8 @@ export default {
         this.grafData = "";
     },
     onAlgorithmChange(alg) {
+        console.log("ñññññ");
+        console.log(alg);
         this.selection.selectedAlgorithm = alg;
     },
     // TODO: place these as individual methods in a js file and import them
