@@ -19,7 +19,15 @@
         <a href="#">Other</a>
       </div>
 		</div> -->
-
+    
+    <div>
+        <button @click="onAlgorithmChange('bfs');">BFS search</button>
+        <button @click="onAlgorithmChange('djikstra');">Djikstra</button>
+    </div>
+    <div>
+        <button @click="onUndo();">Undo</button>
+        <button @click="onRedo();">Redo</button>
+    </div>
     <center>
 
       <header>
@@ -58,6 +66,7 @@ import D3Network from 'vue-d3-network';
 import grafhelpers from '../middleware/helperFunctions';
 import Toolbar from '../components/Toolbar.vue'
 import GrafTools from '../middleware/graf_tools.js'
+import helperFunctions from '../middleware/helperFunctions';
 //import About from 'About.vue'
 
 
@@ -92,6 +101,10 @@ export default {
         nodelabeler: false,
         edgelabeler: false,
         grafData: "",
+        history: {
+            previous: [],
+            next: []
+        },
         selection: {
           selectedAlgorithm: null,
           selectedCurrent: null, //
@@ -145,6 +158,12 @@ export default {
     onAlgorithmChange(alg) {
         this.selection.selectedAlgorithm = alg;
     },
+    onUndo() {
+        this.graf = helperFunctions.updateHistory(this.graf, this.history, true);
+    },
+    onRedo() {
+        this.graf = helperFunctions.updateHistory(this.graf, this.history, false);
+    },
     // TODO: place these as individual methods in a js file and import them
     // TODO: erase tool
     useTool(tool) {
@@ -187,6 +206,7 @@ export default {
     },
     change_tool (tool) {
         //GrafTools.clear_selection(this.graf, this.selection)
+        this.history.previous.unshift(JSON.stringify(this.graf));
         this.currentTool = tool;
         this.useTool(tool);
     },
@@ -197,52 +217,5 @@ export default {
 </script>
 
 <style scoped>
-/* Dropdown Button */
-.dropbtn {
-  background-color: white;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  position: fixed;
-  right: 10px;
-  top: 10px;
-  /*right: 100px;*/
-}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: fixed;
-  right: 10px;
-  top: 63px;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #41bb22c0;}
 
 </style>
