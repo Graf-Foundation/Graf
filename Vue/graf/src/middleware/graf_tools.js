@@ -8,6 +8,7 @@ class GrafTools {
     this.color_graf(graf, 'black', 'edge', new Set(graf.links));
     selection.selectedNodes = new Set();
     selection.selectedEdges = new Set();
+    selection.selectedCurrent = null;
   }
 
   update_selection(graf, selected, type, selection) {
@@ -41,9 +42,11 @@ class GrafTools {
         graf.nodes = this.rebuildNodes(graf, undefined);
     }
     if(type == 'edge') {
+        console.log(selection)
         for(var edge in graf.links) {
-            if(selection.has(graf.links[edge]))
+            if(selection.has(graf.links[edge])) {
                 graf.links[edge]._color = color;
+            }
         }
         graf.links = this.rebuildLinks(graf, undefined);
     }
@@ -60,6 +63,16 @@ class GrafTools {
     }
 
     return matches;
+  }
+  getEdgesFromPath(graf, path) {
+    var edges = new Set();
+    var i = 0, j = 1;
+    while(j < path.length) {
+        edges.add(this.getEdge(graf, [path[i], path[j]]));
+        i += 1;
+        j += 1;
+    }
+    return edges;
   }
 
   getEdge(graf, selection) {
@@ -87,7 +100,7 @@ class GrafTools {
   }
 
   new_node(graf) {
-    graf.nodes.push({id:graf.nodes.length});
+    graf.nodes.push({id:graf.aggCount});
   }
 
   new_edge(graf, selection) {
@@ -104,8 +117,9 @@ class GrafTools {
       //selection.selectedNodes.delete(node);
     }
     // Remove selected Edges
+    console.log(selection.selectedEdges)
     for(let edge of selection.selectedEdges) {
-      this.removeLink(graf, edge.id)
+      graf.links = this.removeLink(graf, edge.id)
       //selection.selectedEdges.delete(edge);
     }
     this.clear_selection(graf, selection);

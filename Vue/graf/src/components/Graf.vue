@@ -20,7 +20,7 @@
       </header>
 
       <div class="labeler"  v-if="currentTool=='Label'" style="margin: 1em 0em 0em" >
-        <sui-input v-model="selection.selectedCurrent.name" @keypress.stop @keyup.enter="close_labeler"/>
+        <sui-input v-model="selection.selectedCurrent.name" @keypress.stop />
         <br>
         Change Label
       </div>
@@ -97,6 +97,7 @@ export default {
           nodes: [{ id: 0 }],
           links: [],
           nodeSize:20,
+          aggCount: 1,
           canvas:false,
           pathActive: false
         }
@@ -148,6 +149,7 @@ export default {
           case "Node":
             this.selection.selectMultiple = false;
             GrafTools.new_node(this.graf);
+            this.graf.aggCount += 1;
             break;
           case "Edge":
             this.selection.selectMultiple = false;
@@ -160,6 +162,7 @@ export default {
           case "Erase":
             this.selection.selectMultiple = false;
             GrafTools.erase(this.graf, this.selection);
+            GrafTools.clear_selection(this.graf, this.selection)
             break;
           default:
             break;
@@ -178,6 +181,7 @@ export default {
     change_tool (tool) {
         //GrafTools.clear_selection(this.graf, this.selection)
         this.currentTool = tool;
+        this.useTool(tool);
     },
 
   }
