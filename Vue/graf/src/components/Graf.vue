@@ -106,6 +106,10 @@ export default {
             next: []
         },
         selection: {
+          click: {
+              type: null,
+              value: null
+          },
           selectedAlgorithm: null,
           selectedCurrent: null, //
           selectedLast: null, //
@@ -169,8 +173,8 @@ export default {
     useTool(tool) {
         switch(tool){
           case "Select":
-            this.pathActive
             this.selection.selectMultiple = true;
+            GrafTools.color_selection(this.graf, this.selection.click.value, this.selection.click.type);
             break;
           case "Node":
             this.selection.selectMultiple = false;
@@ -178,31 +182,35 @@ export default {
             this.graf.aggCount += 1;
             break;
           case "Edge":
-            this.selection.selectMultiple = false;
+            this.selection.selectMultiple = true;
             GrafTools.new_edge(this.graf, this.selection);
             break;
           case "Algorithm":
-            this.selection.selectMultiple = false;
+            this.selection.selectMultiple = true;
             GrafTools.algorithm(this.graf, this.selection);
             break;
           case "Erase":
-            this.selection.selectMultiple = false;
+            this.selection.selectMultiple = true;
             GrafTools.erase(this.graf, this.selection);
-            GrafTools.clear_selection(this.graf, this.selection)
             break;
           default:
             break;
         }
+
+        this.selection.click.value = null;
+        this.selection.click.type = null;
     },
     handle_node_click(event,node) {
         this.selection.selectedLast = this.selection.selectedCurrent;
         this.selection.selectedCurrent = node;
-        if(this.currentTool == 'Select')
-            GrafTools.update_selection(this.graf, node, 'node', this.selection);
+        this.selection.click.value = node;
+        this.selection.click.type = "node";
+        GrafTools.update_selection(this.graf, node, 'node', this.selection);
     },
     handle_edge_click(event,edge) {
-        if(this.currentTool == 'Select')
-            GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
+        this.selection.click.value = edge;
+        this.selection.click.type = "edge";
+        GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
     },
     change_tool (tool) {
         //GrafTools.clear_selection(this.graf, this.selection)

@@ -9,6 +9,24 @@ class GrafTools {
     selection.selectedNodes = new Set();
     selection.selectedEdges = new Set();
     selection.selectedCurrent = null;
+    selection.click.value = null;
+    selection.click.type = null;
+  }
+
+  color_selection(graf, selected, type) {
+
+    if(type == 'node') {
+        if(graf.nodes[selected.index]._color != 'black' && graf.nodes[selected.index]._color != undefined)
+            this.color_graf(graf, 'black', 'node', new Set([selected]));
+        else 
+            this.color_graf(graf, 'red', 'node', new Set([selected]));
+    }
+    if(type == 'edge') {
+        if(graf.links[selected.index]._color != 'black' && graf.links[selected.index]._color != undefined)
+            this.color_graf(graf, 'black', 'edge', new Set([selected]));
+        else 
+            this.color_graf(graf, 'red', 'edge', new Set([selected]));
+    }
   }
 
   update_selection(graf, selected, type, selection) {
@@ -18,17 +36,9 @@ class GrafTools {
     }
 
     if(type == 'node') {
-        if(graf.nodes[selected.index]._color != 'black' && graf.nodes[selected.index]._color != undefined)
-            this.color_graf(graf, 'black', 'node', new Set([selected]));
-        else 
-            this.color_graf(graf, 'red', 'node', new Set([selected]));
         selection.selectedNodes.add(selected);
     }
     if(type == 'edge') {
-        if(graf.links[selected.index]._color != 'black' && graf.links[selected.index]._color != undefined)
-            this.color_graf(graf, 'black', 'edge', new Set([selected]));
-        else 
-            this.color_graf(graf, 'red', 'edge', new Set([selected]));
         selection.selectedEdges.add(selected);
     }
   }
@@ -108,6 +118,7 @@ class GrafTools {
       graf.links.push({sid: selection.selectedLast.id, tid: selection.selectedCurrent.id, _color: 'black'});
       selection.selectedLast = null;
       selection.selectedCurrent = null
+      this.clear_selection(graf, selection);
     }
   }
   erase(graf, selection) {
