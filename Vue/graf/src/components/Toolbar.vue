@@ -168,8 +168,7 @@ export default{
       this.$emit('tool-change', tool);
     },
     onAlgorithmChange(alg){
-      console.log(alg);
-      //SOMEONE MAKE THIS DO WHAT IT IS SUPPOSE TO DO 
+      this.$emit('alg-change', alg);
     },
     onEdgeTypeChange(edgeType){
       console.log(edgeType);
