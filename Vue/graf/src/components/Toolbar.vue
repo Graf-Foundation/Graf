@@ -31,7 +31,6 @@
         <br>(N)ode
       </a>
       <a 
-        is="sui-menu-item"
         v-bind:key='"Edge"'
         @click='onToolChange("Edge")'
         :active='activeTool=="Edge"'
