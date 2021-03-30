@@ -1,4 +1,4 @@
-import helperAlgs from '../middleware/algorithms.js'
+import pathTools from '../middleware/path_tools'
 
 class GrafTools {
 
@@ -167,9 +167,9 @@ class GrafTools {
   }
   algorithm(graf, selection) {
     if(selection.selectedNodes.size === 1) {
-        helperAlgs.searchAlg(graf, selection);
+        pathTools.searchAlg(graf, selection);
     } else if(selection.selectedNodes.size === 2) {
-        helperAlgs.shortestPath(graf, selection);
+        pathTools.shortestPath(graf, selection);
     }
   }
 }

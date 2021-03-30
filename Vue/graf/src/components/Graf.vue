@@ -147,8 +147,6 @@ export default {
         this.grafData = "";
     },
     onAlgorithmChange(alg) {
-        console.log("ñññññ");
-        console.log(alg);
         this.selection.selectedAlgorithm = alg;
     },
     // TODO: place these as individual methods in a js file and import them
