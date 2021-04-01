@@ -56,9 +56,9 @@
         <br>
         <sui-input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
       </div>
+    <Help></Help>
 
     </center>
-    <Help></Help>
   </div>
 </template>
 

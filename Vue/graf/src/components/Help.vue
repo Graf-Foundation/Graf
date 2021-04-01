@@ -1,6 +1,6 @@
 <template>
   <div>
-    <sui-button @click='toggle' class="right floated icon" icon="help" pointing="bottom left"></sui-button>
+    <sui-button @click='toggle' class="right floated icon" icon="help"></sui-button>
     <sui-modal v-model='open'>
       <sui-modal-header>Welcome to Graf!</sui-modal-header>
       <sui-modal-content>
