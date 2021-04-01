@@ -1,29 +1,41 @@
 <template>
   <div>
-    <div v-bind:class="{overlay: menuActive}" v-show="menuActive">
-      <div v-bind:class="{overlaytext: menuActive}">
-        Welcome to Graf!
-      </div>
-      <div v-bind:class="{overlayoptions: menuActive}">
-        <div v-on:click="menuActive = false">Click Here To Get Started</div>
-      </div>
-    </div>
-    <div class="dropdown">
-    <button class="dropbtn"><img width = "20" src = "../assets/gear.png" alt= "Stinky car" /></button>
+    <sui-dropdown class="right floated icon" icon="settings" button pointing="top left">
+      <sui-dropdown-menu>
+        <sui-dropdown-item>
+          <router-link to="/about">About</router-link>
+          </sui-dropdown-item>
+
+        <sui-dropdown-item>Settings</sui-dropdown-item>
+        <sui-dropdown-item>FAQ</sui-dropdown-item>
+      </sui-dropdown-menu>
+    </sui-dropdown>
+
+    <!-- <div class="dropdown">
+    <button class="dropbtn"><img width = "20" src = "../assets/gear.png" /></button>
       <div class="dropdown-content">
         <router-link to="/about">About</router-link>
         <a href="#">FAQ</a>
         <a href="#">Other</a>
       </div>
-		</div>
+		</div> -->
+    
+    <div>
+        <button @click="onAlgorithmChange('bfs');">BFS search</button>
+        <button @click="onAlgorithmChange('djikstra');">Djikstra</button>
+    </div>
+    <div>
+        <button @click="onUndo();">Undo</button>
+        <button @click="onRedo();">Redo</button>
+    </div>
     <center>
 
       <header>
-        <Toolbar @tool-change="change_tool"></Toolbar>
+        <Toolbar @tool-change="change_tool" @alg-change="onAlgorithmChange"></Toolbar>
       </header>
 
       <div class="labeler"  v-if="currentTool=='Label'" style="margin: 1em 0em 0em" >
-        <sui-input v-model="selection.selectedCurrent.name" @keypress.stop @keyup.enter="close_labeler"/>
+        <sui-input v-model="selection.selectedCurrent.name" @keypress.stop />
         <br>
         Change Label
       </div>
@@ -40,6 +52,7 @@
       <div class="graf-labeler">
         <sui-button @click="onSaveImage();" color="green" content="Save Image"/>
         <sui-button @click="onSaveGraf();" color="green" content="Save Graph"/>
+        <sui-button @click="onResetGraf();" color="green" content="Reset Graph"/>
         <br>
         <sui-input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
       </div>
@@ -52,7 +65,8 @@
 import D3Network from 'vue-d3-network';
 import grafhelpers from '../middleware/helperFunctions';
 import Toolbar from '../components/Toolbar.vue'
-import GrafTools from '../graf_tools.js'
+import GrafTools from '../middleware/graf_tools.js'
+import helperFunctions from '../middleware/helperFunctions';
 //import About from 'About.vue'
 
 
@@ -67,17 +81,18 @@ export default {
             this.useTool(this.currentTool);
       }.bind(this), false);
       document.addEventListener("keydown", function(event) {
-            switch(event.key) {
-                case "Shift":
-                    this.selection.selectMultiple = true;
+            switch(event.code) {
+                case "Escape":
+                    GrafTools.update_distances(this.graf, null, false);
+                    GrafTools.clear_selection(this.graf, this.selection)
+                    this.selection.selectMultiple = false;
                     break;
                 default:
                     break;
             }
       }.bind(this), false)
-
-      document.addEventListener("keyup", function() {
-            this.selection.selectMultiple = false;
+			document.addEventListener("keyup", function() {
+			this.selection.selectMultiple = false;
       }.bind(this), false)
   },
   data () {
@@ -86,9 +101,12 @@ export default {
         nodelabeler: false,
         edgelabeler: false,
         grafData: "",
-        pathActive: false,
-        menuActive: true,
+        history: {
+            previous: [],
+            next: []
+        },
         selection: {
+          selectedAlgorithm: null,
           selectedCurrent: null, //
           selectedLast: null, //
           selectMultiple: true,
@@ -99,7 +117,9 @@ export default {
           nodes: [{ id: 0 }],
           links: [],
           nodeSize:20,
-          canvas:false
+          aggCount: 1,
+          canvas:false,
+          pathActive: false
         }
     };
   },
@@ -123,46 +143,72 @@ export default {
         grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
     },
     onSaveGraf() {
-        grafhelpers.saveGraf(this.graf.nodes, this.links);
+        grafhelpers.saveGraf(this.graf);
     },
     onLoadGraf() {
         var data = grafhelpers.loadGraf(this.grafData);
-        this.graf.nodes = data.nodes;
-        this.links = data.links;
+        this.graf = data;
         this.grafData = "";
+    },
+    onResetGraf() {
+        this.graf.nodes = [{ id: 0 }];
+        this.graf.links = [];
+        this.grafData = "";
+    },
+    onAlgorithmChange(alg) {
+        this.selection.selectedAlgorithm = alg;
+    },
+    onUndo() {
+        this.graf = helperFunctions.updateHistory(this.graf, this.history, true);
+    },
+    onRedo() {
+        this.graf = helperFunctions.updateHistory(this.graf, this.history, false);
     },
     // TODO: place these as individual methods in a js file and import them
     // TODO: erase tool
     useTool(tool) {
         switch(tool){
+          case "Select":
+            this.pathActive
+            this.selection.selectMultiple = true;
+            break;
           case "Node":
+            this.selection.selectMultiple = false;
             GrafTools.new_node(this.graf);
+            this.graf.aggCount += 1;
             break;
           case "Edge":
+            this.selection.selectMultiple = false;
             GrafTools.new_edge(this.graf, this.selection);
             break;
           case "Algorithm":
-            GrafTools.algorithm();
+            this.selection.selectMultiple = false;
+            GrafTools.algorithm(this.graf, this.selection);
             break;
           case "Erase":
+            this.selection.selectMultiple = false;
             GrafTools.erase(this.graf, this.selection);
+            GrafTools.clear_selection(this.graf, this.selection)
             break;
           default:
             break;
         }
     },
     handle_node_click(event,node) {
-      // Only for creation of edges
-      this.selection.selectedLast = this.selection.selectedCurrent;
-      this.selection.selectedCurrent = node;
-      GrafTools.update_selection(node, 'node', this.selection);
+        this.selection.selectedLast = this.selection.selectedCurrent;
+        this.selection.selectedCurrent = node;
+        if(this.currentTool == 'Select')
+            GrafTools.update_selection(this.graf, node, 'node', this.selection);
     },
     handle_edge_click(event,edge) {
-      GrafTools.update_selection(edge, 'edge', this.selection);
+        if(this.currentTool == 'Select')
+            GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
     },
     change_tool (tool) {
-        GrafTools.clear_selection(this.selection)
+        //GrafTools.clear_selection(this.graf, this.selection)
+        this.history.previous.unshift(JSON.stringify(this.graf));
         this.currentTool = tool;
+        this.useTool(tool);
     },
 
   }
@@ -171,95 +217,5 @@ export default {
 </script>
 
 <style scoped>
-
-
-.overlay {
-  position: fixed;
-  display: block;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5);
-  z-index: 20;
-}
-.overlaytext {
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  font-size: 50px;
-  color:white;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%,-50%);
-  cursor: default;
-}
-.overlayoptions {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  font-size: 50px;
-  color:white;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%,-50%);
-}
-.overlayoptions > div {
-  display: inline-block;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-.overlayoptions > div:hover {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-/* Dropdown Button */
-.dropbtn {
-  background-color: white;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  position: fixed;
-  right: 10px;
-  top: 10px;
-  /*right: 100px;*/
-}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: fixed;
-  right: 10px;
-  top: 63px;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #41bb22c0;}
 
 </style>
