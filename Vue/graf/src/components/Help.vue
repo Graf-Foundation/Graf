@@ -4,8 +4,16 @@
     <sui-modal v-model='open'>
       <sui-modal-header>Welcome to Graf!</sui-modal-header>
       <sui-modal-content>
+        <sui-header>Quick Start Guide</sui-header>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur consectetur dui leo, in auctor leo molestie at. Quisque eu magna nec felis interdum pretium et vel arcu. Aenean sit amet est volutpat, tristique elit quis, imperdiet urna. Morbi eget hendrerit diam, eu sollicitudin tellus. Suspendisse ipsum dolor, posuere vel faucibus ut, vestibulum vel dolor. Curabitur a faucibus arcu. Proin tincidunt metus dapibus scelerisque posuere. Curabitur non bibendum arcu, in luctus ligula. Phasellus consectetur interdum nibh eget aliquam. Nullam a lacus commodo elit facilisis pellentesque.
+          At the top of the page you'll see the toolbar. 
+          The default tool is the Select tool, which can be used to select the nodes and edges on the graph. 
+          Use the Node tool to add nodes to the graph, and the Edge tool to connect two Nodes.
+          The label tool can be used to label nodes and edges.
+          The erase tool is used to erase nodes and edges.
+          The algorithm tool is used to apply algorithms to the graph, such as Dijkstra's algorithm.
+          The edge tool can also be used to create directed or undirected edges.
+          Happy Grafing!
         </p>
       </sui-modal-content>
       <sui-modal-actions>
