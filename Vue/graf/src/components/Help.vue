@@ -5,6 +5,7 @@
       <sui-modal-header>Welcome to Graf!</sui-modal-header>
       <sui-modal-content>
         <sui-header>Quick Start Guide</sui-header>
+        <img src="../assets/toolbar.png"/>
         <p>
           At the top of the page you'll see the toolbar. 
           The default tool is the Select tool, which can be used to select the nodes and edges on the graph. 
