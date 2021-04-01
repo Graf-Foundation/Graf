@@ -58,6 +58,7 @@
       </div>
 
     </center>
+    <Help></Help>
   </div>
 </template>
 
@@ -67,6 +68,7 @@ import grafhelpers from '../middleware/helperFunctions';
 import Toolbar from '../components/Toolbar.vue'
 import GrafTools from '../middleware/graf_tools.js'
 import helperFunctions from '../middleware/helperFunctions';
+import Help from "../components/Help.vue";
 //import About from 'About.vue'
 
 
@@ -74,7 +76,8 @@ export default {
   name: 'Graf',
   components: {
     D3Network,
-    Toolbar
+    Toolbar,
+    Help
   },
   mounted () {
       document.getElementById("grafNet").addEventListener("click", function() {
