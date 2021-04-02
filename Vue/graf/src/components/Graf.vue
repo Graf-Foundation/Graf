@@ -12,19 +12,22 @@
     </sui-dropdown>
 
     
-    <div>
+    <!-- <div>
         <button @click="onAlgorithmChange('bfs');">BFS search</button>
         <button @click="onAlgorithmChange('djikstra');">Djikstra</button>
-    </div>
-    <div>
+    </div> -->
+    <!-- <div>
         <button @click="onUndo();">Undo</button>
         <button @click="onRedo();">Redo</button>
-    </div>
+    </div> -->
     <center>
 
       <header>
         <Toolbar @tool-change="change_tool" @alg-change="onAlgorithmChange"></Toolbar>
+        <sui-button @click="onUndo();" icon="undo" />
+        <sui-button @click="onRedo();" icon="redo" />
       </header>
+
 
       <div class="labeler"  v-if="currentTool=='Label'" style="margin: 1em 0em 0em" >
         <sui-input v-model="selection.selectedCurrent.name" @keypress.stop />
