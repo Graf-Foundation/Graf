@@ -69,6 +69,22 @@ class grafhelpers {
         link.download = "graf_data";
         link.click();
     }
+    updateHistory(graf, history, type) {
+        var data = JSON.stringify(graf);
+        // if type, return first from previous, append current to next
+        if(type) {
+            if(history.previous.length === 0)
+                return graf;
+            history.next.unshift(data);
+            return JSON.parse(history.previous.shift());
+        // return first from next, append current to previous
+        } else {
+            if(history.next.length === 0)
+                return graf;
+            history.previous.unshift(data);
+            return JSON.parse(history.next.shift());
+        }
+    }
     loadGraf(data) {
         return JSON.parse(data);
     }
