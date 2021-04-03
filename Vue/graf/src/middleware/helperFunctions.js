@@ -1,7 +1,21 @@
 
 class grafhelpers {
 
-    changeGrafColor() {}
+    color_graf(graf, color, type, selection) {
+      if(type == 'node') {
+          for(var node in graf.nodes) {
+              if(selection.has(graf.nodes[node]))
+                  graf.nodes[node]._color = color;
+          }
+      }
+      if(type == 'edge') {
+          for(var edge in graf.links) {
+              if(selection.has(graf.links[edge])) {
+                  graf.links[edge]._color = color;
+              }
+          }
+      }
+    }
     convertGrafData(links) {
         var data = {};
         for(var edge in links) {

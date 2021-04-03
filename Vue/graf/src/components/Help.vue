@@ -33,7 +33,6 @@ export default {
   },
   created: function () {
     this.$http.get('static/html/Help.html').then(function(response){
-      console.log(response);
       this.helpContent = response.data;
     });
   }

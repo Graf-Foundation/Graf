@@ -51,7 +51,7 @@
 import D3Network from 'vue-d3-network';
 import grafhelpers from '../middleware/helperFunctions';
 import Toolbar from '../components/Toolbar.vue'
-import GrafTools from '../middleware/graf_tools.js'
+import GrafTools from '../middleware/grafTools.js'
 import helperFunctions from '../middleware/helperFunctions';
 import Help from "../components/Help.vue";
 //import About from 'About.vue'
@@ -68,27 +68,15 @@ export default {
       document.getElementById("grafNet").addEventListener("click", function() {
             this.useTool(this.currentTool);
       }.bind(this), false);
-      document.addEventListener("keydown", function(event) {
-            switch(event.code) {
-                case "Escape":
-                    GrafTools.update_distances(this.graf, null, false);
-                    GrafTools.clear_selection(this.graf, this.selection)
-                    this.selection.selectMultiple = false;
-                    break;
-                default:
-                    break;
-            }
-      }.bind(this), false)
-			document.addEventListener("keyup", function() {
-			this.selection.selectMultiple = false;
-    }.bind(this), false);
-    window.addEventListener('resize', () => {
-      this.options.size.w = window.innerWidth;
-      this.options.size.h = window.innerHeight - 200;
-      // Hacky BS to force update of the d3 network, should fork and workaround
-      this.graf.nodes.push({id: -1});
-      this.graf.nodes.splice(this.graf.nodes.length-1,1)
-    });
+      document.addEventListener("keydown", this.keydown_listener, false)
+			document.addEventListener("keyup", this.keyup_listener, false);
+      window.addEventListener('resize', () => {
+        this.options.size.w = window.innerWidth - 100;
+        this.options.size.h = window.innerHeight - 210;
+        // Hacky BS to force update of the d3 network, should fork and workaround
+        this.graf.nodes.push({id: -1});
+        this.graf.nodes.splice(this.graf.nodes.length-1,1)
+      });
   },
   data () {
     return {
@@ -115,7 +103,7 @@ export default {
         },
         options: {
             force: 3000,
-            size:{ w: window.innerWidth, h: window.innerHeight - 200},
+            size:{ w: window.innerWidth - 100, h: window.innerHeight - 210},
             resizeListener: true,
             nodeSize: 20,
             nodeLabels: true,
@@ -186,19 +174,35 @@ export default {
         this.selection.selectedCurrent = node;
         this.selection.selectedLabel = node;
         if(this.currentTool == 'Select')
-            GrafTools.update_selection(this.graf, node, 'node', this.selection);
+          GrafTools.update_selection(this.graf, node, 'node', this.selection);
     },
     handle_edge_click(event,edge) {
         this.selection.selectedLabel = edge;
         if(this.currentTool == 'Select')
-            GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
+          GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
     },
     change_tool (tool) {
-        //GrafTools.clear_selection(this.graf, this.selection)
         this.history.previous.unshift(JSON.stringify(this.graf));
         this.currentTool = tool;
         this.useTool(tool);
     },
+    keydown_listener(event) {
+      switch(event.code) {
+        case "Escape":
+          GrafTools.update_distances(this.graf, null, false);
+          GrafTools.clear_selection(this.graf, this.selection)
+          this.selection.selectMultiple = false;
+          break;
+        default:
+          break;
+      }
+    },
+    keyup_listener(event) {
+      if(event.ctrlKey && event.code === 'KeyZ')
+        this.onUndo();
+      if(event.ctrlKey && event.code === 'KeyY')
+        this.onRedo();
+    }
 
   }
 }
