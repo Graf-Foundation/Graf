@@ -13,14 +13,9 @@ class PathTools {
     }
 
     searchAlg(graf, selection) {
-        if(!graf.pathActive) {
-            var data = PathTools.algs[selection.selectedAlgorithm](Array.from(selection.selectedNodes), graf.links);
-            this.update_distances(graf, data, true);
-            graf.pathActive = true;
-        } else {
-            this.update_distances(graf, data, false);
-            graf.pathActive = false;
-        }
+        this.update_distances(graf, data, false);
+        var data = PathTools.algs[selection.selectedAlgorithm](Array.from(selection.selectedNodes), graf.links);
+        this.update_distances(graf, data, true);
     }
 
     match_ids_to_graf(graf, selection) {

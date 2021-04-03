@@ -92,7 +92,6 @@ export default {
           nodes: [{ id: 0 }],
           links: [],
           aggCount: 1,
-          pathActive: false
         },
         options: {
             force: 3000,
