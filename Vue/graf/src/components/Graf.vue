@@ -22,7 +22,6 @@
             <router-link to="/about">About</router-link>
           </sui-dropdown-item>
 
-          <sui-dropdown-item>Settings</sui-dropdown-item>
           <sui-dropdown-item> 
             <router-link to="/help">Help</router-link>
           </sui-dropdown-item>
