@@ -97,7 +97,7 @@ export default {
         },
         options: {
             force: 3000,
-            size:{ w: window.innerWidth - 200, h: window.innerHeight - 210},
+            size:{ w: Math.max(1020,window.innerWidth - 200), h: Math.max(720,window.innerHeight - 210)},
             resizeListener: true,
             nodeSize: 20,
             nodeLabels: true,
@@ -153,6 +153,9 @@ export default {
         case "Erase":
           GrafTools.erase(this.graf, this.selection);
           break;
+        case "Contract":
+          GrafTools.contract(this.graf, this.selection);
+          break;
         default:
           break;
       }
@@ -195,8 +198,8 @@ export default {
         this.onRedo();
     },
     resize_handler() {
-      this.options.size.w = window.innerWidth - 100;
-      this.options.size.h = window.innerHeight - 210;
+      this.options.size.w = Math.max(1020,window.innerWidth - 200);
+      this.options.size.h = Math.max(720,window.innerHeight - 210);
       // Hacky BS to force update of the d3 network, should fork and workaround
       this.graf.nodes.push({id: -1});
       this.graf.nodes.splice(this.graf.nodes.length-1,1)
@@ -228,9 +231,10 @@ export default {
 .fixedBC{
   position:fixed;
   width: 360px;
-  height: 110px;
+  height: 80px;
   bottom:0;
   right:50%;
   margin-right: -180px;
+  margin-bottom: auto;
 }
 </style>

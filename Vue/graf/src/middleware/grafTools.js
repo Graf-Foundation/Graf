@@ -86,6 +86,61 @@ class GrafTools {
         PathTools.shortestPath(graf, selection);
     }
   }
+
+  contract(graf, selection) {
+    var nodeSize = selection.selectedNodes.size;
+    var edgeSize = selection.selectedEdges.size;
+    console.log(nodeSize,edgeSize);
+    if(nodeSize == 1 && edgeSize == 0) {
+      for(let node of selection.selectedNodes) {
+        var id = node.id;
+        this.contractNode(graf, id);
+      }
+    }
+    if(nodeSize === 0 && edgeSize === 1) {
+      for(let edge of selection.selectedEdges) {
+        var source = edge.sid;
+        var target = edge.tid;
+        this.contractEdge(graf, source, target);
+      }
+    }
+  }
+
+  contractNode(graf, nodeId) {
+    var children = this.getChildren(graf, nodeId);
+    for(let child of children) {
+      var subChildren = this.getChildren(graf, child);
+      for(let subChild of subChildren) {
+        graf.links.push({sid: nodeId, tid: subChild, _color: 'black'});
+      }
+    }
+    for(let child of children) {
+      if(child != nodeId)
+        this.removeNode(graf, child);
+    }
+  }
+
+  contractEdge(graf, sourceId, targetId) {
+    var targetChildren =  this.getChildren(graf, targetId);
+    for(let child of targetChildren) {
+      graf.links.push({sid: sourceId, tid: child, _color: 'black'});
+    }
+    this.removeNode(graf, targetId);
+  }
+
+  //Assumes bidirectionality
+  getChildren(graf, nodeId) {
+    let childIds = []
+    for(let link of graf.links) {
+      if(link.sid == nodeId) {
+        childIds.push(link.tid);
+      }
+      if(link.tid == nodeId) {
+        childIds.push(link.sid);
+      }
+    }
+    return childIds;
+  }
 }
 
 export default new GrafTools();

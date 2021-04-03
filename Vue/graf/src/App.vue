@@ -20,9 +20,10 @@ export default {
   padding: 10;
 }
 #app {
-  overflow-x: auto;
   width: 100%;
   height: 100%;
   background:  #ffffff;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 </style>
