@@ -15,6 +15,9 @@ class grafhelpers {
               }
           }
       }
+      // Hacky BS to force update of the d3 network, should fork and workaround
+      graf.nodes.push({id: -1});
+      graf.nodes.splice(graf.nodes.length-1,1)
     }
     convertGrafData(links) {
         var data = {};
