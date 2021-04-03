@@ -141,7 +141,6 @@ export default {
           break;
         case "Node":
           GrafTools.new_node(this.graf);
-          this.graf.aggCount += 1;
           break;
         case "Edge":
           GrafTools.new_edge(this.graf, this.selection);

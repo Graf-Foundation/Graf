@@ -33,6 +33,7 @@ class GrafTools {
 
   new_node(graf) {
     graf.nodes.push({id:graf.aggCount});
+    graf.aggCount += 1;
   }
 
   new_edge(graf, selection) {
