@@ -3,7 +3,7 @@ import helperAlgs from '../middleware/algorithms.js'
 
 class PathTools {
 
-    static algs = {"bfs": helperAlgs.bfs, "djikstra": helperAlgs.djikstra};
+    static algs = {"bfs": helperAlgs.bfs, "dijkstra": helperAlgs.djikstra};
 
     shortestPath(graf, selection) {
         var path = PathTools.algs[selection.selectedAlgorithm](Array.from(selection.selectedNodes), graf.links);
