@@ -20,7 +20,7 @@ export default {
   padding: 10;
 }
 #app {
-  overflow-x: scroll;
+  overflow-x: auto;
   width: 100%;
   height: 100%;
   background:  #ffffff;

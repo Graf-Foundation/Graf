@@ -1,5 +1,5 @@
 <template>
-  <div id="experiemntal">
+  <div>
     <sui-menu style="width: max-content;">
       <sui-menu-item
         v-for="tool in tools"
@@ -56,9 +56,6 @@ export default{
         case "c":
           this.onToolChange("Contract");
           break;
-        case "v":
-          this.changeVertical();
-          break;
         default:
           break;
       }
@@ -67,7 +64,6 @@ export default{
   data:
   function() {
     return {
-      isVertical: false,
       activeTool: "Select",
       activeAlg: "bfs",
       tools: [

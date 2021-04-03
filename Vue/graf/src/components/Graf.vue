@@ -1,31 +1,32 @@
 <template>
-  <div>
-    <sui-dropdown class="right floated icon" icon="settings" button pointing="top left">
-      <sui-dropdown-menu>
-        <sui-dropdown-item>
-          <router-link to="/about">About</router-link>
-          </sui-dropdown-item>
-
-        <sui-dropdown-item>Settings</sui-dropdown-item>
-        <sui-dropdown-item>FAQ</sui-dropdown-item>
-      </sui-dropdown-menu>
-    </sui-dropdown>
-
+  <div class="graf">
     <center>
-      <header>
-
+      <header class="fixedTC">
         <Toolbar @tool-change="change_tool" @alg-change="onAlgorithmChange"></Toolbar>
+
         <sui-button @click="onUndo();" icon="undo" />
         <sui-button @click="onRedo();" icon="redo" />
+
+        <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
+         style="margin: 1em 0em 0em"
+        >
+          <sui-input v-model="selection.selectedLabel.name" @keypress.stop />
+          <br>
+          Change Label
+        </div>
       </header>
 
-      <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
-       style="margin: 1em 0em 0em"
-      >
-        <sui-input v-model="selection.selectedLabel.name" @keypress.stop />
-        <br>
-        Change Label
-      </div>
+      <sui-dropdown class="fixedTR icon" icon="settings" button pointing="top right" floating>
+        <sui-dropdown-menu>
+          <sui-dropdown-item>
+            <router-link to="/about">About</router-link>
+            </sui-dropdown-item>
+
+          <sui-dropdown-item>Settings</sui-dropdown-item>
+          <sui-dropdown-item>FAQ</sui-dropdown-item>
+        </sui-dropdown-menu>
+      </sui-dropdown>
+
 
       <D3Network
         id="grafNet"
@@ -36,14 +37,15 @@
         @link-click="handle_edge_click"
       />
 
-      <div class="graf-labeler">
+      <div class="fixedBC graf-labeler">
         <sui-button @click="onSaveImage();" color="green" content="Save Image"/>
         <sui-button @click="onSaveGraf();" color="green" content="Save Graph"/>
         <sui-button @click="onResetGraf();" color="green" content="Reset Graph"/>
         <br>
         <sui-input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
       </div>
-    <Help></Help>
+
+      <Help class="fixedBR"/>
 
     </center>
   </div>
@@ -95,7 +97,7 @@ export default {
         },
         options: {
             force: 3000,
-            size:{ w: window.innerWidth - 100, h: window.innerHeight - 210},
+            size:{ w: window.innerWidth - 200, h: window.innerHeight - 210},
             resizeListener: true,
             nodeSize: 20,
             nodeLabels: true,
@@ -205,5 +207,30 @@ export default {
 </script>
 
 <style scoped>
-
+.fixedTR{
+  position:fixed;
+  top:0;
+  right: 0;
+}
+.fixedBR{
+  position:fixed;
+  bottom: 0;
+  right: 0;
+}
+.fixedTC{
+  position:fixed;
+  width: 800px;
+  height: 80px;
+  top:0;
+  right:50%;
+  margin-right: -400px;
+}
+.fixedBC{
+  position:fixed;
+  width: 360px;
+  height: 110px;
+  bottom:0;
+  right:50%;
+  margin-right: -180px;
+}
 </style>
