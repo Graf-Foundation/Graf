@@ -19,7 +19,9 @@
         <sui-button @click="onRedo();" icon="redo" />
       </header>
 
-      <div class="labeler"  v-if="currentTool=='Label'" style="margin: 1em 0em 0em" >
+      <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
+       style="margin: 1em 0em 0em"
+      >
         <sui-input v-model="selection.selectedLabel.name" @keypress.stop />
         <br>
         Change Label
@@ -65,18 +67,8 @@ export default {
     Help
   },
   mounted () {
-      document.getElementById("grafNet").addEventListener("click", function() {
-            this.useTool(this.currentTool);
-      }.bind(this), false);
-      document.addEventListener("keydown", this.keydown_listener, false)
-			document.addEventListener("keyup", this.keyup_listener, false);
-      window.addEventListener('resize', () => {
-        this.options.size.w = window.innerWidth - 100;
-        this.options.size.h = window.innerHeight - 210;
-        // Hacky BS to force update of the d3 network, should fork and workaround
-        this.graf.nodes.push({id: -1});
-        this.graf.nodes.splice(this.graf.nodes.length-1,1)
-      });
+			document.addEventListener("keyup", this.keyup_handler, false);
+      window.addEventListener('resize', this.resize_handler, false);
   },
   data () {
     return {
@@ -142,68 +134,72 @@ export default {
         this.graf = helperFunctions.updateHistory(this.graf, this.history, false);
     },
     useTool(tool) {
-        switch(tool){
-          case "Select":
-            this.pathActive
-            this.selection.selectMultiple = true;
-            break;
-          case "Node":
-            this.selection.selectMultiple = false;
-            GrafTools.new_node(this.graf);
-            this.graf.aggCount += 1;
-            break;
-          case "Edge":
-            this.selection.selectMultiple = false;
-            GrafTools.new_edge(this.graf, this.selection);
-            break;
-          case "Algorithm":
-            this.selection.selectMultiple = false;
-            GrafTools.algorithm(this.graf, this.selection);
-            break;
-          case "Erase":
-            this.selection.selectMultiple = false;
-            GrafTools.erase(this.graf, this.selection);
-            GrafTools.clear_selection(this.graf, this.selection)
-            break;
-          default:
-            break;
-        }
+      var oldData = JSON.stringify(this.graf);
+
+      switch(tool){
+        case "Select":
+          break;
+        case "Node":
+          GrafTools.new_node(this.graf);
+          this.graf.aggCount += 1;
+          break;
+        case "Edge":
+          GrafTools.new_edge(this.graf, this.selection);
+          break;
+        case "Algorithm":
+          GrafTools.algorithm(this.graf, this.selection);
+          break;
+        case "Erase":
+          GrafTools.erase(this.graf, this.selection);
+          break;
+        default:
+          break;
+      }
+
+      var newData = JSON.stringify(this.graf);
+      if(oldData != newData) {
+        this.history.previous.unshift(oldData);
+        this.history.next = [];
+      }
     },
     handle_node_click(event,node) {
         this.selection.selectedLast = this.selection.selectedCurrent;
         this.selection.selectedCurrent = node;
         this.selection.selectedLabel = node;
-        if(this.currentTool == 'Select')
-          GrafTools.update_selection(this.graf, node, 'node', this.selection);
+        GrafTools.update_selection(this.graf, node, 'node', this.selection);
+        this.useTool(this.currentTool);
     },
     handle_edge_click(event,edge) {
         this.selection.selectedLabel = edge;
-        if(this.currentTool == 'Select')
-          GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
+        GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
+        this.useTool(this.currentTool);
     },
     change_tool (tool) {
-        this.history.previous.unshift(JSON.stringify(this.graf));
+        if(tool == 'Select') this.selection.selectMultiple = true;
+        else this.selection.selectMultiple = false;
+        this.selection.selectedCurrent = null;
+        this.selection.selectedLast = null;
+        this.selection.selectedLabel = null;
         this.currentTool = tool;
         this.useTool(tool);
     },
-    keydown_listener(event) {
-      switch(event.code) {
-        case "Escape":
-          GrafTools.update_distances(this.graf, null, false);
-          GrafTools.clear_selection(this.graf, this.selection)
-          this.selection.selectMultiple = false;
-          break;
-        default:
-          break;
+    keyup_handler(event) {
+      if(event.cpde == "Escape") {
+        GrafTools.update_distances(this.graf, null, false);
+        GrafTools.clear_selection(this.graf, this.selection)
       }
-    },
-    keyup_listener(event) {
       if(event.ctrlKey && event.code === 'KeyZ')
         this.onUndo();
       if(event.ctrlKey && event.code === 'KeyY')
         this.onRedo();
+    },
+    resize_handler() {
+      this.options.size.w = window.innerWidth - 100;
+      this.options.size.h = window.innerHeight - 210;
+      // Hacky BS to force update of the d3 network, should fork and workaround
+      this.graf.nodes.push({id: -1});
+      this.graf.nodes.splice(this.graf.nodes.length-1,1)
     }
-
   }
 }
 

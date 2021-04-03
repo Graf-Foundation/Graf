@@ -1,4 +1,3 @@
-import grafTools from '../middleware/grafTools.js';
 import helperAlgs from '../middleware/algorithms.js'
 import grafhelpers from '../middleware/helperFunctions';
 
@@ -16,10 +15,10 @@ class PathTools {
     searchAlg(graf, selection) {
         if(!graf.pathActive) {
             var data = PathTools.algs[selection.selectedAlgorithm](Array.from(selection.selectedNodes), graf.links);
-            grafTools.update_distances(graf, data, true);
+            this.update_distances(graf, data, true);
             graf.pathActive = true;
         } else {
-            grafTools.update_distances(graf, data, false);
+            this.update_distances(graf, data, false);
             graf.pathActive = false;
         }
     }

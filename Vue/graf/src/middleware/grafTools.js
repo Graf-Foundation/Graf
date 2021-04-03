@@ -1,4 +1,4 @@
-import pathTools from '../middleware/pathTools'
+import PathTools from '../middleware/pathTools'
 import grafhelpers from '../middleware/helperFunctions';
 
 class GrafTools {
@@ -9,13 +9,11 @@ class GrafTools {
     grafhelpers.color_graf(graf, 'black', 'edge', new Set(graf.links));
     selection.selectedNodes = new Set();
     selection.selectedEdges = new Set();
-    selection.selectedCurrent = null;
   }
 
   update_selection(graf, selected, type, selection) {
     if(!selection.selectMultiple) {
         this.clear_selection(graf, selection);
-        return
     }
     if(type == 'node') {
         if(graf.nodes[selected.index]._color != 'black' && graf.nodes[selected.index]._color != undefined)
@@ -42,6 +40,7 @@ class GrafTools {
       graf.links.push({sid: selection.selectedLast.id, tid: selection.selectedCurrent.id, _color: 'black'});
       selection.selectedLast = null;
       selection.selectedCurrent = null
+      this.clear_selection(graf, selection);
     }
   }
 
@@ -81,9 +80,9 @@ class GrafTools {
 
   algorithm(graf, selection) {
     if(selection.selectedNodes.size === 1) {
-        pathTools.searchAlg(graf, selection);
+        PathTools.searchAlg(graf, selection);
     } else if(selection.selectedNodes.size === 2) {
-        pathTools.shortestPath(graf, selection);
+        PathTools.shortestPath(graf, selection);
     }
   }
 }
