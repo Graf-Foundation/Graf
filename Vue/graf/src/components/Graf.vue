@@ -20,10 +20,12 @@
         <sui-dropdown-menu>
           <sui-dropdown-item>
             <router-link to="/about">About</router-link>
-            </sui-dropdown-item>
+          </sui-dropdown-item>
 
           <sui-dropdown-item>Settings</sui-dropdown-item>
-          <sui-dropdown-item>FAQ</sui-dropdown-item>
+          <sui-dropdown-item> 
+            <router-link to="/help">Help</router-link>
+          </sui-dropdown-item>
         </sui-dropdown-menu>
       </sui-dropdown>
 
@@ -58,7 +60,7 @@ import Toolbar from '../components/Toolbar.vue'
 import GrafTools from '../middleware/grafTools.js'
 import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
-import Help from "../components/Help.vue";
+//import Help from "../components/Help.vue";
 //import About from 'About.vue'
 
 
@@ -66,8 +68,7 @@ export default {
   name: 'Graf',
   components: {
     D3Network,
-    Toolbar,
-    Help
+    Toolbar
   },
   mounted () {
 			document.addEventListener("keyup", this.keyup_handler, false);
