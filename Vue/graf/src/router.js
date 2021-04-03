@@ -19,11 +19,9 @@ export default new Router({
         {
             path: "/about",
             name: "About",
-            component: () => import("./components/AboutV2"),
+            component: () => import("./components/About"),
             //beforeEnter: authGuard
         }
-
-
     ]
 })
 ;

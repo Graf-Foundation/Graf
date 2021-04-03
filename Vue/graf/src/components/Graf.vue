@@ -11,26 +11,16 @@
       </sui-dropdown-menu>
     </sui-dropdown>
 
-    
-    <!-- <div>
-        <button @click="onAlgorithmChange('bfs');">BFS search</button>
-        <button @click="onAlgorithmChange('djikstra');">Djikstra</button>
-    </div> -->
-    <!-- <div>
-        <button @click="onUndo();">Undo</button>
-        <button @click="onRedo();">Redo</button>
-    </div> -->
     <center>
-
       <header>
+
         <Toolbar @tool-change="change_tool" @alg-change="onAlgorithmChange"></Toolbar>
         <sui-button @click="onUndo();" icon="undo" />
         <sui-button @click="onRedo();" icon="redo" />
       </header>
 
-
       <div class="labeler"  v-if="currentTool=='Label'" style="margin: 1em 0em 0em" >
-        <sui-input v-model="selection.selectedCurrent.name" @keypress.stop />
+        <sui-input v-model="selection.selectedLabel.name" @keypress.stop />
         <br>
         Change Label
       </div>
@@ -91,13 +81,18 @@ export default {
       }.bind(this), false)
 			document.addEventListener("keyup", function() {
 			this.selection.selectMultiple = false;
-      }.bind(this), false)
+    }.bind(this), false);
+    window.addEventListener('resize', () => {
+      this.options.size.w = window.innerWidth;
+      this.options.size.h = window.innerHeight - 200;
+      // Hacky BS to force update of the d3 network, should fork and workaround
+      this.graf.nodes.push({id: -1});
+      this.graf.nodes.splice(this.graf.nodes.length-1,1)
+    });
   },
   data () {
     return {
         currentTool: "",
-        nodelabeler: false,
-        edgelabeler: false,
         grafData: "",
         history: {
             previous: [],
@@ -105,8 +100,9 @@ export default {
         },
         selection: {
           selectedAlgorithm: null,
-          selectedCurrent: null, //
-          selectedLast: null, //
+          selectedCurrent: null,
+          selectedLast: null,
+          selectedLabel: null,
           selectMultiple: true,
           selectedNodes: new Set(),
           selectedEdges: new Set()
@@ -114,27 +110,21 @@ export default {
         graf: {
           nodes: [{ id: 0 }],
           links: [],
-          nodeSize:20,
           aggCount: 1,
-          canvas:false,
           pathActive: false
-        }
-    };
-  },
-
-  computed:{
-    options(){
-        return{
+        },
+        options: {
             force: 3000,
             size:{ w: window.innerWidth, h: window.innerHeight - 200},
-            nodeSize: this.graf.nodeSize,
+            resizeListener: true,
+            nodeSize: 20,
             nodeLabels: true,
             linkLabels:true,
-            canvas: this.canvas,
+            canvas: false,
             linkWidth: 3,
-            fontSize: 20
+            fontSize: 15
         }
-    }
+    };
   },
   methods: {
     onSaveImage() {
@@ -163,8 +153,6 @@ export default {
     onRedo() {
         this.graf = helperFunctions.updateHistory(this.graf, this.history, false);
     },
-    // TODO: place these as individual methods in a js file and import them
-    // TODO: erase tool
     useTool(tool) {
         switch(tool){
           case "Select":
@@ -196,10 +184,12 @@ export default {
     handle_node_click(event,node) {
         this.selection.selectedLast = this.selection.selectedCurrent;
         this.selection.selectedCurrent = node;
+        this.selection.selectedLabel = node;
         if(this.currentTool == 'Select')
             GrafTools.update_selection(this.graf, node, 'node', this.selection);
     },
     handle_edge_click(event,edge) {
+        this.selection.selectedLabel = edge;
         if(this.currentTool == 'Select')
             GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
     },
