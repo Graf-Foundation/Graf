@@ -38,11 +38,21 @@ class GrafTools {
 
   new_edge(graf, selection) {
     if(selection.selectedLast != null && selection.selectedCurrent != null && selection.selectedCurrent != selection.selectedLast) {
-      graf.links.push({sid: selection.selectedLast.id, tid: selection.selectedCurrent.id, _color: 'black'});
+      if(!this.edge_exists(graf, selection.selectedLast.id, selection.selectedCurrent.id))
+        graf.links.push({sid: selection.selectedLast.id, tid: selection.selectedCurrent.id, _color: 'black'});
       selection.selectedLast = null;
       selection.selectedCurrent = null
       this.clear_selection(graf, selection);
     }
+  }
+
+  edge_exists(graf, node1, node2) {
+    for(let link of graf.links) {
+      if((link.sid == node1 && link.tid == node2) ||
+         (link.sid == node2 && link.tid == node1))
+        return true;
+    }
+    return false
   }
 
   erase(graf, selection) {
@@ -90,20 +100,22 @@ class GrafTools {
   contract(graf, selection) {
     var nodeSize = selection.selectedNodes.size;
     var edgeSize = selection.selectedEdges.size;
-    console.log(nodeSize,edgeSize);
     if(nodeSize == 1 && edgeSize == 0) {
       for(let node of selection.selectedNodes) {
         var id = node.id;
         this.contractNode(graf, id);
+        return;
       }
     }
-    if(nodeSize === 0 && edgeSize === 1) {
+    else if(nodeSize == 0 && edgeSize == 1) {
       for(let edge of selection.selectedEdges) {
         var source = edge.sid;
         var target = edge.tid;
         this.contractEdge(graf, source, target);
+        return;
       }
     }
+    this.clear_selection(graf, selection)
   }
 
   contractNode(graf, nodeId) {
@@ -111,7 +123,8 @@ class GrafTools {
     for(let child of children) {
       var subChildren = this.getChildren(graf, child);
       for(let subChild of subChildren) {
-        graf.links.push({sid: nodeId, tid: subChild, _color: 'black'});
+        if(!this.edge_exists(graf, nodeId, subChild))
+          graf.links.push({sid: nodeId, tid: subChild, _color: 'black'});
       }
     }
     for(let child of children) {
@@ -123,6 +136,7 @@ class GrafTools {
   contractEdge(graf, sourceId, targetId) {
     var targetChildren =  this.getChildren(graf, targetId);
     for(let child of targetChildren) {
+      if(!this.edge_exists(graf, sourceId, child))
       graf.links.push({sid: sourceId, tid: child, _color: 'black'});
     }
     this.removeNode(graf, targetId);
