@@ -100,7 +100,6 @@ class GrafTools {
   contract(graf, selection) {
     var nodeSize = selection.selectedNodes.size;
     var edgeSize = selection.selectedEdges.size;
-    console.log(nodeSize,edgeSize);
     if(nodeSize == 1 && edgeSize == 0) {
       for(let node of selection.selectedNodes) {
         var id = node.id;
@@ -116,6 +115,7 @@ class GrafTools {
         return;
       }
     }
+    this.clear_selection(graf, selection)
   }
 
   contractNode(graf, nodeId) {
