@@ -1,5 +1,6 @@
-import PathTools from '../middleware/pathTools'
+import PathTools from '../middleware/pathTools';
 import grafhelpers from '../middleware/helperFunctions';
+import cookieHelpers from '..middleware/cookieHelper.js';
 
 class GrafTools {
 
@@ -29,6 +30,8 @@ class GrafTools {
             grafhelpers.color_graf(graf, 'red', 'edge', new Set([selected]));
         selection.selectedEdges.add(selected);
     }
+    //Modifying cookie
+    cookieHelpers.putCookie("GrafData", JSON.stringify(graf));
   }
 
   new_node(graf) {
@@ -155,6 +158,7 @@ class GrafTools {
     }
     return childIds;
   }
+
 }
 
 export default new GrafTools();
