@@ -60,7 +60,7 @@ import Toolbar from '../components/Toolbar.vue'
 import GrafTools from '../middleware/grafTools.js'
 import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
-import cookieHelpers from "..middleware/cookieHelper.js";
+import CookieHelpers from '../middleware/cookieHelper';
 //import Help from "../components/Help.vue";
 //import About from 'About.vue'
 
@@ -75,9 +75,9 @@ export default {
 			document.addEventListener("keyup", this.keyup_handler, false);
       window.addEventListener('resize', this.resize_handler, false);
       //Loading in the graf from cookies
-      cookieHelpers.checkRepCookie();
-      if(!cookieHelpers.isC) {
-        var d = grafhelpers.loadGraf(cookieHelpers.getCookie("GrafData"));
+      CookieHelpers.checkRepCookie();
+      if(!CookieHelpers.isC) {
+        var d = grafhelpers.loadGraf(CookieHelpers.getCookie("GrafData"));
         this.graf = d;
       }
   },
@@ -134,7 +134,7 @@ export default {
         this.grafData = "";
         this.graf.aggCount = 1;
       //Modifying cookie
-      cookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+      CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
     onAlgorithmChange(alg) {
         this.selection.selectedAlgorithm = alg;
@@ -142,12 +142,12 @@ export default {
     onUndo() {
         this.graf = helperFunctions.updateHistory(this.graf, this.history, true);
         //Modifying cookie
-        cookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+        CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
     onRedo() {
         this.graf = helperFunctions.updateHistory(this.graf, this.history, false);
         //Modifying cookie
-        cookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+        CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
     useTool(tool) {
       var oldData = JSON.stringify(this.graf);
@@ -174,7 +174,7 @@ export default {
           break;
       }
       //Modifying cookie
-      cookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+      CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
 
       var newData = JSON.stringify(this.graf);
       if(oldData != newData) {
