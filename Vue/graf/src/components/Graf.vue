@@ -60,6 +60,7 @@ import Toolbar from '../components/Toolbar.vue'
 import GrafTools from '../middleware/grafTools.js'
 import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
+import CookieHelpers from '../middleware/cookieHelper';
 //import Help from "../components/Help.vue";
 //import About from 'About.vue'
 
@@ -73,6 +74,12 @@ export default {
   mounted () {
 			document.addEventListener("keyup", this.keyup_handler, false);
       window.addEventListener('resize', this.resize_handler, false);
+      //Loading in the graf from cookies
+      CookieHelpers.checkRepCookie();
+      if(!CookieHelpers.isC) {
+        var d = grafhelpers.loadGraf(CookieHelpers.getCookie("GrafData"));
+        this.graf = d;
+      }
   },
   data () {
     return {
@@ -126,15 +133,21 @@ export default {
         this.graf.links = [];
         this.grafData = "";
         this.graf.aggCount = 1;
+      //Modifying cookie
+      CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
     onAlgorithmChange(alg) {
         this.selection.selectedAlgorithm = alg;
     },
     onUndo() {
         this.graf = helperFunctions.updateHistory(this.graf, this.history, true);
+        //Modifying cookie
+        CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
     onRedo() {
         this.graf = helperFunctions.updateHistory(this.graf, this.history, false);
+        //Modifying cookie
+        CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
     useTool(tool) {
       var oldData = JSON.stringify(this.graf);
@@ -160,6 +173,8 @@ export default {
         default:
           break;
       }
+      //Modifying cookie
+      CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
 
       var newData = JSON.stringify(this.graf);
       if(oldData != newData) {
