@@ -1,6 +1,6 @@
 import PathTools from '../middleware/pathTools';
 import grafhelpers from '../middleware/helperFunctions';
-import cookieHelpers from '..middleware/cookieHelper.js';
+import cookieHelpers from '../middleware/cookieHelper';
 
 class GrafTools {
 
