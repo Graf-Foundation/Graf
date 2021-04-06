@@ -17,18 +17,22 @@ class GrafTools {
         this.clear_selection(graf, selection);
     }
     if(type == 'node') {
-        if(graf.nodes[selected.index]._color != 'black' && graf.nodes[selected.index]._color != undefined)
+        if(selection.selectedNodes.has(selected)) {
             grafhelpers.color_graf(graf, 'black', 'node', new Set([selected]));
-        else
+            selection.selectedNodes.delete(selected);
+        } else {
             grafhelpers.color_graf(graf, 'red', 'node', new Set([selected]));
-        selection.selectedNodes.add(selected);
+            selection.selectedNodes.add(selected);
+        }
     }
     if(type == 'edge') {
-        if(graf.links[selected.index]._color != 'black' && graf.links[selected.index]._color != undefined)
+        if(selection.selectedEdges.has(selected)) {
             grafhelpers.color_graf(graf, 'black', 'edge', new Set([selected]));
-        else
+            selection.selectedEdges.delete(selected);
+        } else {
             grafhelpers.color_graf(graf, 'red', 'edge', new Set([selected]));
-        selection.selectedEdges.add(selected);
+            selection.selectedEdges.add(selected);
+        }
     }
     //Modifying cookie
     cookieHelpers.putCookie("GrafData", JSON.stringify(graf));
