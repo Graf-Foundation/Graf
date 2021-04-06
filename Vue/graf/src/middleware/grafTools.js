@@ -17,7 +17,7 @@ class GrafTools {
         this.clear_selection(graf, selection);
     }
     if(type == 'node') {
-        if(graf.nodes[selected.index]._color != 'black' && graf.nodes[selected.index]._color != undefined) {
+        if(selection.selectedNodes.has(selected)) {
             grafhelpers.color_graf(graf, 'black', 'node', new Set([selected]));
             selection.selectedNodes.delete(selected);
         } else {
@@ -26,7 +26,7 @@ class GrafTools {
         }
     }
     if(type == 'edge') {
-        if(graf.links[selected.index]._color != 'black' && graf.links[selected.index]._color != undefined) {
+        if(selection.selectedEdges.has(selected)) {
             grafhelpers.color_graf(graf, 'black', 'edge', new Set([selected]));
             selection.selectedEdges.delete(selected);
         } else {
