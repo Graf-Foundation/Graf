@@ -42,9 +42,10 @@
       <div class="fixedBC graf-labeler">
         <sui-button @click="onSaveImage();" color="green" content="Save Image"/>
         <sui-button @click="onSaveGraf();" color="green" content="Save Graph"/>
+        <sui-button @click="onLoadGraf();" color="green" content="Load Graph"/>
         <sui-button @click="onResetGraf();" color="green" content="Reset Graph"/>
         <br>
-        <sui-input placeholder="Load Graf" v-model="grafData" @keyup.enter="onLoadGraf()"/>
+        <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
       </div>
 
       <Help class="fixedBR"/>
@@ -124,9 +125,17 @@ export default {
         grafhelpers.saveGraf(this.graf);
     },
     onLoadGraf() {
-        var data = grafhelpers.loadGraf(this.grafData);
-        this.graf = data;
-        this.grafData = "";
+        const elem = this.$refs.fileload;
+        elem.click(); 
+    },
+    onFileUpload() {
+        if ('files' in this.$refs.fileload) {
+            const file = this.$refs.fileload.files[0];
+            file.text().then(text => {
+              const data = grafhelpers.loadGraf(text);
+              this.graf = data;
+            });
+        }
     },
     onResetGraf() {
         this.graf.nodes = [{ id: 0 }];
@@ -246,11 +255,11 @@ export default {
 }
 .fixedBC{
   position:fixed;
-  width: 360px;
+  width: 480;
   height: 80px;
   bottom:0;
   right:50%;
-  margin-right: -180px;
+  margin-right: -260px;
   margin-bottom: auto;
 }
 </style>
