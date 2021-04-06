@@ -259,7 +259,7 @@ export default {
   height: 80px;
   bottom:0;
   right:50%;
-  margin-right: -260px;
+  margin-right: -250px;
   margin-bottom: auto;
 }
 </style>
