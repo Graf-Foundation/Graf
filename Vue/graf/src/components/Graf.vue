@@ -77,7 +77,7 @@ export default {
       window.addEventListener('resize', this.resize_handler, false);
       //Loading in the graf from cookies
       CookieHelpers.checkRepCookie();
-      if(!CookieHelpers.isC) {
+      if(!CookieHelpers.isCookieEmpty()) {
         var d = grafhelpers.loadGraf(CookieHelpers.getCookie("GrafData"));
         this.graf = d;
       }
@@ -119,6 +119,7 @@ export default {
   },
   methods: {
     onSaveImage() {
+        console.log(CookieHelpers.getCookie("GrafData"));
         grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
     },
     onSaveGraf() {
@@ -143,7 +144,9 @@ export default {
         this.grafData = "";
         this.graf.aggCount = 1;
       //Modifying cookie
-      CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+      var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
+      console.log("RESET COOKIE: " + s);
+      CookieHelpers.putCookie("GrafData", s);
     },
     onAlgorithmChange(alg) {
         this.selection.selectedAlgorithm = alg;
@@ -151,12 +154,12 @@ export default {
     onUndo() {
         this.graf = helperFunctions.updateHistory(this.graf, this.history, true);
         //Modifying cookie
-        CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+        CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
     },
     onRedo() {
         this.graf = helperFunctions.updateHistory(this.graf, this.history, false);
         //Modifying cookie
-        CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+        CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
     },
     useTool(tool) {
       var oldData = JSON.stringify(this.graf);
@@ -183,7 +186,9 @@ export default {
           break;
       }
       //Modifying cookie
-      CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+      var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
+      console.log("NEW COOKIE: " + s);
+      CookieHelpers.putCookie("GrafData", s);
 
       var newData = JSON.stringify(this.graf);
       if(oldData != newData) {
