@@ -35,7 +35,7 @@ class GrafTools {
         }
     }
     //Modifying cookie
-    cookieHelpers.putCookie("GrafData", JSON.stringify(graf));
+    cookieHelpers.putCookie("GrafData", cookieHelpers.compressGraf(JSON.stringify(graf)));
   }
 
   new_node(graf) {
