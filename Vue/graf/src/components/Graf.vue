@@ -24,7 +24,7 @@
 
           <sui-dropdown-item>Settings</sui-dropdown-item>
           <sui-dropdown-item> 
-            <router-link to="/help">Help</router-link>
+            <a @click="$root.$emit('openHelp')">Help</a>
           </sui-dropdown-item>
         </sui-dropdown-menu>
       </sui-dropdown>
@@ -47,8 +47,9 @@
         <br>
         <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
       </div>
+      <Help/>
 
-      <Help class="fixedBR"/>
+
 
     </center>
   </div>
@@ -62,7 +63,7 @@ import GrafTools from '../middleware/grafTools.js'
 import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
-//import Help from "../components/Help.vue";
+import Help from "../components/Help.vue";
 //import About from 'About.vue'
 
 
@@ -70,7 +71,8 @@ export default {
   name: 'Graf',
   components: {
     D3Network,
-    Toolbar
+    Toolbar,
+    Help
   },
   mounted () {
 			document.addEventListener("keyup", this.keyup_handler, false);
