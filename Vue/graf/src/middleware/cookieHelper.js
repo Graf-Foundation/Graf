@@ -2,7 +2,6 @@ class CookieHelper {
 
 
 
-
   // Get function to retrieve a field from cookies
   // @param key: corresponding string from when the key was stored
   // @return String: value corresponding to key
@@ -24,6 +23,8 @@ class CookieHelper {
     // String.fromCharCode(165)
     // USES ASCII 163 (GBPound symbol) as a delimeter after value before next unrelated key
     // String.fromCharCode(163)
+
+    console.log("PUT: key: " + key + "  val: " + value);
 
     var ind = this.findCookie(key);
 
@@ -49,6 +50,90 @@ class CookieHelper {
     
 
   }
+
+
+  // Compresses the node list and edge list into a much smaller file
+  // @param input: String of complete graf data
+  // @return String the compressed string
+  compressGraf(input) {
+    console.log("INPUT: " + input)
+    const COMPRESS_IGNORES = ["x", "y", "vx", "vy", "fx", "fy", "_color"];
+    
+    var result = "";
+
+    var i = 0;
+    var j = -1;
+
+    var currIndex = 0;
+    var lastEnd = 0;
+    var tokenBack = 0;
+
+    while(i < input.length) {
+      console.log("curr: " + currIndex + "   input: " + input);
+
+
+      var x = input.indexOf("{\"", i-1);
+      var y = input.indexOf(",\"", i-1);
+
+
+      if(x == -1) {
+        if(y == -1) {
+          result += input.substring(lastEnd);
+          break;
+        } else {
+          currIndex = Math.min(x,y);
+        }
+      } else if(y == -1) {
+        currIndex = x;
+      } else {
+        currIndex = Math.min(x,y);
+      }
+
+      tokenBack = input.indexOf("\"", currIndex+1);
+
+
+      console.log("i: " + i + "   j: " + j);
+
+      var token = input.substring(i+1,j);
+
+      var ignored = false;
+      var backComma = input.indexOf(",", j);
+      var backBrace = input.indexOf("}", j);
+
+      for(var z = 0; z < COMPRESS_IGNORES.length; ++z) {
+        if(token === COMPRESS_IGNORES[z]) {
+          if(backBrace < backComma) {
+            if(input.charAt(i-1) === "," && result.charAt(result.length-1)) {
+              result = result.substring(0,result.length-1);
+              i = backBrace - 1;
+            } else {
+              i = backBrace - 1;
+            } 
+          } else {
+            i = backComma;
+          }
+          ignored = true;
+          break;
+        }
+      }
+      if(!ignored) {
+        lastEnd = input.indexOf("\"",j+1);
+        if(lastEnd === -1) {
+          result += input.substring(i);
+        }
+        result += input.substring(i,a);
+        i = a;
+        
+      }
+      console.log("bottom i: " + i + "{" + input.charAt(i) + "}");
+
+
+    }
+
+    return input;
+
+  }
+
 
   // Gives the index in the cookie string where the pre-key delimiter is located
   // @param key: String key to look up in cookie
