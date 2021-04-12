@@ -32,9 +32,7 @@
             <router-link to="/about">About</router-link>
           </sui-dropdown-item>
           <sui-dropdown-item>
-            <sui-button class="ui button" @click.stop="visible = true">
-                Menu
-            </sui-button>
+            thing
           </sui-dropdown-item>
           <sui-dropdown-item>
             <router-link to="/help">Help</router-link>
@@ -170,9 +168,6 @@ export default {
       this.graf = helperFunctions.updateHistory(this.graf, this.history, false);
       //Modifying cookie
       CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
-    },
-    toggleSettings() {
-      this.visible = false;
     },
     useTool(tool) {
       var oldData = JSON.stringify(this.graf);
