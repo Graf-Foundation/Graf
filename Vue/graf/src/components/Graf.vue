@@ -1,5 +1,6 @@
 <template>
   <div class="graf">
+    <Settings v-bind:open="Toggled"/>
     <center>
       <header class="fixedTC">
         <Toolbar
@@ -32,7 +33,11 @@
             <router-link to="/about">About</router-link>
           </sui-dropdown-item>
 
-          <sui-dropdown-item>Settings</sui-dropdown-item>
+          <sui-dropdown-item>
+            <!-- <a @click ="$root.$emit('openSettings')">Settings</a> -->
+            <a @click ="onSettingsOpen()">Settings</a>
+          </sui-dropdown-item>
+
           <sui-dropdown-item> 
             <a @click="$root.$emit('openHelp')">Help</a>
           </sui-dropdown-item>
@@ -72,6 +77,7 @@ import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
+import Settings from "../components/Settings.vue"
 //import About from 'About.vue'
 
 export default {
@@ -79,6 +85,7 @@ export default {
   components: {
     D3Network,
     Toolbar,
+    Settings,
     Help
   },
   mounted() {
@@ -93,6 +100,7 @@ export default {
   },
   data() {
     return {
+      Toggled: false,
       currentTool: "",
       grafData: "",
       visible: false,
@@ -149,6 +157,11 @@ export default {
               this.graf = data;
             });
         }
+    },
+    onSettingsOpen(){
+      console.log("cmonman")
+      this.Toggled = true;
+      console.log(this.Toggled)
     },
     onResetGraf() {
       this.graf.nodes = [{ id: 0 }];
