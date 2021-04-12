@@ -31,11 +31,10 @@
           <sui-dropdown-item>
             <router-link to="/about">About</router-link>
           </sui-dropdown-item>
-          <sui-dropdown-item>
-            thing
-          </sui-dropdown-item>
-          <sui-dropdown-item>
-            <router-link to="/help">Help</router-link>
+
+          <sui-dropdown-item>Settings</sui-dropdown-item>
+          <sui-dropdown-item> 
+            <a @click="$root.$emit('openHelp')">Help</a>
           </sui-dropdown-item>
         </sui-dropdown-menu>
       </sui-dropdown>
@@ -50,35 +49,29 @@
       />
 
       <div class="fixedBC graf-labeler">
-        <sui-button @click="onSaveImage()" color="green" content="Save Image" />
-        <sui-button @click="onSaveGraf()" color="green" content="Save Graph" />
-        <sui-button
-          @click="onResetGraf()"
-          color="green"
-          content="Reset Graph"
-        />
-        <br />
-        <sui-input
-          placeholder="Load Graf"
-          v-model="grafData"
-          @keyup.enter="onLoadGraf()"
-        />
+        <sui-button @click="onSaveImage();" color="green" content="Save Image"/>
+        <sui-button @click="onSaveGraf();" color="green" content="Save Graph"/>
+        <sui-button @click="onLoadGraf();" color="green" content="Load Graph"/>
+        <sui-button @click="onResetGraf();" color="green" content="Reset Graph"/>
+        <br>
+        <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
       </div>
+      <Help/>
 
-      <Help class="fixedBR" />
+
     </center>
   </div>
 </template>
 
 <script>
-import D3Network from "vue-d3-network";
-import grafhelpers from "../middleware/helperFunctions";
-import Toolbar from "../components/Toolbar.vue";
-import GrafTools from "../middleware/grafTools.js";
-import PathTools from "../middleware/pathTools.js";
-import helperFunctions from "../middleware/helperFunctions";
-import CookieHelpers from "../middleware/cookieHelper";
-//import Help from "../components/Help.vue";
+import D3Network from 'vue-d3-network';
+import grafhelpers from '../middleware/helperFunctions';
+import Toolbar from '../components/Toolbar.vue'
+import GrafTools from '../middleware/grafTools.js'
+import PathTools from '../middleware/pathTools.js'
+import helperFunctions from '../middleware/helperFunctions';
+import CookieHelpers from '../middleware/cookieHelper';
+import Help from "../components/Help.vue";
 //import About from 'About.vue'
 
 export default {
@@ -86,6 +79,7 @@ export default {
   components: {
     D3Network,
     Toolbar,
+    Help
   },
   mounted() {
     document.addEventListener("keyup", this.keyup_handler, false);
@@ -144,9 +138,17 @@ export default {
       grafhelpers.saveGraf(this.graf);
     },
     onLoadGraf() {
-      var data = grafhelpers.loadGraf(this.grafData);
-      this.graf = data;
-      this.grafData = "";
+        const elem = this.$refs.fileload;
+        elem.click(); 
+    },
+    onFileUpload() {
+        if ('files' in this.$refs.fileload) {
+            const file = this.$refs.fileload.files[0];
+            file.text().then(text => {
+              const data = grafhelpers.loadGraf(text);
+              this.graf = data;
+            });
+        }
     },
     onResetGraf() {
       this.graf.nodes = [{ id: 0 }];
@@ -261,13 +263,13 @@ export default {
   right: 50%;
   margin-right: -400px;
 }
-.fixedBC {
-  position: fixed;
-  width: 360px;
+.fixedBC{
+  position:fixed;
+  width: 480;
   height: 80px;
-  bottom: 0;
-  right: 50%;
-  margin-right: -180px;
+  bottom:0;
+  right:50%;
+  margin-right: -250px;
   margin-bottom: auto;
 }
 </style>
