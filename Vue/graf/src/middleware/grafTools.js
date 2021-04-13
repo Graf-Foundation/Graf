@@ -62,7 +62,7 @@ class GrafTools {
                             tid: selection.selectedCurrent.id,
                             _color: 'black',
                             type: "Bidirected",
-                            _svgAttrs: {'marker-end': 'url(#target-arrow)'}});
+                            _svgAttrs: {'marker-start': 'url(#source-arrow)', 'marker-end': 'url(#target-arrow)'}});
       selection.selectedLast = null;
       selection.selectedCurrent = null
       this.clear_selection(graf, selection);
@@ -144,39 +144,77 @@ class GrafTools {
   contractNode(graf, nodeId) {
     var children = this.getChildren(graf, nodeId);
     for(let child of children) {
-      var subChildren = this.getChildren(graf, child);
+      var subChildren = this.getChildren(graf, child[0]);
       for(let subChild of subChildren) {
-        if(!this.edge_exists(graf, nodeId, subChild))
-          graf.links.push({sid: nodeId, tid: subChild, _color: 'black'});
+        if(!this.edge_exists(graf, nodeId, subChild[0]) && subChild[0] != nodeId)
+        graf.links.push({ sid: nodeId,
+                          tid: subChild[0],
+                          _color: 'black',
+                          type: subChild[1],
+                          _svgAttrs: subChild[2]
+                        });
+      }
+      var subParents = this.getParents(graf, child[0]);
+      for(let subParent of subParents) {
+        if(!this.edge_exists(graf, nodeId, subParent[0])  && subParent[0] != nodeId)
+        graf.links.push({ sid: nodeId,
+                          tid: subParent[0],
+                          _color: 'black',
+                          type: subParent[1],
+                          _svgAttrs: subParent[2]
+                        });
       }
     }
     for(let child of children) {
-      if(child != nodeId)
-        this.removeNode(graf, child);
+      if(child[0] != nodeId)
+        this.removeNode(graf, child[0]);
     }
   }
 
   contractEdge(graf, sourceId, targetId) {
-    var targetChildren =  this.getChildren(graf, targetId);
-    for(let child of targetChildren) {
-      if(!this.edge_exists(graf, sourceId, child))
-      graf.links.push({sid: sourceId, tid: child, _color: 'black'});
+    var children = this.getChildren(graf, targetId);
+    for(let child of children) {
+      if(!this.edge_exists(graf, sourceId, child[0]) && child[0] != sourceId)
+      graf.links.push({ sid: sourceId,
+                        tid: child[0],
+                        _color: 'black',
+                        type: child[1],
+                        _svgAttrs: child[2]
+                      });
+    }
+    var parents = this.getParents(graf, sourceId);
+    for(let parent of parents) {
+      if(!this.edge_exists(graf, parent[0], sourceId) && parent[0] != sourceId)
+      graf.links.push({ sid: parent[0],
+                        tid: sourceId,
+                        _color: 'black',
+                        type: parent[1],
+                        _svgAttrs: parent[2]
+                      });
     }
     this.removeNode(graf, targetId);
   }
 
-  //Assumes bidirectionality
   getChildren(graf, nodeId) {
-    let childIds = []
+    let edges = []
     for(let link of graf.links) {
-      if(link.sid == nodeId) {
-        childIds.push(link.tid);
-      }
-      if(link.tid == nodeId) {
-        childIds.push(link.sid);
-      }
+      if(link.sid == nodeId)
+        edges.push([link.tid, link.type, link._svgAttrs]);
+      if(link.tid == nodeId && link.type != "Directed")
+        edges.push([link.sid, link.type, link._svgAttrs]);
     }
-    return childIds;
+    return edges;
+  }
+
+  getParents(graf, nodeId) {
+    let edges = []
+    for(let link of graf.links) {
+      if(link.tid == nodeId)
+        edges.push([link.sid, link.type, link._svgAttrs]);
+      if(link.sid == nodeId && link.type != "Directed")
+        edges.push([link.tid, link.type, link._svgAttrs]);
+    }
+    return edges;
   }
 
 }

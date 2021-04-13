@@ -104,16 +104,11 @@ export default{
           "dfs" : "DFS Search",
           "dijkstra" : "Dijkstra",
           "kosaraju" : "Kosaraju"
-        },
-        "Contract" : {
-          "node" : "Contract Node",
-          "edge" : "Contract Edge"
         }
       },
       subMenuActive: {
         "Edge" : "undir",
-        "Algorithm" : "bfs",
-        "Contract" : "node"
+        "Algorithm" : "bfs"
       }
     }
   },
