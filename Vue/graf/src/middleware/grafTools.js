@@ -43,10 +43,26 @@ class GrafTools {
     graf.aggCount += 1;
   }
 
-  new_edge(graf, selection) {
+  new_edge(graf, selection, type) {
     if(selection.selectedLast != null && selection.selectedCurrent != null && selection.selectedCurrent != selection.selectedLast) {
       if(!this.edge_exists(graf, selection.selectedLast.id, selection.selectedCurrent.id))
-        graf.links.push({sid: selection.selectedLast.id, tid: selection.selectedCurrent.id, _color: 'black'});
+        if(type == "undir")
+          graf.links.push({ sid: selection.selectedLast.id,
+                            tid: selection.selectedCurrent.id,
+                            _color: 'black',
+                            type: "Undirected"});
+        else if(type == "dir")
+          graf.links.push({ sid: selection.selectedLast.id,
+                            tid: selection.selectedCurrent.id,
+                            _color: 'black',
+                            type: "Directed",
+                            _svgAttrs: {'marker-end': 'url(#target-arrow)'}});
+        else if(type == "bidir")
+          graf.links.push({ sid: selection.selectedLast.id,
+                            tid: selection.selectedCurrent.id,
+                            _color: 'black',
+                            type: "Bidirected",
+                            _svgAttrs: {'marker-end': 'url(#target-arrow)'}});
       selection.selectedLast = null;
       selection.selectedCurrent = null
       this.clear_selection(graf, selection);

@@ -2,7 +2,7 @@
   <div class="graf">
     <center>
       <header class="fixedTC">
-        <Toolbar @tool-change="change_tool" @alg-change="onAlgorithmChange"></Toolbar>
+        <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
 
         <sui-button @click="onUndo();" icon="undo" />
         <sui-button @click="onRedo();" icon="redo" />
@@ -23,7 +23,7 @@
           </sui-dropdown-item>
 
           <sui-dropdown-item>Settings</sui-dropdown-item>
-          <sui-dropdown-item> 
+          <sui-dropdown-item>
             <a @click="$root.$emit('openHelp')">Help</a>
           </sui-dropdown-item>
         </sui-dropdown-menu>
@@ -52,6 +52,16 @@
 
 
     </center>
+    <svg >
+      <defs>
+        <marker id="target-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth" >
+          <path d="M0,0 L0,6 L9,3 z"></path>
+        </marker>
+        <marker id="source-arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth" >
+          <path d="M0,3 L9,6 L9,0 z"></path>
+        </marker>
+      </defs>
+    </svg>
   </div>
 </template>
 
@@ -87,6 +97,7 @@ export default {
   data () {
     return {
         currentTool: "",
+        edgeType: "undir",
         grafData: "",
         history: {
             previous: [],
@@ -128,7 +139,7 @@ export default {
     },
     onLoadGraf() {
         const elem = this.$refs.fileload;
-        elem.click(); 
+        elem.click();
     },
     onFileUpload() {
         if ('files' in this.$refs.fileload) {
@@ -170,7 +181,7 @@ export default {
           GrafTools.new_node(this.graf);
           break;
         case "Edge":
-          GrafTools.new_edge(this.graf, this.selection);
+          GrafTools.new_edge(this.graf, this.selection, this.edgeType);
           break;
         case "Algorithm":
           GrafTools.algorithm(this.graf, this.selection);
@@ -213,6 +224,9 @@ export default {
         this.selection.selectedLabel = null;
         this.currentTool = tool;
         this.useTool(tool);
+    },
+    change_edge (edgeType) {
+      this.edgeType = edgeType;
     },
     keyup_handler(event) {
       if(event.code == "Escape") {
@@ -263,5 +277,8 @@ export default {
   right:50%;
   margin-right: -250px;
   margin-bottom: auto;
+}
+#source-arrow path, #target-arrow{
+  fill: rgba(0, 0, 0, 1);
 }
 </style>
