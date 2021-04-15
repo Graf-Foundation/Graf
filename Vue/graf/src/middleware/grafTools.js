@@ -1,4 +1,3 @@
-import PathTools from '../middleware/pathTools';
 import grafhelpers from '../middleware/helperFunctions';
 import cookieHelpers from '../middleware/cookieHelper';
 
@@ -109,14 +108,6 @@ class GrafTools {
       graf.links = newLinks;
       // remove the node
       graf.nodes.splice(index, 1);
-    }
-  }
-
-  algorithm(graf, selection) {
-    if(selection.selectedNodes.size === 1) {
-        PathTools.searchAlg(graf, selection);
-    } else if(selection.selectedNodes.size === 2) {
-        PathTools.shortestPath(graf, selection);
     }
   }
 

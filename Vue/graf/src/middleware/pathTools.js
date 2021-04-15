@@ -3,18 +3,27 @@ import grafhelpers from '../middleware/helperFunctions';
 
 class PathTools {
 
-    static algs = {"bfs": helperAlgs.bfs, "dijkstra": helperAlgs.djikstra};
+    static algs = {"bfs": {"fun": helperAlgs.bfs, "type": "search"}, "dijkstra": {"fun": helperAlgs.djikstra, "type": "shortestPath"}};
 
-    shortestPath(graf, selection) {
-        var path = PathTools.algs[selection.selectedAlgorithm](Array.from(selection.selectedNodes), graf.links);
+    algorithm(graf, selection, alg) {
+        var data = PathTools.algs[alg]
+        if(data.type === "search") {
+            this.searchAlg(graf, selection, data.fun);
+        } else if(data.type === "shortestPath") {
+            this.shortestPath(graf, selection, data.fun);
+        }
+    }
+
+    shortestPath(graf, selection, alg) {
+        var path = alg(Array.from(selection.selectedNodes), graf.links);
         // Recolor all edges in path
         grafhelpers.color_graf(graf, 'red', 'node', this.match_ids_to_graf(graf, path));
         grafhelpers.color_graf(graf, 'red', 'edge', this.getEdgesFromPath(graf, path));
     }
 
-    searchAlg(graf, selection) {
+    searchAlg(graf, selection, alg) {
         this.update_distances(graf, data, false);
-        var data = PathTools.algs[selection.selectedAlgorithm](Array.from(selection.selectedNodes), graf.links);
+        var data = alg(Array.from(selection.selectedNodes), graf.links);
         this.update_distances(graf, data, true);
     }
 
