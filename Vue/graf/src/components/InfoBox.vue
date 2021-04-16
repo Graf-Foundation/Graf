@@ -1,13 +1,13 @@
 <template>
   <div id="infoBox">
     <sui-card>
-      <sui-card-content>
-        <sui-card-header id="infoBoxHeader">
+      <sui-card-content id="infoBoxHeader">
+        <sui-card-header>
           Info
         </sui-card-header>
       </sui-card-content>
       <sui-card-content>
-        <p>Lorem Ipsum</p>
+        {{ selected.name }}
       </sui-card-content>
     </sui-card>
   </div>
@@ -60,7 +60,8 @@ export default {
         document.onmousemove = null;
       }
     }
-  }
+  },
+  props: ['selected']
 }
 
 </script>
