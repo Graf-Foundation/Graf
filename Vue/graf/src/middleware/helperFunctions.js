@@ -26,16 +26,25 @@ class grafhelpers {
             var lNode = links[edge].sid
             var rNode = links[edge].tid
 
-            if(!(lNode in data)) {
-                data[lNode] = new Set([rNode]);
-            } else {
-                data[lNode].add(rNode);
-            }
+            if(links[edge].type === "Undirected" || links[edge].type === "Bidirected") {
+                if(!(lNode in data))
+                    data[lNode] = new Set([rNode]);
+                else
+                    data[lNode].add(rNode);
+    
+                if(!(rNode in data))
+                    data[rNode] = new Set([lNode]);
+                else
+                    data[rNode].add(lNode);
 
-            if(!(rNode in data)) {
-                data[rNode] = new Set([lNode]);
-            } else {
-                data[rNode].add(lNode);
+            } else if(links[edge].type === "Directed") {
+                if(!(lNode in data))
+                    data[lNode] = new Set([rNode]);
+                else
+                    data[lNode].add(rNode);
+
+                if(!(rNode in data))
+                    data[rNode] = new Set([rNode]);
             }
         }
 

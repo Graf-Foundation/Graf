@@ -97,6 +97,7 @@ export default {
   data () {
     return {
         currentTool: "",
+        algType: "",
         edgeType: "undir",
         grafData: "",
         history: {
@@ -104,7 +105,6 @@ export default {
             next: []
         },
         selection: {
-          selectedAlgorithm: null,
           selectedCurrent: null,
           selectedLast: null,
           selectedLabel: null,
@@ -159,7 +159,7 @@ export default {
       CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
     onAlgorithmChange(alg) {
-        this.selection.selectedAlgorithm = alg;
+        this.algType = alg;
     },
     onUndo() {
         this.graf = helperFunctions.updateHistory(this.graf, this.history, true);
@@ -184,7 +184,8 @@ export default {
           GrafTools.new_edge(this.graf, this.selection, this.edgeType);
           break;
         case "Algorithm":
-          GrafTools.algorithm(this.graf, this.selection);
+          this.selection.selectMultiple = true;
+          PathTools.algorithm(this.graf, this.selection, this.algType);
           break;
         case "Erase":
           GrafTools.erase(this.graf, this.selection);
