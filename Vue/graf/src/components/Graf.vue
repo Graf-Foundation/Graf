@@ -126,7 +126,7 @@ export default {
             resizeListener: true,
             nodeSize: 20,
             nodeLabels: true,
-            linkLabels:true,
+            linkLabels:false,
             canvas: false,
             linkWidth: 3,
             fontSize: 15

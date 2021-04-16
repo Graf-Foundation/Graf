@@ -7,7 +7,10 @@
         </sui-card-header>
       </sui-card-content>
       <sui-card-content>
+        <h5>Name: </h5> 
         {{ selected.name }}
+        <h5 v-if="selected.type">Type: </h5>
+        {{ selected.type }}
       </sui-card-content>
     </sui-card>
   </div>
@@ -66,7 +69,10 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
+h5 {
+  margin-bottom: 0;
+}
 #infoBox {
   position: absolute;
   z-index: 9;
