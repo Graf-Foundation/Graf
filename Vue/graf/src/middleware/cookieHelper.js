@@ -24,7 +24,7 @@ class CookieHelper {
     // USES ASCII 163 (GBPound symbol) as a delimeter after value before next unrelated key
     // String.fromCharCode(163)
 
-    console.log("PUT: key: " + key + "  val: " + value);
+    // console.log("PUT: key: " + key + "  val: " + value);
 
     var ind = this.findCookie(key);
 
@@ -56,81 +56,176 @@ class CookieHelper {
   // @param input: String of complete graf data
   // @return String the compressed string
   compressGraf(input) {
-    console.log("INPUT: " + input)
-    const COMPRESS_IGNORES = ["x", "y", "vx", "vy", "fx", "fy", "_color"];
-    
+    // console.log("INPUT: " + input);
+    const COMPRESS_IGNORES = ["x", "y", "vx", "vy", "fx", "fy", "_color", "index"];
+    const BIG_IGNORES = ["source","target"];
+
+
+    const VALID_TOKENS = ["nodes","id","name","links","sid","tid","type","aggCount"];
+    const DELIM_START_INT = 174;
+    const BAD_FORMAT_TOKENS = ['{', '}', '[' ,']' ,',' ,'"'];
+    // const DELIM_START_CHAR = String.fromCharCode(174);
+
     var result = "";
 
-    var i = 0;
-    var j = -1;
-
-    var currIndex = 0;
+    var currIndex = -1;
     var lastEnd = 0;
     var tokenBack = 0;
+    var isLinks = false;
+    var compression = "";
+    var nonCompress = "";
+    var info = "";
 
-    while(i < input.length) {
-      console.log("curr: " + currIndex + "   input: " + input);
+    while(lastEnd < input.length) {
 
 
-      var x = input.indexOf("{\"", i-1);
-      var y = input.indexOf(",\"", i-1);
+      // setting currIndex to be at next " symbol starting a key
+      var x = input.indexOf("{\"", tokenBack+1);
+      var y = input.indexOf(",\"", tokenBack+1);
 
-
+      // console.log("x: " + x + ": " + y);
       if(x == -1) {
         if(y == -1) {
           result += input.substring(lastEnd);
           break;
         } else {
-          currIndex = Math.min(x,y);
+          currIndex = y+1;
         }
       } else if(y == -1) {
-        currIndex = x;
+        currIndex = x+1;
       } else {
-        currIndex = Math.min(x,y);
+        currIndex = Math.min(x,y)+1;
       }
 
-      tokenBack = input.indexOf("\"", currIndex+1);
+      // Add until the current key from last iteration
+      result += input.substring(lastEnd,currIndex);
 
+      // Further compression using delimeters
+      if(!nonCompress) {
+        for(var a = 0; a < VALID_TOKENS.length; ++a) {
+          if(token === VALID_TOKENS[a]) {
+            compression += String.fromCharCode(DELIM_START_INT+a);
+            if(a === 6) {
+              //COMPRESS (D)irected or (U)ndirected      
+              // info += "TYPE" + input.substring(tokenBack + 3,tokenBack+4);        
+              compression += input.substring(tokenBack + 3,tokenBack+4);
+              break;
+            }
 
-      console.log("i: " + i + "   j: " + j);
+            for(var ch = tokenBack + 2; ch < currIndex-1; ++ch) {
+              // info += input.charAt(ch);
+              var isBad = false;
+              for(var i = 0; i < BAD_FORMAT_TOKENS.length; ++i) {
+                if(input.charAt(ch) === BAD_FORMAT_TOKENS[i]) {
+                  // info += "ISBAD ";
+                  isBad = true;
+                  break;
+                }
+              }
+              if(!isBad) {
+                compression += input.substring(ch,ch+1);
+              }
+            }
+            break;
+          }
+        }
+      }
 
-      var token = input.substring(i+1,j);
+      // TokenBack is the end of the key
+      tokenBack = input.indexOf("\":", currIndex+1);
 
-      var ignored = false;
-      var backComma = input.indexOf(",", j);
-      var backBrace = input.indexOf("}", j);
+      // console.log("result: " + result);
+      // console.log("currInd: " + currIndex + "   tokenBack: " + tokenBack);
+      
+      // The key in question
+      var token = input.substring(currIndex+1,tokenBack);
+      // info += " " + token;
+      // End of value info, to help ignore a field
+      var backComma = input.indexOf(",", tokenBack);
+      var backBrace = input.indexOf("}", tokenBack);
+      lastEnd = currIndex;
 
+      if(isLinks) {
+        if(token === "id") {
+          if(backBrace < backComma) {
+            if(input.charAt(currIndex-1) === ',' && 
+                result.charAt(result.length-1) == ',') {
+              //delete previous comma in result
+              result = result.substring(0,result.length-1);
+              lastEnd = backBrace;
+            } else if(result.charAt(result.length-1) == '{') {
+              result = result.substring(0,result.length-1);
+              lastEnd = backBrace+1;
+            } else {
+              //delete brace in future string addition
+              lastEnd = backBrace+1;
+            }
+          } else {
+            //delete comma in future string addition
+            lastEnd = backComma+1;
+          }
+          continue;
+        }
+        nonCompress = true;
+      }
+      
+      if(token === "links") {
+        isLinks = true;
+      }
+
+      //Search for if the key's field is unnecessary
       for(var z = 0; z < COMPRESS_IGNORES.length; ++z) {
         if(token === COMPRESS_IGNORES[z]) {
+          
+          // key is unnecessary, do not add it or its field to 
           if(backBrace < backComma) {
-            if(input.charAt(i-1) === "," && result.charAt(result.length-1)) {
+            if(input.charAt(currIndex-1) === ',' && 
+                result.charAt(result.length-1) == ',') {
+              //delete previous comma in result
               result = result.substring(0,result.length-1);
-              i = backBrace - 1;
+              lastEnd = backBrace;
+            } else if(result.charAt(result.length-1) == '{') {
+              result = result.substring(0,result.length-1);
+              lastEnd = backBrace+1;
             } else {
-              i = backBrace - 1;
-            } 
+              //delete brace in future string addition
+              lastEnd = backBrace+1;
+            }
           } else {
-            i = backComma;
+            //delete comma in future string addition
+            lastEnd = backComma+1;
           }
-          ignored = true;
+          // console.log("IGNORED: " + input.substring(currIndex,lastEnd));
+          // info += "FOUND,  ";
+          nonCompress = true;
           break;
+        } else if(z < BIG_IGNORES.length && token === BIG_IGNORES[z]) {
+          lastEnd = backBrace + 2;
+          tokenBack = lastEnd - 2;
+          // info += "FOUND,  ";
+          nonCompress = true;
+          break;
+        } else {
+          nonCompress = false;
         }
       }
-      if(!ignored) {
-        lastEnd = input.indexOf("\"",j+1);
-        if(lastEnd === -1) {
-          result += input.substring(i);
-        }
-        result += input.substring(i,a);
-        i = a;
-        
-      }
-      console.log("bottom i: " + i + "{" + input.charAt(i) + "}");
+
 
 
     }
 
-    return input;
+
+    if(nonCompress) {
+      info += "3";
+    }
+    if(nonCompress && info === "1234") {
+      console.log("INFO: " + info);
+      console.log(compression);
+    }
+    console.log("RES: " + result);
+    console.log("COMPRESS: " + compression);
+
+    return result;
 
   }
 
