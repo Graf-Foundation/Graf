@@ -2,10 +2,11 @@
   <div class="graf">
     <center>
       <header class="fixedTC">
-        <Toolbar @tool-change="change_tool" @alg-change="onAlgorithmChange"></Toolbar>
+        <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
 
         <sui-button @click="onUndo();" icon="undo" />
         <sui-button @click="onRedo();" icon="redo" />
+        <InfoBox :selected="selection.selectedLabel"> </InfoBox>
 
         <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
          style="margin: 1em 0em 0em"
@@ -23,7 +24,7 @@
           </sui-dropdown-item>
 
           <sui-dropdown-item>Settings</sui-dropdown-item>
-          <sui-dropdown-item> 
+          <sui-dropdown-item>
             <a @click="$root.$emit('openHelp')">Help</a>
           </sui-dropdown-item>
         </sui-dropdown-menu>
@@ -52,6 +53,16 @@
 
 
     </center>
+    <svg >
+      <defs>
+        <marker id="target-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth" >
+          <path d="M0,0 L0,6 L9,3 z"></path>
+        </marker>
+        <marker id="source-arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth" >
+          <path d="M0,3 L9,6 L9,0 z"></path>
+        </marker>
+      </defs>
+    </svg>
   </div>
 </template>
 
@@ -64,6 +75,7 @@ import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
+import InfoBox from "./InfoBox.vue";
 //import About from 'About.vue'
 
 
@@ -72,7 +84,8 @@ export default {
   components: {
     D3Network,
     Toolbar,
-    Help
+    Help,
+    InfoBox
   },
   mounted () {
 			document.addEventListener("keyup", this.keyup_handler, false);
@@ -87,13 +100,14 @@ export default {
   data () {
     return {
         currentTool: "",
+        algType: "",
+        edgeType: "undir",
         grafData: "",
         history: {
             previous: [],
             next: []
         },
         selection: {
-          selectedAlgorithm: null,
           selectedCurrent: null,
           selectedLast: null,
           selectedLabel: null,
@@ -112,7 +126,7 @@ export default {
             resizeListener: true,
             nodeSize: 20,
             nodeLabels: true,
-            linkLabels:true,
+            linkLabels:false,
             canvas: false,
             linkWidth: 3,
             fontSize: 15
@@ -129,7 +143,7 @@ export default {
     },
     onLoadGraf() {
         const elem = this.$refs.fileload;
-        elem.click(); 
+        elem.click();
     },
     onFileUpload() {
         if ('files' in this.$refs.fileload) {
@@ -151,7 +165,7 @@ export default {
       CookieHelpers.putCookie("GrafData", s);
     },
     onAlgorithmChange(alg) {
-        this.selection.selectedAlgorithm = alg;
+        this.algType = alg;
     },
     onUndo() {
         this.graf = helperFunctions.updateHistory(this.graf, this.history, true);
@@ -173,10 +187,11 @@ export default {
           GrafTools.new_node(this.graf);
           break;
         case "Edge":
-          GrafTools.new_edge(this.graf, this.selection);
+          GrafTools.new_edge(this.graf, this.selection, this.edgeType);
           break;
         case "Algorithm":
-          GrafTools.algorithm(this.graf, this.selection);
+          this.selection.selectMultiple = true;
+          PathTools.algorithm(this.graf, this.selection, this.algType);
           break;
         case "Erase":
           GrafTools.erase(this.graf, this.selection);
@@ -218,6 +233,9 @@ export default {
         this.selection.selectedLabel = null;
         this.currentTool = tool;
         this.useTool(tool);
+    },
+    change_edge (edgeType) {
+      this.edgeType = edgeType;
     },
     keyup_handler(event) {
       if(event.code == "Escape") {
@@ -268,5 +286,8 @@ export default {
   right:50%;
   margin-right: -250px;
   margin-bottom: auto;
+}
+#source-arrow path, #target-arrow{
+  fill: rgba(0, 0, 0, 1);
 }
 </style>
