@@ -135,8 +135,10 @@ export default {
   },
   methods: {
     onSaveImage() {
-        console.log(CookieHelpers.getCookie("GrafData"));
-        grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
+      //Modifying cookie
+      console.log("SAVE TEST COOKIE: \n" + CookieHelpers.getCookie("GrafData"));
+
+      grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
     },
     onSaveGraf() {
         grafhelpers.saveGraf(this.graf);
@@ -204,7 +206,7 @@ export default {
       }
       //Modifying cookie
       var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
-      console.log("NEW COOKIE: " + s);
+      // console.log("NEW COOKIE: " + s);
       CookieHelpers.putCookie("GrafData", s);
 
       var newData = JSON.stringify(this.graf);
