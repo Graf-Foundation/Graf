@@ -1,5 +1,6 @@
 <template>
   <div class="graf">
+    <Settings/>
     <center>
       <header class="fixedTC">
         <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
