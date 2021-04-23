@@ -60,7 +60,8 @@
         <br>
         <br>
         <div class="slidecontainer">
-					<input @change="onSliderChange();" v-model = "sliderVal" type="range" min="1" max="100" value="50" class="slider" id="myRange">
+					<input @change="onSliderChange();" v-model.number = "sliderVal" type="range" min="50" max="30000" value="20" class="slider">
+          
 				</div>
         <br>
         <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
@@ -182,11 +183,18 @@ export default {
       this.graf.links = [];
       this.grafData = "";
       this.graf.aggCount = 1;
+      this.options.nodeSize = 20
+      this.options = Object.assign({},this.options)
       //Modifying cookie
       CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
+    changeOptions(options){
+      this.options = Object.assign({}, options)
+      console.log(this.options)
+    },
     onSliderChange() {
-      this.options.nodeSize = this.sliderVal/2.5;
+      this.options.force = this.sliderVal
+      this.options = Object.assign({},this.options)
       console.log(this.options.nodeSize);
       
     },
