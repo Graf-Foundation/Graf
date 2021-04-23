@@ -3,18 +3,19 @@
 		<sui-sidebar-pushable>
 			<sui-menu
 				is="sui-sidebar"
-				:visible="open"
+				:visible="this.open"
 				animation="overlay"
 				width="thin"
 				icon="labeled"
 				inverted
 				vertical
-                right
+        right
 			>
 				<sui-menu-item>
 					<div class="slidecontainer">
 					<input type="range" min="1" max="100" value="50" class="slider" id="myRange">
 					</div>
+				</sui-menu-item>
 				<sui-menu-item to="/">
 					<sui-icon name="home" />
 					My Acccount
@@ -39,25 +40,13 @@
 </template>
 
 <script>
+
 export default {
 	name: "Settings",
 	data() {
-		return {
-			//open: false
-		};
+		return {}
 	},
-	props: ["open"],
-	methods: {
-    	toggle() {
-      		this.open = !this.open
-			console.log(this.open)
-    	}
-  	},
-	  created: function () {
-    	this.$root.$on('openSettings', () => {
-      	this.toggle();
-    });
-  }
+	props: ["open"]
 };
 </script>
 
@@ -66,7 +55,7 @@ export default {
   -webkit-appearance: none;
   width: 100%;
   height: 15px;
-  border-radius: 5px;  
+  border-radius: 5px;
   background: #d3d3d3;
   outline: none;
   opacity: 0.7;
@@ -79,7 +68,7 @@ export default {
   appearance: none;
   width: 25px;
   height: 25px;
-  border-radius: 50%; 
+  border-radius: 50%;
   background: #25df2c;
   cursor: pointer;
 }
