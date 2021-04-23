@@ -1,6 +1,8 @@
 # Graf
 An intuitive, open-source graph editor.
+
 ![](graf.gif)
+
 ## Installation
 First, install [Node.js](https://nodejs.org/en/).
 Clone the repository and navigate to `Graf/Vue/graf` in the command line.
