@@ -1,6 +1,5 @@
 <template>
   <div class="graf">
-    <Settings v-bind:open="Toggled"/>
     <center>
       <header class="fixedTC">
         <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
@@ -18,6 +17,7 @@
           Change Label
         </div>
       </header>
+			
 
       <sui-dropdown
         class="fixedTR icon"
@@ -57,6 +57,11 @@
         <sui-button @click="onLoadGraf();" color="green" content="Load Graph"/>
         <sui-button @click="onResetGraf();" color="green" content="Reset Graph"/>
         <br>
+        <br>
+        <div class="slidecontainer">
+					<input @change="onSliderChange();" v-model = "sliderVal" type="range" min="1" max="100" value="50" class="slider" id="myRange">
+				</div>
+        <br>
         <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
       </div>
       <Help/>
@@ -85,7 +90,7 @@ import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
-import Settings from "../components/Settings.vue"
+//import Settings from "../components/Settings.vue"
 import InfoBox from "./InfoBox.vue";
 //import About from 'About.vue'
 
@@ -94,7 +99,7 @@ export default {
   components: {
     D3Network,
     Toolbar,
-    Settings,
+    //Settings,
     Help,
     InfoBox
   },
@@ -114,6 +119,8 @@ export default {
         algType: "",
         edgeType: "undir",
         grafData: "",
+        sliderVal: "",
+        sliderFunction: "",
         history: {
             previous: [],
             next: []
@@ -165,7 +172,7 @@ export default {
         }
     },
     onSettingsOpen(){
-      console.log("cmonman")
+      //console.log("cmonman")
       this.Toggled = true;
       console.log(this.Toggled)
     },
@@ -176,6 +183,11 @@ export default {
       this.graf.aggCount = 1;
       //Modifying cookie
       CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+    },
+    onSliderChange() {
+      this.options.nodeSize = this.sliderVal/2.5;
+      console.log(this.options.nodeSize);
+      
     },
     onAlgorithmChange(alg) {
         this.algType = alg;
@@ -297,5 +309,34 @@ export default {
 }
 #source-arrow path, #target-arrow{
   fill: rgba(0, 0, 0, 1);
+}
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background: #25df2c;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #25df2c;
+  cursor: pointer;
 }
 </style>
