@@ -9,7 +9,7 @@
 				icon="labeled"
 				inverted
 				vertical
-        right
+				right
 			>
 				<sui-menu-item>
 					<div class="slidecontainer">
