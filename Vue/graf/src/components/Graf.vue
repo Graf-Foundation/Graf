@@ -6,8 +6,7 @@
 
         <sui-button @click="onUndo();" icon="undo" />
         <sui-button @click="onRedo();" icon="redo" />
-        <InfoBox v-for="s in selection.selectedNodes" v-bind:key="s.id" :selected="s"> </InfoBox>
-        <InfoBox v-for="s in selection.selectedEdges" v-bind:key="s.id" :selected="s"> </InfoBox>
+        <InfoBox :selected="selection.selectedLabel"> </InfoBox>
 
         <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
          style="margin: 1em 0em 0em"

@@ -1,7 +1,7 @@
 <template>
-  <div v-bind:id="'infoBox'+selected.id" class="infoBox">
+  <div id="infoBox">
     <sui-card>
-      <sui-card-content v-bind:id="'infoBox'+selected.id+'Header'" class="infoBoxHeader">
+      <sui-card-content id="infoBoxHeader">
         <sui-card-header>
           Info
         </sui-card-header>
@@ -21,7 +21,7 @@
 export default {
   name: "InfoBox",
   mounted: function() {
-    dragElement(document.getElementById("infoBox"+this.selected.id));
+    dragElement(document.getElementById("infoBox"));
 
     function dragElement(elmnt) {
       var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -73,14 +73,14 @@ export default {
 h5 {
   margin-bottom: 0;
 }
-.infoBox {
+#infoBox {
   position: absolute;
   z-index: 9;
   border: 1px solid #d3d3d3;
   left:100%;
 }
 
-.infoBoxHeader {
+#infoBoxHeader {
   cursor: move;
   z-index: 10;
 }
