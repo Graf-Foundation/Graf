@@ -1,6 +1,6 @@
 <template>
-  <div class="graf">
-    <Settings/>
+  <div id="app" v-on:mousemove="sideBarCheck">
+    <Settings v-bind:open="Toggled"/>
     <center>
       <header class="fixedTC">
         <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
@@ -92,16 +92,15 @@ import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
-//import Settings from "../components/Settings.vue"
+import Settings from "../components/Settings.vue"
 import InfoBox from "./InfoBox.vue";
-//import About from 'About.vue'
 
 export default {
   name: "Graf",
   components: {
     D3Network,
     Toolbar,
-    //Settings,
+    Settings,
     Help,
     InfoBox
   },
@@ -122,7 +121,7 @@ export default {
         edgeType: "undir",
         grafData: "",
         sliderVal: "",
-        sliderFunction: "",
+        Toggled: false,
         history: {
             previous: [],
             next: []
@@ -172,6 +171,17 @@ export default {
               this.graf = data;
             });
         }
+    },
+    sideBarCheck: function(event) {
+      var x = event.clientX;
+      var y = event.clientY;
+      if(x < 200 && y < 50) {
+        this.Toggled = true;
+      } else if (x < 200 && this.Toggled) {
+        this.Toggled = true;
+      } else {
+        this.Toggled = false;
+      }
     },
     onSettingsOpen(){
       //console.log("cmonman")
