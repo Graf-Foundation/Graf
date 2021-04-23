@@ -95,24 +95,20 @@ export default{
       },
       subMenus: {
         "Edge" : {
+          "undir" : "Undirected",
           "dir" : "Directed",
-          "undir" : "Undirected"
+          "bidir" : "Bidirected"
         },
         "Algorithm" : {
           "bfs" : "BFS Search",
           "dfs" : "DFS Search",
           "dijkstra" : "Dijkstra",
           "kosaraju" : "Kosaraju"
-        },
-        "Contract" : {
-          "node" : "Contract Node",
-          "edge" : "Contract Edge"
         }
       },
       subMenuActive: {
-        "Edge" : "dir",
-        "Algorithm" : "bfs",
-        "Contract" : "node"
+        "Edge" : "undir",
+        "Algorithm" : "bfs"
       }
     }
   },
@@ -125,12 +121,11 @@ export default{
       this.$emit('alg-change', alg);
     },
     onEdgeTypeChange(edgeType){
-      console.log(edgeType);
-      //This should do something too
+      this.$emit('edge-change', edgeType);
     },
     subMenuHandler(menuItem, tool) {
       if(tool == "Algorithm") this.onAlgorithmChange(menuItem);
-
+      if(tool == "Edge") this.onEdgeTypeChange(menuItem);
       this.subMenuActive[tool] = menuItem;
       this.onToolChange(tool);
     }

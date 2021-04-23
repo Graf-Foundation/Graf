@@ -3,17 +3,15 @@
     <Settings v-bind:open="Toggled"/>
     <center>
       <header class="fixedTC">
-        <Toolbar
-          @tool-change="change_tool"
-          @alg-change="onAlgorithmChange"
-        ></Toolbar>
-        <sui-button @click="onUndo()" icon="undo" />
-        <sui-button @click="onRedo()" icon="redo" />
+        <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
 
-        <div
-          class="labeler"
-          v-if="currentTool == 'Label' && selection.selectedLabel"
-          style="margin: 1em 0em 0em"
+        <sui-button @click="onUndo();" icon="undo" />
+        <sui-button @click="onRedo();" icon="redo" />
+        <InfoBox v-for="s in selection.selectedNodes" v-bind:key="s.id" :selected="s"> </InfoBox>
+        <InfoBox v-for="s in selection.selectedEdges" v-bind:key="s.id" :selected="s"> </InfoBox>
+
+        <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
+         style="margin: 1em 0em 0em"
         >
           <sui-input v-model="selection.selectedLabel.name" @keypress.stop />
           <br />
@@ -65,6 +63,16 @@
 
 
     </center>
+    <svg >
+      <defs>
+        <marker id="target-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth" >
+          <path d="M0,0 L0,6 L9,3 z"></path>
+        </marker>
+        <marker id="source-arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth" >
+          <path d="M0,3 L9,6 L9,0 z"></path>
+        </marker>
+      </defs>
+    </svg>
   </div>
 </template>
 
@@ -78,6 +86,7 @@ import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
 import Settings from "../components/Settings.vue"
+import InfoBox from "./InfoBox.vue";
 //import About from 'About.vue'
 
 export default {
@@ -86,7 +95,8 @@ export default {
     D3Network,
     Toolbar,
     Settings,
-    Help
+    Help,
+    InfoBox
   },
   mounted() {
     document.addEventListener("keyup", this.keyup_handler, false);
@@ -100,42 +110,38 @@ export default {
   },
   data() {
     return {
-      Toggled: false,
-      currentTool: "",
-      grafData: "",
-      visible: false,
-      history: {
-        previous: [],
-        next: [],
-      },
-      selection: {
-        selectedAlgorithm: null,
-        selectedCurrent: null,
-        selectedLast: null,
-        selectedLabel: null,
-        selectMultiple: true,
-        selectedNodes: new Set(),
-        selectedEdges: new Set(),
-      },
-      graf: {
-        nodes: [{ id: 0 }],
-        links: [],
-        aggCount: 1,
-      },
-      options: {
-        force: 3000,
-        size: {
-          w: Math.max(1020, window.innerWidth - 200),
-          h: Math.max(720, window.innerHeight - 210),
+        currentTool: "",
+        algType: "",
+        edgeType: "undir",
+        grafData: "",
+        history: {
+            previous: [],
+            next: []
         },
-        resizeListener: true,
-        nodeSize: 20,
-        nodeLabels: true,
-        linkLabels: true,
-        canvas: false,
-        linkWidth: 3,
-        fontSize: 15,
-      },
+        selection: {
+          selectedCurrent: null,
+          selectedLast: null,
+          selectedLabel: null,
+          selectMultiple: true,
+          selectedNodes: new Set(),
+          selectedEdges: new Set()
+        },
+        graf: {
+          nodes: [{ id: 0 }],
+          links: [],
+          aggCount: 1,
+        },
+        options: {
+            force: 3000,
+            size:{ w: Math.max(1020,window.innerWidth - 200), h: Math.max(720,window.innerHeight - 210)},
+            resizeListener: true,
+            nodeSize: 20,
+            nodeLabels: true,
+            linkLabels:false,
+            canvas: false,
+            linkWidth: 3,
+            fontSize: 15
+        }
     };
   },
   methods: {
@@ -147,7 +153,7 @@ export default {
     },
     onLoadGraf() {
         const elem = this.$refs.fileload;
-        elem.click(); 
+        elem.click();
     },
     onFileUpload() {
         if ('files' in this.$refs.fileload) {
@@ -172,7 +178,7 @@ export default {
       CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
     onAlgorithmChange(alg) {
-      this.selection.selectedAlgorithm = alg;
+        this.algType = alg;
     },
     onUndo() {
       this.graf = helperFunctions.updateHistory(this.graf, this.history, true);
@@ -194,10 +200,11 @@ export default {
           GrafTools.new_node(this.graf);
           break;
         case "Edge":
-          GrafTools.new_edge(this.graf, this.selection);
+          GrafTools.new_edge(this.graf, this.selection, this.edgeType);
           break;
         case "Algorithm":
-          GrafTools.algorithm(this.graf, this.selection);
+          this.selection.selectMultiple = true;
+          PathTools.algorithm(this.graf, this.selection, this.algType);
           break;
         case "Erase":
           GrafTools.erase(this.graf, this.selection);
@@ -237,6 +244,9 @@ export default {
       this.selection.selectedLabel = null;
       this.currentTool = tool;
       this.useTool(tool);
+    },
+    change_edge (edgeType) {
+      this.edgeType = edgeType;
     },
     keyup_handler(event) {
       if (event.code == "Escape") {
@@ -284,5 +294,8 @@ export default {
   right:50%;
   margin-right: -250px;
   margin-bottom: auto;
+}
+#source-arrow path, #target-arrow{
+  fill: rgba(0, 0, 0, 1);
 }
 </style>
