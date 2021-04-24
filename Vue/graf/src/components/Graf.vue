@@ -171,15 +171,16 @@ export default {
         }
     },
     sideBarCheck: function(event) {
-      var x = event.clientX;
-      var y = event.clientY;
-      if(x < 200 && y < 50) {
-        this.Toggled = true;
-      } else if (x < 200 && this.Toggled) {
-        this.Toggled = true;
-      } else {
-        this.Toggled = false;
-      }
+      event;
+      // var x = event.clientX;
+      // var y = event.clientY;
+      // if(x < 200 && y < 50) {
+      //   this.Toggled = true;
+      // } else if (x < 200 && this.Toggled) {
+      //   this.Toggled = true;
+      // } else {
+      //   this.Toggled = false;
+      // }
     },
     onSettingsOpen(){
       this.Toggled = true;
@@ -196,7 +197,7 @@ export default {
     },
     onSliderChange(val) {
       console.log(val)
-      this.options.nodeSize = val
+      this.options.nodeSize = this.sldierVal
       this.options = Object.assign({},this.options)
       console.log(this.options.nodeSize);
       
