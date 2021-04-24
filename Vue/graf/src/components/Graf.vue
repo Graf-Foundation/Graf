@@ -1,6 +1,6 @@
 <template>
   <div id="app" v-on:mousemove="sideBarCheck">
-    <Settings v-bind:open="Toggled"/>
+    <Settings v-bind:open="Toggled" @slider-change="onSliderChange"></Settings>
     <center>
       <header class="fixedTC">
         <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
@@ -33,7 +33,6 @@
           </sui-dropdown-item>
 
           <sui-dropdown-item>
-            <!-- <a @click ="$root.$emit('openSettings')">Settings</a> -->
             <a @click ="onSettingsOpen()">Settings</a>
           </sui-dropdown-item>
 
@@ -61,7 +60,6 @@
         <br>
         <div class="slidecontainer">
 					<input @change="onSliderChange();" v-model.number = "sliderVal" type="range" min="50" max="30000" value="20" class="slider">
-          
 				</div>
         <br>
         <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
@@ -184,9 +182,7 @@ export default {
       }
     },
     onSettingsOpen(){
-      //console.log("cmonman")
       this.Toggled = true;
-      console.log(this.Toggled)
     },
     onResetGraf() {
       this.graf.nodes = [{ id: 0 }];
@@ -198,12 +194,9 @@ export default {
       //Modifying cookie
       CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
-    changeOptions(options){
-      this.options = Object.assign({}, options)
-      console.log(this.options)
-    },
-    onSliderChange() {
-      this.options.force = this.sliderVal
+    onSliderChange(val) {
+      console.log(val)
+      this.options.nodeSize = val
       this.options = Object.assign({},this.options)
       console.log(this.options.nodeSize);
       
