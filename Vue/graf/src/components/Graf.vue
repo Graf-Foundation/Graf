@@ -92,10 +92,11 @@ export default {
       window.addEventListener('resize', this.resize_handler, false);
       //Loading in the graf from cookies
       CookieHelpers.checkRepCookie();
-      if(!CookieHelpers.isCookieEmpty()) {
-        var d = grafhelpers.loadGraf(CookieHelpers.getCookie("GrafData"));
-        this.graf = d;
-      }
+      // if(!CookieHelpers.isCookieEmpty()) {
+      //   var d = grafhelpers.loadGraf(CookieHelpers.decompressGraf(
+      //             CookieHelpers.getCookie("GrafData")));
+      //   this.graf = d;
+      // }
   },
   data () {
     return {
@@ -135,9 +136,8 @@ export default {
   },
   methods: {
     onSaveImage() {
-      //Modifying cookie
-      console.log("SAVE TEST COOKIE: \n" + CookieHelpers.getCookie("GrafData"));
-
+      console.log("Compressed Graf Cookie: " + CookieHelpers.getCookie("GrafData"));
+      console.log("Decompressed Version: " + CookieHelpers.decompressGraf(CookieHelpers.getCookie("GrafData")));
       grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
     },
     onSaveGraf() {
@@ -163,7 +163,6 @@ export default {
         this.graf.aggCount = 1;
       //Modifying cookie
       var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
-      console.log("RESET COOKIE: " + s);
       CookieHelpers.putCookie("GrafData", s);
     },
     onAlgorithmChange(alg) {
@@ -205,9 +204,10 @@ export default {
           break;
       }
       //Modifying cookie
-      var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
+      // var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
       // console.log("NEW COOKIE: " + s);
-      CookieHelpers.putCookie("GrafData", s);
+      CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
+    
 
       var newData = JSON.stringify(this.graf);
       if(oldData != newData) {
