@@ -13,20 +13,8 @@
 			>
 				<sui-menu-item>
 					<div class="slidecontainer">
-					<input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+						<input @change="onSliderChange(val);" v-model.number = "val" type="range" min="10" max="80" value="20" class="slider">
 					</div>
-				</sui-menu-item>
-				<sui-menu-item to="/">
-					<sui-icon name="home" />
-					My Acccount
-				</sui-menu-item>
-				<sui-menu-item>
-					<sui-icon name="file outline" />
-					Master List
-				</sui-menu-item>
-				<sui-menu-item>
-					<sui-icon name="plus" />
-					New Project
 				</sui-menu-item>
 			</sui-menu>
 			<sui-sidebar-pusher>
@@ -46,6 +34,12 @@ export default {
 	data() {
 		return {}
 	},
+	methods: {
+		onSliderChange(val) {
+			console.log(val);
+			this.$emit('slider-change', val);
+		}
+	},
 	props: ["open"]
 };
 </script>
@@ -54,7 +48,7 @@ export default {
 .slider {
   -webkit-appearance: none;
   width: 100%;
-  height: 15px;
+  height: 8px;
   border-radius: 5px;
   background: #d3d3d3;
   outline: none;
@@ -66,8 +60,8 @@ export default {
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 25px;
-  height: 25px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   background: #25df2c;
   cursor: pointer;
@@ -80,4 +74,5 @@ export default {
   background: #25df2c;
   cursor: pointer;
 }
+
 </style>
