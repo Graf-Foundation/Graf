@@ -209,9 +209,6 @@ class CookieHelper {
           nonCompress = false;
         }
       }
-
-
-
     }
 
 
@@ -225,9 +222,110 @@ class CookieHelper {
     console.log("RES: " + result);
     console.log("COMPRESS: " + compression);
 
-    return result;
+    return compression;
 
   }
+
+  // Decompresses the GrafData compression
+  // @param compressed: String of compressed Graf
+  // @return String of decompressed Graf data
+  decompressGraf(compressed) {
+    console.log("COMPRESSED: " + compressed);
+    
+    // const VALID_TOKENS = ["nodes","id","name","links","sid","tid","type","aggCount"];
+    const DECOMPRESS_STRINGS = ["{\"nodes\":[{", "\"id\":", "\"name\":", 
+                              "}],\"links\":[{", "\"sid\":", "\"tid\":", 
+                              "\"type\":", "}],\"aggCount\":"];
+    const DOUBLE_NAKED_STRING = "},{";
+    const DELIM_START_INT = 174;
+    // const BAD_FORMAT_TOKENS = ['{', '}', '[' ,']' ,',' ,'"'];
+    // const DELIM_START_CHAR = String.fromCharCode(174);
+
+    var token;
+
+    var index = 0;
+    var doubleNaked = false;
+    var result = "";
+
+    while(index < compressed.length) {
+      // console.log(result);
+      console.log("CHARAT " + index + ": " + compressed.charAt(index));
+      token = compressed.charAt(index);
+      var tempString = "";
+      var a;
+      var b;
+      switch(token) {
+        //nodes, links, aggCount
+        case String.fromCharCode(DELIM_START_INT):
+        case String.fromCharCode(DELIM_START_INT+3):
+        case String.fromCharCode(DELIM_START_INT+7):
+          console.log("AAA");
+          doubleNaked = false;
+          break;
+        //id and sid
+        case String.fromCharCode(DELIM_START_INT+1):
+        case String.fromCharCode(DELIM_START_INT+4):
+          console.log("BBB");
+          if(doubleNaked) {
+            result += DOUBLE_NAKED_STRING;
+          }
+          
+
+          a = Math.min(compressed.indexOf(String.fromCharCode(DELIM_START_INT+2),index),
+                            compressed.indexOf(String.fromCharCode(DELIM_START_INT+5), index));
+          var str = "";
+          for(var zzz = 0; zzz < 10; ++zzz) {
+            str += String.fromCharCode(DELIM_START_INT + zzz);
+          }
+          console.log("STR " + str);
+          tempString = compressed.substring(index+1,a);
+          index = a-1;
+          return "";
+          // break;
+        //tid
+        case String.fromCharCode(DELIM_START_INT+5):
+          console.log("CCC");
+          result += ",";
+          break;
+        //name
+        case String.fromCharCode(DELIM_START_INT+2):
+          console.log("DDD");
+          result += ",";
+          doubleNaked = true;
+          a = Math.min(compressed.indexOf(DELIM_START_INT+1,index), 
+                            compressed.indexOf(DELIM_START_INT+3,index));
+          tempString = "\"" + compressed.substring(index+1,a) + "\"";
+          index = a-1;
+          break;
+        //type
+        case DELIM_START_INT+6:
+          result += ",";
+          break;
+      }
+      // console.log("A" + result);
+      result += DECOMPRESS_STRINGS[token - DELIM_START_INT];
+      // console.log("B" + result);
+      result += tempString;
+      // console.log("C" + result);
+      ++index;
+
+    }
+
+
+
+    console.log("F" + result);
+    return compressed;
+
+
+
+
+
+
+
+  }
+
+
+
 
 
   // Gives the index in the cookie string where the pre-key delimiter is located
