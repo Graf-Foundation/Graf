@@ -195,7 +195,7 @@ export default {
     },
     onSliderChange(val) {
       console.log(val)
-      this.options.nodeSize = this.sldierVal
+      this.options.nodeSize = val
       this.options = Object.assign({},this.options)
       console.log(this.options.nodeSize);
       
