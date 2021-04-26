@@ -5,11 +5,10 @@
 				is="sui-sidebar"
 				:visible="this.open"
 				animation="overlay"
-				width="thin"
+				width= "thin"
 				icon="labeled"
-				inverted
 				vertical
-				right
+				direction = "left"
 			>
 				<sui-menu-item>
 					this will look nicer
