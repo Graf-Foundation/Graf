@@ -7,8 +7,6 @@
 
         <sui-button @click="onUndo();" icon="undo" />
         <sui-button @click="onRedo();" icon="redo" />
-        <InfoBox v-for="s in selection.selectedNodes" v-bind:key="s.id" :selected="s"> </InfoBox>
-        <InfoBox v-for="s in selection.selectedEdges" v-bind:key="s.id" :selected="s"> </InfoBox>
 
         <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
          style="margin: 1em 0em 0em"
@@ -91,7 +89,7 @@ import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
 import Settings from "../components/Settings.vue"
-import InfoBox from "./InfoBox.vue";
+//import InfoBox from "./InfoBox.vue";
 
 export default {
   name: "Graf",
@@ -99,8 +97,8 @@ export default {
     D3Network,
     Toolbar,
     Settings,
-    Help,
-    InfoBox
+    Help
+    //InfoBox
   },
   mounted() {
     document.addEventListener("keyup", this.keyup_handler, false);
@@ -143,7 +141,7 @@ export default {
             resizeListener: true,
             nodeSize: 20,
             nodeLabels: true,
-            linkLabels:false,
+            linkLabels:true,
             canvas: false,
             linkWidth: 3,
             fontSize: 15
