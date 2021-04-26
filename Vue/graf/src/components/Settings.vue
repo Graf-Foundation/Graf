@@ -28,7 +28,6 @@
 </template>
 
 <script>
-
 export default {
 	name: "Settings",
 	data() {
