@@ -69,12 +69,13 @@ class CookieHelper {
     var result = "";
 
     var currIndex = -1;
-    var lastEnd = 0;
-    var tokenBack = 0;
+    var lastEnd = -1;
+    var tokenBack = -1;
     var isLinks = false;
     var compression = "";
-    var nonCompress = "";
-    var info = "";
+    var nonCompress = false;
+    var lastIteration = false;
+    // var info = "";
 
     while(lastEnd < input.length) {
 
@@ -86,8 +87,8 @@ class CookieHelper {
       // console.log("x: " + x + ": " + y);
       if(x == -1) {
         if(y == -1) {
-          result += input.substring(lastEnd);
-          break;
+          currIndex = input.length;
+          lastIteration = true;
         } else {
           currIndex = y+1;
         }
@@ -130,6 +131,9 @@ class CookieHelper {
           }
         }
       }
+      if(lastIteration) {
+        break;
+      }
 
       // TokenBack is the end of the key
       tokenBack = input.indexOf("\":", currIndex+1);
@@ -139,6 +143,7 @@ class CookieHelper {
       
       // The key in question
       var token = input.substring(currIndex+1,tokenBack);
+      // console.log("token: " + token);
       // info += " " + token;
       // End of value info, to help ignore a field
       var backComma = input.indexOf(",", tokenBack);
@@ -212,15 +217,12 @@ class CookieHelper {
     }
 
 
-    if(nonCompress) {
-      info += "3";
-    }
-    if(nonCompress && info === "1234") {
-      console.log("INFO: " + info);
-      console.log(compression);
-    }
+    // if(info != "aaaaaaa") {
+    //   console.log("INFO: " + info);
+    //   console.log(compression);
+    // }
     console.log("RES: " + result);
-    console.log("COMPRESS: " + compression);
+    // console.log("COMPRESS: " + compression);
 
     return compression;
 
@@ -234,34 +236,52 @@ class CookieHelper {
     
     // const VALID_TOKENS = ["nodes","id","name","links","sid","tid","type","aggCount"];
     const DECOMPRESS_STRINGS = ["{\"nodes\":[{", "\"id\":", "\"name\":", 
-                              "}],\"links\":[{", "\"sid\":", "\"tid\":", 
-                              "\"type\":", "}],\"aggCount\":"];
+                              "}],\"links\":[", "\"sid\":", "\"tid\":", 
+                              "\"type\":", "],\"aggCount\":"];
     const DOUBLE_NAKED_STRING = "},{";
     const DELIM_START_INT = 174;
     // const BAD_FORMAT_TOKENS = ['{', '}', '[' ,']' ,',' ,'"'];
     // const DELIM_START_CHAR = String.fromCharCode(174);
 
     var token;
+    var tokenInt;
 
     var index = 0;
     var doubleNaked = false;
     var result = "";
+    var end = false;
 
-    while(index < compressed.length) {
-      // console.log(result);
+    while(!end && index < compressed.length) {
+      console.log("RES: " + result);
       console.log("CHARAT " + index + ": " + compressed.charAt(index));
       token = compressed.charAt(index);
+      tokenInt = compressed.charCodeAt(index);
       var tempString = "";
       var a;
       var b;
       var c;
+      var d;
       switch(token) {
-        //nodes, links, aggCount
+        //nodes
         case String.fromCharCode(DELIM_START_INT):
-        case String.fromCharCode(DELIM_START_INT+3):
-        case String.fromCharCode(DELIM_START_INT+7):
           console.log("AAA");
           doubleNaked = false;
+          break;
+        // links
+        case String.fromCharCode(DELIM_START_INT+3):
+          doubleNaked = false;
+          if(compressed.charAt(index+1) != String.fromCharCode(DELIM_START_INT+7)) {
+            result += "{";
+          }
+          break;
+        // aggcount
+        case String.fromCharCode(DELIM_START_INT+7):
+          doubleNaked = false;
+          if(compressed.charAt(index-1) != String.fromCharCode(DELIM_START_INT+3)) {
+            result += "}";
+          }
+          tempString = compressed.substring(index+1) + "}";
+          end = true;
           break;
         //id and sid
         case String.fromCharCode(DELIM_START_INT+1):
@@ -272,21 +292,24 @@ class CookieHelper {
           }
           
 
-          a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+2),index);
+          a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+2), index);
           b = compressed.indexOf(String.fromCharCode(DELIM_START_INT+5), index);
-          if(a == -1) c = b;
-          else if(b == -1) c = a;
-          else c = Math.min(a,b);
+          c = compressed.indexOf(String.fromCharCode(DELIM_START_INT+3), index);
 
-          var str = "";
-          for(var zzz = 0; zzz < 10; ++zzz) {
-            str += String.fromCharCode(DELIM_START_INT + zzz);
-          }
+          if(a === -1) a = Number.MAX_SAFE_INTEGER;
+          if(b === -1) b = Number.MAX_SAFE_INTEGER;
+          if(c === -1) c = Number.MAX_SAFE_INTEGER;
+          
+          d = Math.min(a,b,c);
+          console.log("a: " + a + "  b: " + b + "  c: " + c + "  d: " + d);
+          // var str = "";
+          // for(var zzz = 0; zzz < 10; ++zzz) {
+          //   str += String.fromCharCode(DELIM_START_INT + zzz);
+          // }
           // console.log("STR " + str);
-          tempString = compressed.substring(index+1,c);
-          index = c-1;
-          return "";
-          // break;
+          tempString = compressed.substring(index+1,d);
+          index = d-1;
+          break;
         //tid
         case String.fromCharCode(DELIM_START_INT+5):
           console.log("CCC");
@@ -297,10 +320,16 @@ class CookieHelper {
           console.log("DDD");
           result += ",";
           doubleNaked = true;
-          a = Math.min(compressed.indexOf(DELIM_START_INT+1,index), 
-                            compressed.indexOf(DELIM_START_INT+3,index));
-          tempString = "\"" + compressed.substring(index+1,a) + "\"";
-          index = a-1;
+          a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+1),index);
+          b = compressed.indexOf(String.fromCharCode(DELIM_START_INT+3), index);
+
+          if(a === -1) a = Number.MAX_SAFE_INTEGER;
+          if(b === -1) b = Number.MAX_SAFE_INTEGER;
+          
+          c = Math.min(a,b);
+          console.log("a: " + a + "  b: " + b + "  c: " + c);
+          tempString = "\"" + compressed.substring(index+1,c) + "\"";
+          index = c-1;
           break;
         //type
         case DELIM_START_INT+6:
@@ -309,7 +338,7 @@ class CookieHelper {
           break;
       }
       // console.log("A" + result);
-      result += DECOMPRESS_STRINGS[token - DELIM_START_INT];
+      result += DECOMPRESS_STRINGS[tokenInt - DELIM_START_INT];
       // console.log("B" + result);
       result += tempString;
       // console.log("C" + result);
