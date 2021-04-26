@@ -254,6 +254,7 @@ class CookieHelper {
       var tempString = "";
       var a;
       var b;
+      var c;
       switch(token) {
         //nodes, links, aggCount
         case String.fromCharCode(DELIM_START_INT):
@@ -271,15 +272,19 @@ class CookieHelper {
           }
           
 
-          a = Math.min(compressed.indexOf(String.fromCharCode(DELIM_START_INT+2),index),
-                            compressed.indexOf(String.fromCharCode(DELIM_START_INT+5), index));
+          a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+2),index);
+          b = compressed.indexOf(String.fromCharCode(DELIM_START_INT+5), index);
+          if(a == -1) c = b;
+          else if(b == -1) c = a;
+          else c = Math.min(a,b);
+
           var str = "";
           for(var zzz = 0; zzz < 10; ++zzz) {
             str += String.fromCharCode(DELIM_START_INT + zzz);
           }
-          console.log("STR " + str);
-          tempString = compressed.substring(index+1,a);
-          index = a-1;
+          // console.log("STR " + str);
+          tempString = compressed.substring(index+1,c);
+          index = c-1;
           return "";
           // break;
         //tid
@@ -299,6 +304,7 @@ class CookieHelper {
           break;
         //type
         case DELIM_START_INT+6:
+          console.log("EEE");
           result += ",";
           break;
       }
