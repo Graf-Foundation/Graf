@@ -55,11 +55,6 @@
         <sui-button @click="onLoadGraf();" color="green" content="Load Graph"/>
         <sui-button @click="onResetGraf();" color="green" content="Reset Graph"/>
         <br>
-        <br>
-        <div class="slidecontainer">
-					<input @change="onSliderChange();" v-model.number = "sliderVal" type="range" min="50" max="30000" value="20" class="slider">
-				</div>
-        <br>
         <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
       </div>
       <Help/>
@@ -116,7 +111,6 @@ export default {
         algType: "",
         edgeType: "undir",
         grafData: "",
-        sliderVal: "",
         Toggled: false,
         history: {
             previous: [],
@@ -169,19 +163,20 @@ export default {
         }
     },
     sideBarCheck: function(event) {
-      event;
-      // var x = event.clientX;
-      // var y = event.clientY;
-      // if(x < 200 && y < 50) {
-      //   this.Toggled = true;
-      // } else if (x < 200 && this.Toggled) {
-      //   this.Toggled = true;
-      // } else {
-      //   this.Toggled = false;
-      // }
+      //event;
+      var x = event.clientX;
+      var y = event.clientY;
+      if(x < 200 && y < 50) {
+        this.Toggled = true;
+      } else if (x < 200 && this.Toggled) {
+        this.Toggled = true;
+      } else {
+        this.Toggled = false;
+      }
     },
     onSettingsOpen(){
       this.Toggled = true;
+      console.log(this.graf.links)
     },
     onResetGraf() {
       this.graf.nodes = [{ id: 0 }];
@@ -189,15 +184,17 @@ export default {
       this.grafData = "";
       this.graf.aggCount = 1;
       this.options.nodeSize = 20
+      this.options.force = 3000;
+      this.options.linkWidth = 3;
       this.options = Object.assign({},this.options)
       //Modifying cookie
       CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
-    onSliderChange(val) {
-      console.log(val)
-      this.options.nodeSize = val
+    onSliderChange(val, need) {
+      if(need == 1) {this.options.nodeSize = val}
+      if(need == 2) {this.options.force = val}
+      if(need == 3) {this.options.linkWidth = val}
       this.options = Object.assign({},this.options)
-      console.log(this.options.nodeSize);
       
     },
     onAlgorithmChange(alg) {
