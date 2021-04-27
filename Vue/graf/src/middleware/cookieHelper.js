@@ -271,7 +271,7 @@ class CookieHelper {
         case String.fromCharCode(DELIM_START_INT+3):
           doubleNaked = false;
           if(compressed.charAt(index+1) != String.fromCharCode(DELIM_START_INT+7)) {
-            result += "{";
+            tempString += "{";
           }
           break;
         // aggcount
