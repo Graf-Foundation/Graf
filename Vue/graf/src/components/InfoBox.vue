@@ -1,16 +1,23 @@
 <template>
-  <div v-bind:id="'infoBox'+selected.id" class="infoBox">
+  <div id="infoBox" class="infoBox">
     <sui-card>
-      <sui-card-content v-bind:id="'infoBox'+selected.id+'Header'" class="infoBoxHeader">
+      <sui-card-content id="infoBoxHeader" class="infoBoxHeader">
         <sui-card-header>
           Info
         </sui-card-header>
       </sui-card-content>
-      <sui-card-content>
+      <sui-card-content style="display:none">
+        {{selected}}
+      </sui-card-content>
+      <sui-card-content v-for="n in selected.selectedNodes" v-bind:key="n.id">
         <h5>Name: </h5> 
-        {{ selected.name }}
-        <h5 v-if="selected.type">Type: </h5>
-        {{ selected.type }}
+        {{ n.name }}
+      </sui-card-content>
+      <sui-card-content v-for="e in selected.selectedEdges" v-bind:key="e.id">
+        <h5>Name: </h5> 
+        {{ e.name }}
+        <h5>Type: </h5>
+        {{ e.type }}
       </sui-card-content>
     </sui-card>
   </div>
@@ -21,7 +28,7 @@
 export default {
   name: "InfoBox",
   mounted: function() {
-    dragElement(document.getElementById("infoBox"+this.selected.id));
+    dragElement(document.getElementById("infoBox"));
 
     function dragElement(elmnt) {
       var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
