@@ -7,6 +7,7 @@
 
         <sui-button @click="onUndo();" icon="undo" />
         <sui-button @click="onRedo();" icon="redo" />
+        <sui-button @click="clear_selections()" @ icon ="eye slash"/>
         <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection"> </InfoBox>
 
         <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
@@ -196,6 +197,8 @@ export default {
       this.options.linkWidth = 3;
       this.options = Object.assign({},this.options)
       this.$root.$emit('resetSliders')
+      this.selection.selectedNodes = new Set();
+      this.selection.selectedEdges = new Set();
       //Modifying cookie
       var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
       CookieHelpers.putCookie("GrafData", s);
@@ -283,11 +286,12 @@ export default {
     change_edge (edgeType) {
       this.edgeType = edgeType;
     },
-    keyup_handler(event) {
-      if (event.code == "Escape") {
+    clear_selections(){
         PathTools.update_distances(this.graf, null, false);
         GrafTools.clear_selection(this.graf, this.selection);
-      }
+    },
+    keyup_handler(event) {
+      if (event.code == "Escape") {this.clear_selections()}
       if (event.ctrlKey && event.code === "KeyZ") this.onUndo();
       if (event.ctrlKey && event.code === "KeyY") this.onRedo();
     },
