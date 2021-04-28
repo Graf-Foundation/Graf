@@ -1,5 +1,6 @@
 <template>
-  <div class="graf">
+  <div id="app" v-on:mousemove="sideBarCheck">
+    <Settings v-bind:open="Toggled" @slider-change="onSliderChange"/>
     <center>
       <header class="fixedTC">
         <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
@@ -12,24 +13,33 @@
          style="margin: 1em 0em 0em"
         >
           <sui-input v-model="selection.selectedLabel.name" @keypress.stop />
-          <br>
+          <br />
           Change Label
         </div>
       </header>
+			
 
-      <sui-dropdown class="fixedTR icon" icon="settings" button pointing="top right" floating>
+      <sui-dropdown
+        class="fixedTR icon"
+        icon="settings"
+        button
+        pointing="top right"
+        floating
+      >
         <sui-dropdown-menu>
           <sui-dropdown-item>
             <router-link to="/about">About</router-link>
           </sui-dropdown-item>
 
-          <sui-dropdown-item>Settings</sui-dropdown-item>
-          <sui-dropdown-item>
+          <!-- <sui-dropdown-item>
+            <a @click ="onSettingsOpen()">Settings</a>
+          </sui-dropdown-item> -->
+
+          <sui-dropdown-item> 
             <a @click="$root.$emit('openHelp')">Help</a>
           </sui-dropdown-item>
         </sui-dropdown-menu>
       </sui-dropdown>
-
 
       <D3Network
         id="grafNet"
@@ -49,7 +59,6 @@
         <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
       </div>
       <Help/>
-
 
 
     </center>
@@ -75,22 +84,30 @@ import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
+import Settings from "../components/Settings.vue"
 import InfoBox from "./InfoBox.vue";
 //import About from 'About.vue'
 
-
 export default {
-  name: 'Graf',
+  name: "Graf",
   components: {
     D3Network,
     Toolbar,
+    Settings,
     Help,
     InfoBox
   },
   mounted () {
 			document.addEventListener("keyup", this.keyup_handler, false);
       window.addEventListener('resize', this.resize_handler, false);
-      // this.graf = Object.assign({},this.graf);
+      //this.graf = Object.assign({},this.graf);
+      
+      //Loading in the graf from cookies
+      //CookieHelpers.checkRepCookie();
+      //if (!CookieHelpers.isC) {
+      //  var d = grafhelpers.loadGraf(CookieHelpers.getCookie("GrafData"));
+      //  this.graf = d;
+      //}
       
       this.graf = CookieHelpers.mountedCookie();
       
@@ -100,12 +117,13 @@ export default {
       this.change_tool("Select");
       this.handle_node_click(this.graf.nodes[0]);
   },
-  data () {
+  data() {
     return {
         currentTool: "",
         algType: "",
         edgeType: "undir",
         grafData: "",
+        Toggled: false,
         history: {
             previous: [],
             next: []
@@ -141,7 +159,7 @@ export default {
       grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
     },
     onSaveGraf() {
-        grafhelpers.saveGraf(this.graf);
+      grafhelpers.saveGraf(this.graf);
     },
     onLoadGraf() {
         const elem = this.$refs.fileload;
@@ -156,14 +174,38 @@ export default {
             });
         }
     },
+    sideBarCheck: function(event) {
+      //event;
+      var x = event.clientX;
+      //var y = event.clientY;
+      if(x < 200) {
+        this.Toggled = true;
+      } else if (x < 200 && this.Toggled) {
+        this.Toggled = true;
+      } else {
+        this.Toggled = false;
+      }
+    },
     onResetGraf() {
-        this.graf.nodes = [{ id: 0 }];
-        this.graf.links = [];
-        this.grafData = "";
-        this.graf.aggCount = 1;
-        //Modifying cookie
-        var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
-        CookieHelpers.putCookie("GrafData", s);
+      this.graf.nodes = [{ id: 0 }];
+      this.graf.links = [];
+      this.grafData = "";
+      this.graf.aggCount = 1;
+      this.options.nodeSize = 20
+      this.options.force = 3000;
+      this.options.linkWidth = 3;
+      this.options = Object.assign({},this.options)
+      this.$root.$emit('resetSliders')
+      //Modifying cookie
+      var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
+      CookieHelpers.putCookie("GrafData", s);
+    },
+    onSliderChange(val, need) {
+      if(need == 1) {this.options.nodeSize = val}
+      if(need == 2) {this.options.force = (1/val)*10000}
+      if(need == 3) {this.options.linkWidth = val}
+      this.options = Object.assign({},this.options)
+      
     },
     onAlgorithmChange(alg) {
         this.algType = alg;
@@ -181,7 +223,7 @@ export default {
     useTool(tool) {
       var oldData = JSON.stringify(this.graf);
 
-      switch(tool){
+      switch (tool) {
         case "Select":
           break;
         case "Node":
@@ -208,7 +250,7 @@ export default {
     
 
       var newData = JSON.stringify(this.graf);
-      if(oldData != newData) {
+      if (oldData != newData) {
         this.history.previous.unshift(oldData);
         this.history.next = [];
       }
@@ -229,57 +271,54 @@ export default {
         //Modifying cookie
         CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
     },
-    change_tool (tool) {
-        if(tool == 'Select') this.selection.selectMultiple = true;
-        else this.selection.selectMultiple = false;
-        this.selection.selectedCurrent = null;
-        this.selection.selectedLast = null;
-        this.selection.selectedLabel = null;
-        this.currentTool = tool;
-        this.useTool(tool);
+    change_tool(tool) {
+      if (tool == "Select") this.selection.selectMultiple = true;
+      else this.selection.selectMultiple = false;
+      this.selection.selectedCurrent = null;
+      this.selection.selectedLast = null;
+      this.selection.selectedLabel = null;
+      this.currentTool = tool;
+      this.useTool(tool);
     },
     change_edge (edgeType) {
       this.edgeType = edgeType;
     },
     keyup_handler(event) {
-      if(event.code == "Escape") {
+      if (event.code == "Escape") {
         PathTools.update_distances(this.graf, null, false);
-        GrafTools.clear_selection(this.graf, this.selection)
+        GrafTools.clear_selection(this.graf, this.selection);
       }
-      if(event.ctrlKey && event.code === 'KeyZ')
-        this.onUndo();
-      if(event.ctrlKey && event.code === 'KeyY')
-        this.onRedo();
+      if (event.ctrlKey && event.code === "KeyZ") this.onUndo();
+      if (event.ctrlKey && event.code === "KeyY") this.onRedo();
     },
     resize_handler() {
-      this.options.size.w = Math.max(1020,window.innerWidth - 200);
-      this.options.size.h = Math.max(720,window.innerHeight - 210);
+      this.options.size.w = Math.max(1020, window.innerWidth - 200);
+      this.options.size.h = Math.max(720, window.innerHeight - 210);
       // Hacky BS to force update of the d3 network, should fork and workaround
-      this.graf.nodes.push({id: -1});
-      this.graf.nodes.splice(this.graf.nodes.length-1,1)
-    }
-  }
-}
-
+      this.graf.nodes.push({ id: -1 });
+      this.graf.nodes.splice(this.graf.nodes.length - 1, 1);
+    },
+  },
+};
 </script>
 
 <style scoped>
-.fixedTR{
-  position:fixed;
-  top:0;
+.fixedTR {
+  position: fixed;
+  top: 0;
   right: 0;
 }
-.fixedBR{
-  position:fixed;
+.fixedBR {
+  position: fixed;
   bottom: 0;
   right: 0;
 }
-.fixedTC{
-  position:fixed;
+.fixedTC {
+  position: fixed;
   width: 800px;
   height: 80px;
-  top:0;
-  right:50%;
+  top: 0;
+  right: 50%;
   margin-right: -400px;
 }
 .fixedBC{
@@ -293,5 +332,34 @@ export default {
 }
 #source-arrow path, #target-arrow{
   fill: rgba(0, 0, 0, 1);
+}
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background: #25df2c;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #25df2c;
+  cursor: pointer;
 }
 </style>

@@ -101,9 +101,7 @@ export default{
         },
         "Algorithm" : {
           "bfs" : "BFS Search",
-          "dfs" : "DFS Search",
           "dijkstra" : "Dijkstra",
-          "kosaraju" : "Kosaraju"
         }
       },
       subMenuActive: {
