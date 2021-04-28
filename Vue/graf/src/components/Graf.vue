@@ -30,9 +30,9 @@
             <router-link to="/about">About</router-link>
           </sui-dropdown-item>
 
-          <sui-dropdown-item>
+          <!-- <sui-dropdown-item>
             <a @click ="onSettingsOpen()">Settings</a>
-          </sui-dropdown-item>
+          </sui-dropdown-item> -->
 
           <sui-dropdown-item> 
             <a @click="$root.$emit('openHelp')">Help</a>
@@ -165,18 +165,14 @@ export default {
     sideBarCheck: function(event) {
       //event;
       var x = event.clientX;
-      var y = event.clientY;
-      if(x < 200 && y < 50) {
+      //var y = event.clientY;
+      if(x < 200) {
         this.Toggled = true;
       } else if (x < 200 && this.Toggled) {
         this.Toggled = true;
       } else {
         this.Toggled = false;
       }
-    },
-    onSettingsOpen(){
-      this.Toggled = true;
-      console.log(this.graf.links)
     },
     onResetGraf() {
       this.graf.nodes = [{ id: 0 }];
