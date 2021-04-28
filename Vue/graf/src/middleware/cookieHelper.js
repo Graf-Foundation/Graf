@@ -1,5 +1,25 @@
+
+import grafhelpers from '../middleware/helperFunctions';
+// import Graf from '../components/Graf.vue';
+
+
 class CookieHelper {
 
+  // A function to run on start & centralize all cookie initialization
+  mountedCookie() {
+    // Checking cookie representation
+    this.checkRepCookie();
+
+    if(!this.isCookieEmpty()) {
+      if(this.getCookie.length > 3500) {
+        return grafhelpers.loadGraf('{"nodes":[{"id":0,"name":"node 0"}],"links":[],"aggCount":1}');
+      }
+      var d = grafhelpers.loadGraf(this.decompressGraf(
+                this.getCookie("GrafData")));
+      return d;
+    }
+    return grafhelpers.loadGraf('{"nodes":[{"id":0,"name":"node 0"}],"links":[],"aggCount":1}');
+  }
 
 
   // Get function to retrieve a field from cookies
@@ -12,6 +32,8 @@ class CookieHelper {
     var value = document.cookie.substring(kEndIndex + 1, vEndIndex);
     return value;
   }
+
+
 
   // Put function to emplace or update a field in cookies
   // @param key: String for later retrieval
@@ -221,7 +243,7 @@ class CookieHelper {
     //   console.log("INFO: " + info);
     //   console.log(compression);
     // }
-    console.log("RES: " + result);
+    // console.log("RES: " + result);
     // console.log("COMPRESS: " + compression);
 
     return compression;
@@ -250,10 +272,11 @@ class CookieHelper {
     var doubleNaked = false;
     var result = "";
     var end = false;
+    var isNodes = true;
 
     while(!end && index < compressed.length) {
-      console.log("RES: " + result);
-      console.log("CHARAT " + index + ": " + compressed.charAt(index));
+      // console.log("RES: " + result);
+      // console.log("CHARAT " + index + ": " + compressed.charAt(index));
       token = compressed.charAt(index);
       tokenInt = compressed.charCodeAt(index);
       var tempString = "";
@@ -264,7 +287,6 @@ class CookieHelper {
       switch(token) {
         //nodes
         case String.fromCharCode(DELIM_START_INT):
-          console.log("AAA");
           doubleNaked = false;
           break;
         // links
@@ -273,6 +295,80 @@ class CookieHelper {
           if(compressed.charAt(index+1) != String.fromCharCode(DELIM_START_INT+7)) {
             tempString += "{";
           }
+          isNodes = false;
+          break;
+        //id
+        case String.fromCharCode(DELIM_START_INT+1):
+          if(doubleNaked) {
+            result += DOUBLE_NAKED_STRING;
+          }
+          
+
+          a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+2), index);
+          b = compressed.indexOf(String.fromCharCode(DELIM_START_INT+3), index);
+
+          if(a === -1) a = Number.MAX_SAFE_INTEGER;
+          if(b === -1) b = Number.MAX_SAFE_INTEGER;
+          
+          d = Math.min(a,b);
+          // console.log("a: " + a + "  b: " + b + "  d: " + d);
+          // var str = "";
+          // for(var zzz = 0; zzz < 10; ++zzz) {
+          //   str += String.fromCharCode(DELIM_START_INT + zzz);
+          // }
+          // console.log("STR " + str);
+          tempString = compressed.substring(index+1,d);
+          index = d-1;
+          break;
+        //name
+        case String.fromCharCode(DELIM_START_INT+2):
+          result += ",";
+          doubleNaked = true;
+          if(isNodes) {
+            a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+1),index);
+            b = compressed.indexOf(String.fromCharCode(DELIM_START_INT+3), index);
+          } else {
+            a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+4),index);
+            b = compressed.indexOf(String.fromCharCode(DELIM_START_INT+7),index);
+          }
+          if(a === -1) a = Number.MAX_SAFE_INTEGER;
+          if(b === -1) b = Number.MAX_SAFE_INTEGER;
+          
+          c = Math.min(a,b);
+          // console.log("a: " + a + "  b: " + b + "  c: " + c);
+          tempString = "\"" + compressed.substring(index+1,c) + "\"";
+          index = c-1;
+          break;
+        
+        //sid
+        case String.fromCharCode(DELIM_START_INT+4):
+          if(doubleNaked) {
+            result += DOUBLE_NAKED_STRING;
+          }
+          a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+5),index);
+
+          tempString = compressed.substring(index+1,a);
+          index = a-1;
+          break;
+        //tid
+        case String.fromCharCode(DELIM_START_INT+5):
+          result += ",";
+          a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+6),index);
+          tempString = compressed.substring(index+1,a);
+          index = a-1;
+          break;
+        //type
+        case String.fromCharCode(DELIM_START_INT+6):
+          result += ",";
+          doubleNaked = true;
+          a = compressed.charAt(index+1);
+          if(a == 'U') {
+            tempString = "\"Undirected\"";
+          } else if(a == 'D') {
+            tempString = "\"Directed\"";
+          }
+          ++index;
+
           break;
         // aggcount
         case String.fromCharCode(DELIM_START_INT+7):
@@ -282,59 +378,6 @@ class CookieHelper {
           }
           tempString = compressed.substring(index+1) + "}";
           end = true;
-          break;
-        //id and sid
-        case String.fromCharCode(DELIM_START_INT+1):
-        case String.fromCharCode(DELIM_START_INT+4):
-          console.log("BBB");
-          if(doubleNaked) {
-            result += DOUBLE_NAKED_STRING;
-          }
-          
-
-          a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+2), index);
-          b = compressed.indexOf(String.fromCharCode(DELIM_START_INT+5), index);
-          c = compressed.indexOf(String.fromCharCode(DELIM_START_INT+3), index);
-
-          if(a === -1) a = Number.MAX_SAFE_INTEGER;
-          if(b === -1) b = Number.MAX_SAFE_INTEGER;
-          if(c === -1) c = Number.MAX_SAFE_INTEGER;
-          
-          d = Math.min(a,b,c);
-          console.log("a: " + a + "  b: " + b + "  c: " + c + "  d: " + d);
-          // var str = "";
-          // for(var zzz = 0; zzz < 10; ++zzz) {
-          //   str += String.fromCharCode(DELIM_START_INT + zzz);
-          // }
-          // console.log("STR " + str);
-          tempString = compressed.substring(index+1,d);
-          index = d-1;
-          break;
-        //tid
-        case String.fromCharCode(DELIM_START_INT+5):
-          console.log("CCC");
-          result += ",";
-          break;
-        //name
-        case String.fromCharCode(DELIM_START_INT+2):
-          console.log("DDD");
-          result += ",";
-          doubleNaked = true;
-          a = compressed.indexOf(String.fromCharCode(DELIM_START_INT+1),index);
-          b = compressed.indexOf(String.fromCharCode(DELIM_START_INT+3), index);
-
-          if(a === -1) a = Number.MAX_SAFE_INTEGER;
-          if(b === -1) b = Number.MAX_SAFE_INTEGER;
-          
-          c = Math.min(a,b);
-          console.log("a: " + a + "  b: " + b + "  c: " + c);
-          tempString = "\"" + compressed.substring(index+1,c) + "\"";
-          index = c-1;
-          break;
-        //type
-        case DELIM_START_INT+6:
-          console.log("EEE");
-          result += ",";
           break;
       }
       // console.log("A" + result);
@@ -348,8 +391,8 @@ class CookieHelper {
 
 
 
-    console.log("F" + result);
-    return compressed;
+    // console.log("RESULT: " + result);
+    return result;
 
 
 
