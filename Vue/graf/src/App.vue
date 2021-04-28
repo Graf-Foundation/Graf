@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-on:mousemove="sideBarCheck">
+  <div id="app">
     <Settings v-bind:open="Toggled"/>
     <div id="Router">
       <router-view/>
@@ -8,24 +8,13 @@
 </template>
 
 <script>
-import Settings from './components/Settings.vue';
+
 
 export default {
   name: 'App',
-  components: { Settings },
+  components: {},
   data() { return { Toggled: false, } },
   methods: {
-    sideBarCheck: function(event) {
-      var x = event.clientX;
-      var y = event.clientY;
-      if(x < 200 && y < 50) {
-        this.Toggled = true;
-      } else if (x < 200 && this.Toggled) {
-        this.Toggled = true;
-      } else {
-        this.Toggled = false;
-      }
-    }
   }
 }
 </script>
