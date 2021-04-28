@@ -254,7 +254,7 @@ class CookieHelper {
   // @param compressed: String of compressed Graf
   // @return String of decompressed Graf data
   decompressGraf(compressed) {
-    console.log("COMPRESSED: " + compressed);
+    // console.log("COMPRESSED: " + compressed);
     
     // const VALID_TOKENS = ["nodes","id","name","links","sid","tid","type","aggCount"];
     const DECOMPRESS_STRINGS = ["{\"nodes\":[{", "\"id\":", "\"name\":", 
