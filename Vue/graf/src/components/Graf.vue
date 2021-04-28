@@ -7,6 +7,7 @@
 
         <sui-button @click="onUndo();" icon="undo" />
         <sui-button @click="onRedo();" icon="redo" />
+        <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection"> </InfoBox>
 
         <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
          style="margin: 1em 0em 0em"
@@ -84,6 +85,8 @@ import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
 import Settings from "../components/Settings.vue"
+import InfoBox from "./InfoBox.vue";
+//import About from 'About.vue'
 
 export default {
   name: "Graf",
@@ -91,17 +94,28 @@ export default {
     D3Network,
     Toolbar,
     Settings,
-    Help
+    Help,
+    InfoBox
   },
-  mounted() {
-    document.addEventListener("keyup", this.keyup_handler, false);
-    window.addEventListener("resize", this.resize_handler, false);
-    //Loading in the graf from cookies
-    CookieHelpers.checkRepCookie();
-    if (!CookieHelpers.isC) {
-      var d = grafhelpers.loadGraf(CookieHelpers.getCookie("GrafData"));
-      this.graf = d;
-    }
+  mounted () {
+			document.addEventListener("keyup", this.keyup_handler, false);
+      window.addEventListener('resize', this.resize_handler, false);
+      //this.graf = Object.assign({},this.graf);
+      
+      //Loading in the graf from cookies
+      //CookieHelpers.checkRepCookie();
+      //if (!CookieHelpers.isC) {
+      //  var d = grafhelpers.loadGraf(CookieHelpers.getCookie("GrafData"));
+      //  this.graf = d;
+      //}
+      
+      this.graf = CookieHelpers.mountedCookie();
+      
+      //workaround to make edges show on reload
+      this.change_tool("Edge");
+      this.handle_node_click(this.graf.nodes[0]);
+      this.change_tool("Select");
+      this.handle_node_click(this.graf.nodes[0]);
   },
   data() {
     return {
@@ -183,7 +197,8 @@ export default {
       this.options = Object.assign({},this.options)
       this.$root.$emit('resetSliders')
       //Modifying cookie
-      CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+      var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
+      CookieHelpers.putCookie("GrafData", s);
     },
     onSliderChange(val, need) {
       if(need == 1) {this.options.nodeSize = val}
@@ -196,14 +211,14 @@ export default {
         this.algType = alg;
     },
     onUndo() {
-      this.graf = helperFunctions.updateHistory(this.graf, this.history, true);
-      //Modifying cookie
-      CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+        this.graf = helperFunctions.updateHistory(this.graf, this.history, true);
+        //Modifying cookie
+        CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
     },
     onRedo() {
-      this.graf = helperFunctions.updateHistory(this.graf, this.history, false);
-      //Modifying cookie
-      CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+        this.graf = helperFunctions.updateHistory(this.graf, this.history, false);
+        //Modifying cookie
+        CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
     },
     useTool(tool) {
       var oldData = JSON.stringify(this.graf);
@@ -231,7 +246,8 @@ export default {
           break;
       }
       //Modifying cookie
-      CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
+      CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
+    
 
       var newData = JSON.stringify(this.graf);
       if (oldData != newData) {
@@ -239,17 +255,21 @@ export default {
         this.history.next = [];
       }
     },
-    handle_node_click(event, node) {
-      this.selection.selectedLast = this.selection.selectedCurrent;
-      this.selection.selectedCurrent = node;
-      this.selection.selectedLabel = node;
-      GrafTools.update_selection(this.graf, node, "node", this.selection);
-      this.useTool(this.currentTool);
+    handle_node_click(event,node) {
+        this.selection.selectedLast = this.selection.selectedCurrent;
+        this.selection.selectedCurrent = node;
+        this.selection.selectedLabel = node;
+        GrafTools.update_selection(this.graf, node, 'node', this.selection);
+        this.useTool(this.currentTool);
+        //Modifying cookie
+        CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
     },
-    handle_edge_click(event, edge) {
-      this.selection.selectedLabel = edge;
-      GrafTools.update_selection(this.graf, edge, "edge", this.selection);
-      this.useTool(this.currentTool);
+    handle_edge_click(event,edge) {
+        this.selection.selectedLabel = edge;
+        GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
+        this.useTool(this.currentTool);
+        //Modifying cookie
+        CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
     },
     change_tool(tool) {
       if (tool == "Select") this.selection.selectMultiple = true;
