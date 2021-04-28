@@ -6,6 +6,7 @@
 
         <sui-button @click="onUndo();" icon="undo" />
         <sui-button @click="onRedo();" icon="redo" />
+        <InfoBox :selected="selection.selectedLabel"> </InfoBox>
 
         <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
          style="margin: 1em 0em 0em"
@@ -74,6 +75,7 @@ import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
+import InfoBox from "./InfoBox.vue";
 //import About from 'About.vue'
 
 
@@ -82,7 +84,8 @@ export default {
   components: {
     D3Network,
     Toolbar,
-    Help
+    Help,
+    InfoBox
   },
   mounted () {
 			document.addEventListener("keyup", this.keyup_handler, false);
@@ -123,7 +126,7 @@ export default {
             resizeListener: true,
             nodeSize: 20,
             nodeLabels: true,
-            linkLabels:true,
+            linkLabels: false,
             canvas: false,
             linkWidth: 3,
             fontSize: 15
