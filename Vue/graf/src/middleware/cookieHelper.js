@@ -365,7 +365,10 @@ class CookieHelper {
           if(a == 'U') {
             tempString = "\"Undirected\"";
           } else if(a == 'D') {
-            tempString = "\"Directed\"";
+            tempString = "\"Directed\"" + ",\"_svgAttrs\":{\"marker-end\":\"url(#target-arrow)\"}";
+          } else if(a == 'B') {
+            tempString = "\"Bidirected\"" + ",\"_svgAttrs\":{\"marker-start\":\"url(#source-arrow)\""
+                                          + ",\"marker-end\":\"url(#target-arrow)\"}";
           }
           ++index;
 
