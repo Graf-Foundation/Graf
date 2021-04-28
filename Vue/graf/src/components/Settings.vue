@@ -26,7 +26,7 @@
 						Edge Force
 					</div>	
 					<div class="slidecontainer">
-						<input @change="onSliderChange(val2, 2);" v-model.number = "val2" type="range" min="1000" max="12000" value="3000" class="slider">
+						<input @change="onSliderChange(val2, 2);" v-model.number = "val2" type="range" min=".66" max="10" value="3" step=".01" class="slider">
 					</div>
 				</sui-menu-item>
 				<sui-menu-item>
@@ -34,7 +34,7 @@
 						Edge Width
 					</div>	
 					<div class="slidecontainer">
-						<input @change="onSliderChange(val3, 3);" v-model.number = "val3" type="range" min=".5" max="15" value="3" class="slider">
+						<input @change="onSliderChange(val3, 3);" v-model.number = "val3" type="range" min=".5" max="15" value="3" step =".1" class="slider">
 					</div>
 				</sui-menu-item>
 			</sui-menu>
@@ -55,7 +55,7 @@ export default {
 	data() {
 		return {
 			val1: 20,
-			val2: 3000,
+			val2: 3,
 			val3: 3
 		}
 	},
@@ -63,7 +63,19 @@ export default {
 		onSliderChange(val, need) {
 			this.$emit('slider-change', val, need);
 		},
+		onReset(){
+			this.val1 = 20;
+			this.val2 = 3;
+			this.val3 = 3;
+			this.data = Object.assign({}, this.data)
+
+		}
 	},
+	created: function () {
+    this.$root.$on('resetSliders', () => {
+		this.onReset();
+    });
+  },
 	props: ["open"]
 };
 </script>
