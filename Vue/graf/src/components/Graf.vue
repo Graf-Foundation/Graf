@@ -187,9 +187,15 @@ export default {
     },
     onSliderChange(val, need) {
       if(need == 1) {this.options.nodeSize = val}
-      if(need == 2) {this.options.force = (1/val)*10000
-      console.log(this.options.force)}
-      if(need == 3) {this.options.linkWidth = val}
+      if(need == 2) {this.options.force = (1/val)*10000}
+      if(need == 3) {
+        this.options.linkWidth = val
+        console.log(document.cookie)
+        // console.log(this.graf.links.length)
+        // for(var i = 0; i < this.graf.links.length; i++) {
+        //   console.log(this.graf.links[i])
+        // }
+      }
       this.options = Object.assign({},this.options)
       
     },
