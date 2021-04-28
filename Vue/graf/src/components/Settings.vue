@@ -11,11 +11,11 @@
 				direction = "left"
 			>
 				<sui-menu-item>
-					this will look nicer
+					Settings
 				</sui-menu-item>	
 				<sui-menu-item>
 					<div>
-						NODE SIZE
+						Node Size
 					</div>	
 					<div class="slidecontainer">
 						<input @change="onSliderChange(val1, 1);" v-model.number = "val1" type="range" min="10" max="80" value="20" class="slider">
@@ -23,7 +23,7 @@
 				</sui-menu-item>
 				<sui-menu-item>
 					<div>
-						FORCE
+						Edge Force
 					</div>	
 					<div class="slidecontainer">
 						<input @change="onSliderChange(val2, 2);" v-model.number = "val2" type="range" min="1000" max="12000" value="3000" class="slider">
@@ -31,14 +31,11 @@
 				</sui-menu-item>
 				<sui-menu-item>
 					<div>
-						EDGE WIDTH
+						Edge Width
 					</div>	
 					<div class="slidecontainer">
 						<input @change="onSliderChange(val3, 3);" v-model.number = "val3" type="range" min=".5" max="15" value="3" class="slider">
 					</div>
-				</sui-menu-item>
-				<sui-menu-item>
-					<a @click ="close()"> close </a>
 				</sui-menu-item>
 			</sui-menu>
 			<sui-sidebar-pusher>
@@ -66,9 +63,6 @@ export default {
 		onSliderChange(val, need) {
 			this.$emit('slider-change', val, need);
 		},
-		close(){
-			this.open = false;
-		}
 	},
 	props: ["open"]
 };
