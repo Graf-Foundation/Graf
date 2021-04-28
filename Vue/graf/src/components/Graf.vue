@@ -135,8 +135,6 @@ export default {
   },
   methods: {
     onSaveImage() {
-      console.log("Compressed Graf Cookie: " + CookieHelpers.getCookie("GrafData"));
-      console.log("Decompressed Version: " + CookieHelpers.decompressGraf(CookieHelpers.getCookie("GrafData")));
       grafhelpers.screenshotGraf(document.getElementsByClassName("net-svg")[0]);
     },
     onSaveGraf() {
