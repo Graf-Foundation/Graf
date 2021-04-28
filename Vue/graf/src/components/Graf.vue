@@ -87,13 +87,15 @@ export default {
   mounted () {
 			document.addEventListener("keyup", this.keyup_handler, false);
       window.addEventListener('resize', this.resize_handler, false);
-      //Loading in the graf from cookies
-      CookieHelpers.checkRepCookie();
-      // if(!CookieHelpers.isCookieEmpty()) {
-      //   var d = grafhelpers.loadGraf(CookieHelpers.decompressGraf(
-      //             CookieHelpers.getCookie("GrafData")));
-      //   this.graf = d;
-      // }
+      // this.graf = Object.assign({},this.graf);
+      
+      this.graf = CookieHelpers.mountedCookie();
+      
+      //workaround to make edges show on reload
+      this.change_tool("Edge");
+      this.handle_node_click(this.graf.nodes[0]);
+      this.change_tool("Select");
+      this.handle_node_click(this.graf.nodes[0]);
   },
   data () {
     return {
@@ -158,9 +160,9 @@ export default {
         this.graf.links = [];
         this.grafData = "";
         this.graf.aggCount = 1;
-      //Modifying cookie
-      var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
-      CookieHelpers.putCookie("GrafData", s);
+        //Modifying cookie
+        var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
+        CookieHelpers.putCookie("GrafData", s);
     },
     onAlgorithmChange(alg) {
         this.algType = alg;
@@ -201,8 +203,6 @@ export default {
           break;
       }
       //Modifying cookie
-      // var s = CookieHelpers.compressGraf(JSON.stringify(this.graf));
-      // console.log("NEW COOKIE: " + s);
       CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
     
 
@@ -218,11 +218,15 @@ export default {
         this.selection.selectedLabel = node;
         GrafTools.update_selection(this.graf, node, 'node', this.selection);
         this.useTool(this.currentTool);
+        //Modifying cookie
+        CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
     },
     handle_edge_click(event,edge) {
         this.selection.selectedLabel = edge;
         GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
         this.useTool(this.currentTool);
+        //Modifying cookie
+        CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
     },
     change_tool (tool) {
         if(tool == 'Select') this.selection.selectMultiple = true;
