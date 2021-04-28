@@ -5,9 +5,9 @@
       <header class="fixedTC">
         <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
 
-        <sui-button @click="onUndo();" icon="undo" />
-        <sui-button @click="onRedo();" icon="redo" />
-        <sui-button @click="clear_selections()" @ icon ="eye slash"/>
+        <sui-button @click="onUndo();" icon="undo" data-tooltip="Ctrl-Z" data-position="bottom center"/>
+        <sui-button @click="onRedo();" icon="redo" data-tooltip="Ctrl-Y" data-position="bottom center"/>
+        <sui-button @click="clear_selections()" icon ="eye slash" data-tooltip="Esc" data-position="bottom center"/>
         <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection"> </InfoBox>
 
         <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
