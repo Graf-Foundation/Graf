@@ -1,6 +1,6 @@
 <template>
   <div id="app" v-on:mousemove="sideBarCheck">
-    <Settings v-bind:open="Toggled" @slider-change="onSliderChange"></Settings>
+    <Settings v-bind:open="Toggled" @slider-change="onSliderChange"/>
     <center>
       <header class="fixedTC">
         <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
@@ -84,7 +84,6 @@ import helperFunctions from '../middleware/helperFunctions';
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
 import Settings from "../components/Settings.vue"
-//import InfoBox from "./InfoBox.vue";
 
 export default {
   name: "Graf",
@@ -93,7 +92,6 @@ export default {
     Toolbar,
     Settings,
     Help
-    //InfoBox
   },
   mounted() {
     document.addEventListener("keyup", this.keyup_handler, false);
@@ -183,12 +181,14 @@ export default {
       this.options.force = 3000;
       this.options.linkWidth = 3;
       this.options = Object.assign({},this.options)
+      this.$root.$emit('resetSliders')
       //Modifying cookie
       CookieHelpers.putCookie("GrafData", JSON.stringify(this.graf));
     },
     onSliderChange(val, need) {
       if(need == 1) {this.options.nodeSize = val}
-      if(need == 2) {this.options.force = val}
+      if(need == 2) {this.options.force = (1/val)*10000
+      console.log(this.options.force)}
       if(need == 3) {this.options.linkWidth = val}
       this.options = Object.assign({},this.options)
       
