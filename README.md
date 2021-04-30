@@ -1,5 +1,5 @@
 # Graf
-An intuitive, open-source graph editor.
+An intuitive, open-source graph editor. Try it [here](https://jpweir.github.io/Graf)!
 
 ![](graf.gif)
 
