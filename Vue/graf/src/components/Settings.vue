@@ -37,6 +37,11 @@
 						<input @change="onSliderChange(val3, 3);" v-model.number = "val3" type="range" min=".5" max="15" value="3" step =".1" class="slider">
 					</div>
 				</sui-menu-item>
+				<sui-menu-item>
+					<div>
+					<sui-checkbox @change="onEdgeChange()" label="Edge Weights"/>
+					</div>	
+				</sui-menu-item>
 			</sui-menu>
 			<sui-sidebar-pusher>
 				<sui-segment>
@@ -56,12 +61,15 @@ export default {
 		return {
 			val1: 20,
 			val2: 3,
-			val3: 3
+			val3: 3,
 		}
 	},
 	methods: {
 		onSliderChange(val, need) {
 			this.$emit('slider-change', val, need);
+		},
+		onEdgeChange(){
+			this.$emit('edge-change');
 		},
 		onReset(){
 			this.val1 = 20;
