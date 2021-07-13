@@ -14,8 +14,9 @@
         {{ n.name }}
       </sui-card-content>
       <sui-card-content v-for="e in selected.selectedEdges" v-bind:key="e.id">
-        <h5>Name: </h5> 
-        {{ e.name }}
+        <h5>Weight: 
+          <sui-input fluid v-model ="e.name"  @keypress.stop/>
+        </h5>
         <h5>Type: </h5>
         {{ e.type }}
       </sui-card-content>
@@ -79,6 +80,7 @@ export default {
 <style scoped>
 h5 {
   margin-bottom: 0;
+  width: 35%;
 }
 .infoBox {
   position: absolute;
