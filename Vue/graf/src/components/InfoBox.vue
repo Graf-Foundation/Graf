@@ -10,13 +10,28 @@
         {{selected}}
       </sui-card-content>
       <sui-card-content v-for="n in selected.selectedNodes" v-bind:key="n.id">
-        <h5>Name: </h5> 
+        <h5>
+          <sui-button
+          @click ="onDeselectNode(n)" 
+          circular 
+          class = "right floated"
+          size = "mini"
+          icon="angle down" />
+
+          <sui-button 
+          @click ="onDeleteNode(n)" 
+          circular 
+          class = "right floated"
+          size = "mini" 
+          icon="trash alternate outline"/>
+          Name: 
+        </h5> 
         {{ n.name }}
       </sui-card-content>
       <sui-card-content v-for="e in selected.selectedEdges" v-bind:key="e.id">
-        <h5>Weight: 
+        <h4> Weight:
           <sui-input fluid v-model ="e.name"  @keypress.stop/>
-        </h5>
+        </h4>
         <h5>Type: </h5>
         {{ e.type }}
       </sui-card-content>
@@ -72,6 +87,16 @@ export default {
       }
     }
   },
+  methods: {
+    onDeselectNode(n) {
+      this.$emit('des-node', n);
+    },
+    onDeleteNode(n) { 
+      this.$emit('del-node', n);
+
+    },
+
+  },
   props: ['selected']
 }
 
@@ -80,7 +105,13 @@ export default {
 <style scoped>
 h5 {
   margin-bottom: 0;
+  /* width: 35%; */
+}
+h4 {
+  margin-bottom: 0;
+  font-size: 10.5pt;
   width: 35%;
+  
 }
 .infoBox {
   position: absolute;
