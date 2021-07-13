@@ -68,8 +68,8 @@ class GrafTools {
           graf.links.push({ sid: selection.selectedLast.id,
                             tid: selection.selectedCurrent.id,
                             _color: 'black',
-                            name: 1,
-                            type: "Undirected"});
+                            type: "Undirected",
+                            name: 1});
         else if(type == "dir")
           graf.links.push({ sid: selection.selectedLast.id,
                             tid: selection.selectedCurrent.id,
