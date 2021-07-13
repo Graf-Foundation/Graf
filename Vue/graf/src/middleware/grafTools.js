@@ -125,7 +125,7 @@ class GrafTools {
       for (let link of graf.links) {
         if(link.sid != nodeId && link.tid != nodeId) {
           newLinks.push(link);
-        }
+        } 
       }
       graf.links = newLinks;
       // remove the node
