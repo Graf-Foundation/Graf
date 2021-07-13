@@ -9,7 +9,9 @@
         <sui-button @click="onRedo();" icon="redo" data-tooltip="Ctrl-Y" data-position="bottom center"/>
         <sui-button @click="clear_selections()" icon ="eye slash" data-tooltip="Esc" data-position="bottom center"/>
         <sui-button @click="info()" icon ="button" data-position="bottom center"/>
-        <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection"> </InfoBox>
+        <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
+        @del-node="onInfoNodeDel"
+        @des-node="onInfoNodeDes"> </InfoBox>
 
         <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
          style="margin: 1em 0em 0em"
@@ -216,6 +218,24 @@ export default {
     onEdgeChange(){
       this.options.linkLabels = !this.options.linkLabels
       this.options = Object.assign({},this.options)
+    },
+    onInfoNodeDel(node) {
+      grafhelpers.color_graf(this.graf, 'black', 'node', new Set([node]));
+      this.selection.selectedNodes.delete(node);
+      for (let link of this.graf.links) {
+        //console.log(link.sid, " ", link.tid);
+        if(link.sid == node.id || link.tid == node.id) {
+          grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([link]));
+          this.selection.selectedEdges.delete(link);
+        }
+      }
+      //GrafTools.clear_selection(this.graf, node);
+      GrafTools.removeNode(this.graf, node.id);
+      
+    },
+    onInfoNodeDes(node) {
+      grafhelpers.color_graf(this.graf, 'black', 'node', new Set([node]));
+      this.selection.selectedNodes.delete(node);
     },
     info(){
       // this.options.linkLabels = !this.options.linkLabels
