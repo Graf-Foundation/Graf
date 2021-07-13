@@ -11,7 +11,9 @@
         <sui-button @click="info()" icon ="button" data-position="bottom center"/>
         <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
         @del-node="onInfoNodeDel"
-        @des-node="onInfoNodeDes"> </InfoBox>
+        @des-node="onInfoNodeDes"
+        @del-edge="onInfoEdgeDel"
+        @des-edge="onInfoEdgeDes"> </InfoBox>
 
         <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
          style="margin: 1em 0em 0em"
@@ -236,6 +238,17 @@ export default {
     onInfoNodeDes(node) {
       grafhelpers.color_graf(this.graf, 'black', 'node', new Set([node]));
       this.selection.selectedNodes.delete(node);
+    },
+    onInfoEdgeDel(edge) {
+      grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([edge]));
+      this.selection.selectedEdges.delete(edge);
+      //GrafTools.clear_selection(this.graf, node);
+      GrafTools.removeLink(this.graf, edge.id);
+      
+    },
+    onInfoEdgeDes(edge) {
+      grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([edge]));
+      this.selection.selectedEdges.delete(edge);
     },
     info(){
       // this.options.linkLabels = !this.options.linkLabels
