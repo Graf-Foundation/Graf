@@ -1,6 +1,6 @@
 <template>
   <div id="app" v-on:mousemove="sideBarCheck">
-    <Settings v-bind:open="Toggled" @slider-change="onSliderChange"/>
+    <Settings v-bind:open="Toggled" @slider-change="onSliderChange" @edge-change="onEdgeChange"/>
     <center>
       <header class="fixedTC">
         <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
@@ -8,7 +8,12 @@
         <sui-button @click="onUndo();" icon="undo" data-tooltip="Ctrl-Z" data-position="bottom center"/>
         <sui-button @click="onRedo();" icon="redo" data-tooltip="Ctrl-Y" data-position="bottom center"/>
         <sui-button @click="clear_selections()" icon ="eye slash" data-tooltip="Esc" data-position="bottom center"/>
-        <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection"> </InfoBox>
+        <sui-button @click="info()" icon ="button" data-position="bottom center"/>
+        <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
+        @del-node="onInfoNodeDel"
+        @des-node="onInfoNodeDes"
+        @del-edge="onInfoEdgeDel"
+        @des-edge="onInfoEdgeDes"> </InfoBox>
 
         <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
          style="margin: 1em 0em 0em"
@@ -101,6 +106,7 @@ export default {
   mounted () {
 			document.addEventListener("keyup", this.keyup_handler, false);
       window.addEventListener('resize', this.resize_handler, false);
+      GrafTools.new_node(this.graf);
       //this.graf = Object.assign({},this.graf);
       
       //Loading in the graf from cookies
@@ -138,9 +144,9 @@ export default {
           selectedEdges: new Set()
         },
         graf: {
-          nodes: [{ id: 0 }],
+          nodes: [],
           links: [],
-          aggCount: 1,
+          aggCount: 0,
         },
         options: {
             force: 3000,
@@ -148,7 +154,7 @@ export default {
             resizeListener: true,
             nodeSize: 20,
             nodeLabels: true,
-            linkLabels:true,
+            linkLabels:false,
             canvas: false,
             linkWidth: 3,
             fontSize: 15
@@ -188,10 +194,11 @@ export default {
       }
     },
     onResetGraf() {
-      this.graf.nodes = [{ id: 0 }];
+      this.graf.nodes = [];
       this.graf.links = [];
       this.grafData = "";
-      this.graf.aggCount = 1;
+      this.graf.aggCount = 0;
+      GrafTools.new_node(this.graf);
       this.options.nodeSize = 20
       this.options.force = 3000;
       this.options.linkWidth = 3;
@@ -209,6 +216,50 @@ export default {
       if(need == 3) {this.options.linkWidth = val}
       this.options = Object.assign({},this.options)
       
+    },
+    onEdgeChange(){
+      this.options.linkLabels = !this.options.linkLabels
+      this.options = Object.assign({},this.options)
+    },
+    onInfoNodeDel(node) {
+      grafhelpers.color_graf(this.graf, 'black', 'node', new Set([node]));
+      this.selection.selectedNodes.delete(node);
+      for (let link of this.graf.links) {
+        //console.log(link.sid, " ", link.tid);
+        if(link.sid == node.id || link.tid == node.id) {
+          grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([link]));
+          this.selection.selectedEdges.delete(link);
+        }
+      }
+      //GrafTools.clear_selection(this.graf, node);
+      GrafTools.removeNode(this.graf, node.id);
+      
+    },
+    onInfoNodeDes(node) {
+      grafhelpers.color_graf(this.graf, 'black', 'node', new Set([node]));
+      this.selection.selectedNodes.delete(node);
+    },
+    onInfoEdgeDel(edge) {
+      grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([edge]));
+      this.selection.selectedEdges.delete(edge);
+      //GrafTools.clear_selection(this.graf, node);
+      GrafTools.removeLink(this.graf, edge.id);
+      
+    },
+    onInfoEdgeDes(edge) {
+      grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([edge]));
+      this.selection.selectedEdges.delete(edge);
+    },
+    info(){
+      // this.options.linkLabels = !this.options.linkLabels
+      // this.options = Object.assign({},this.options)
+      console.log("nodes")
+      console.log(this.graf.nodes);
+      console.log("edges")
+      console.log(this.graf.links);
+      console.log("data")
+      console.log(CookieHelpers.compressGraf(JSON.stringify(this.graf)))
+      console.log(JSON.stringify(this.graf))
     },
     onAlgorithmChange(alg) {
         this.algType = alg;

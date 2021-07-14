@@ -2,7 +2,6 @@ import grafhelpers from '../middleware/helperFunctions';
 import cookieHelpers from '../middleware/cookieHelper';
 
 class GrafTools {
-
   // Helper
   clear_selection(graf, selection) {
     grafhelpers.color_graf(graf, 'black', 'node', new Set(graf.nodes));
@@ -37,10 +36,30 @@ class GrafTools {
     cookieHelpers.putCookie("GrafData", cookieHelpers.compressGraf(JSON.stringify(graf)));
   }
 
+
+  getName(count){
+    var name;
+    if (count < 26) {
+      name = String.fromCharCode(count + 97);
+    } else if (count < 26 + 26 * 26 ){
+      var first = (count)/26;
+      var second = count%26;
+      name = String.fromCharCode(97 + first - 1) + String.fromCharCode(97 + second);
+    } else {
+      name = count;
+    }
+    
+    return name;
+
+  }
+
   new_node(graf) {
-    graf.nodes.push({id:graf.aggCount});
+    graf.nodes.push({id:graf.aggCount,
+    name: this.getName(graf.aggCount)});
     graf.aggCount += 1;
   }
+
+ 
 
   new_edge(graf, selection, type) {
     if(selection.selectedLast != null && selection.selectedCurrent != null && selection.selectedCurrent != selection.selectedLast) {
@@ -49,18 +68,21 @@ class GrafTools {
           graf.links.push({ sid: selection.selectedLast.id,
                             tid: selection.selectedCurrent.id,
                             _color: 'black',
-                            type: "Undirected"});
+                            type: "Undirected",
+                            name: 1});
         else if(type == "dir")
           graf.links.push({ sid: selection.selectedLast.id,
                             tid: selection.selectedCurrent.id,
                             _color: 'black',
                             type: "Directed",
+                            name: 1,
                             _svgAttrs: {'marker-end': 'url(#target-arrow)'}});
         else if(type == "bidir")
           graf.links.push({ sid: selection.selectedLast.id,
                             tid: selection.selectedCurrent.id,
                             _color: 'black',
                             type: "Bidirected",
+                            name: 1,
                             _svgAttrs: {'marker-start': 'url(#source-arrow)', 'marker-end': 'url(#target-arrow)'}});
       selection.selectedLast = null;
       selection.selectedCurrent = null
@@ -103,7 +125,7 @@ class GrafTools {
       for (let link of graf.links) {
         if(link.sid != nodeId && link.tid != nodeId) {
           newLinks.push(link);
-        }
+        } 
       }
       graf.links = newLinks;
       // remove the node
