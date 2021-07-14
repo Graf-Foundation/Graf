@@ -88,7 +88,7 @@ import Toolbar from '../components/Toolbar.vue'
 import GrafTools from '../middleware/grafTools.js'
 import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
-//import Algorithms from '../middleware/algorithms.js'
+import Algorithms from '../middleware/algorithms.js'
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
 import Settings from "../components/Settings.vue"
@@ -262,6 +262,7 @@ export default {
       // console.log("data")
       // console.log(CookieHelpers.compressGraf(JSON.stringify(this.graf)))
       // console.log(JSON.stringify(this.graf))
+      
       
     },
     onAlgorithmChange(alg) {
