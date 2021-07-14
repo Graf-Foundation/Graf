@@ -10,7 +10,8 @@ class PathTools {
         if(data.type === "search") {
             this.searchAlg(graf, selection, data.fun);
         } else if(data.type === "shortestPath") {
-            this.shortestPath(graf, selection, data.fun);
+            //this.shortestPath(graf, selection, data.fun);
+            this.shortestPath2(graf, selection);
         }
     }
 
@@ -19,6 +20,24 @@ class PathTools {
         // Recolor all edges in path
         grafhelpers.color_graf(graf, 'red', 'node', this.match_ids_to_graf(graf, path));
         grafhelpers.color_graf(graf, 'red', 'edge', this.getEdgesFromPath(graf, path));
+    }
+    
+    //sortestPath that considers edge weight(I did not want to delete the old one)
+    shortestPath2(graf, selection){
+
+        var selections = Array.from(selection.selectedNodes)
+
+        var nodePath = helperAlgs.djikstra2(graf, selections[0], selections[1])[0];
+        var edgePath = helperAlgs.djikstra2(graf, selections[0], selections[1])[1];
+
+        //coloring the nodes
+        for(let n in nodePath) {
+            graf.nodes[n]._color = "red";
+        }
+        //coloring the edges
+        for(let e in edgePath) {
+            graf.links[e]._color = "red";
+        }
     }
 
     searchAlg(graf, selection, alg) {
