@@ -65,7 +65,8 @@ class helperAlgs {
             visited.set(minDest, "visited");
         }
         final_links.splice(0, 1);
-        //console.log(final_links);
+        console.log(final_path);
+        console.log(final_links);
         return [final_path, final_links];
 
     }
