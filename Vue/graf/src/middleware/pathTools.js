@@ -26,9 +26,9 @@ class PathTools {
     shortestPath2(graf, selection){
 
         var selections = Array.from(selection.selectedNodes)
-
-        var nodePath = helperAlgs.djikstra2(graf, selections[0], selections[1])[0];
-        var edgePath = helperAlgs.djikstra2(graf, selections[0], selections[1])[1];
+        var data = helperAlgs.djikstra2(graf, selections[0], selections[1]);
+        var nodePath = data[0];
+        var edgePath = data[1];
 
         //coloring the nodes
         for(let n in nodePath) {
