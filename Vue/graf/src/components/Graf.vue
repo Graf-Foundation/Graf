@@ -88,10 +88,12 @@ import Toolbar from '../components/Toolbar.vue'
 import GrafTools from '../middleware/grafTools.js'
 import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
+import Algorithms from '../middleware/algorithms.js'
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
 import Settings from "../components/Settings.vue"
 import InfoBox from "./InfoBox.vue";
+
 //import About from 'About.vue'
 
 export default {
@@ -253,13 +255,27 @@ export default {
     info(){
       // this.options.linkLabels = !this.options.linkLabels
       // this.options = Object.assign({},this.options)
-      console.log("nodes")
-      console.log(this.graf.nodes);
-      console.log("edges")
-      console.log(this.graf.links);
-      console.log("data")
-      console.log(CookieHelpers.compressGraf(JSON.stringify(this.graf)))
-      console.log(JSON.stringify(this.graf))
+      // console.log("nodes")
+      // console.log(this.graf.nodes);
+      // console.log("edges")
+      // console.log(this.graf.links);
+      // console.log("data")
+      // console.log(CookieHelpers.compressGraf(JSON.stringify(this.graf)))
+      // console.log(JSON.stringify(this.graf))
+            
+      var temp = Array.from(this.selection.selectedNodes)
+
+      var temp2 = Algorithms.djikstra2(this.graf, temp[0], temp[1])[0];
+      var temp3 = Algorithms.djikstra2(this.graf, temp[0], temp[1])[1];
+
+      for(let esp in temp2) {
+        this.graf.nodes[esp]._color = "red";
+      }
+
+      for(let esp in temp3) {
+        this.graf.links[esp]._color = "red";
+      }
+      
     },
     onAlgorithmChange(alg) {
         this.algType = alg;
