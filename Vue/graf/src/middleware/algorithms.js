@@ -62,6 +62,7 @@ class helperAlgs {
             }
             //sort queue by weight
             queue = this.sortQueue(queue);
+            console.log(queue)
             visited.set(minDest, "visited");
         }
         final_links.splice(0, 1);
