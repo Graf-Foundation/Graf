@@ -24,20 +24,28 @@ class PathTools {
     
     //sortestPath that considers edge weight(I did not want to delete the old one)
     shortestPath2(graf, selection){
-
         var selections = Array.from(selection.selectedNodes)
         var data = helperAlgs.djikstra2(graf, selections[0], selections[1]);
         var nodePath = data[0];
-        var edgePath = data[1];
 
+        //if no path was found
+        if(data[1] == 0){
+            return;
+        }
+        var pathData = new Array();
+        for(var a = 0; a < nodePath.length; a++) {
+            pathData.push({id: nodePath[a]});
+        }   
         //coloring the nodes
-        for(let n in nodePath) {
-            graf.nodes[n]._color = "red";
+        
+        for(var i = 0; i < nodePath.length; i++){
+            graf.nodes[this.getIndexFromID(graf,nodePath[i])]._color = "red";
         }
+
         //coloring the edges
-        for(let e in edgePath) {
-            graf.links[e]._color = "red";
-        }
+        var edgeColor = this.getEdgesFromPath(graf, pathData);
+
+        grafhelpers.color_graf(graf, "red", "edge", edgeColor);
     }
 
     searchAlg(graf, selection, alg) {
@@ -90,6 +98,14 @@ class PathTools {
         for(var edge in graf.links) {
             if(graf.links[edge].sid === selection[0].id && graf.links[edge].tid === selection[1].id || graf.links[edge].tid === selection[0].id && graf.links[edge].sid === selection[1].id) {
                 return graf.links[edge];
+            }
+        }
+    }
+
+    getIndexFromID(graf, id){
+        for(let n of graf.nodes) {
+            if(n.id === id) {
+                return n.index;
             }
         }
     }
