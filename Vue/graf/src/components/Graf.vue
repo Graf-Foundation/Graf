@@ -88,7 +88,7 @@ import Toolbar from '../components/Toolbar.vue'
 import GrafTools from '../middleware/grafTools.js'
 import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
-import Algorithms from '../middleware/algorithms.js'
+//import Algorithms from '../middleware/algorithms.js'
 import CookieHelpers from '../middleware/cookieHelper';
 import Help from "../components/Help.vue";
 import Settings from "../components/Settings.vue"
@@ -233,6 +233,7 @@ export default {
           this.selection.selectedEdges.delete(link);
         }
       }
+      this.selection = Object.assign({},this.selection);
       //GrafTools.clear_selection(this.graf, node);
       GrafTools.removeNode(this.graf, node.id);
       
@@ -240,10 +241,12 @@ export default {
     onInfoNodeDes(node) {
       grafhelpers.color_graf(this.graf, 'black', 'node', new Set([node]));
       this.selection.selectedNodes.delete(node);
+      this.selection = Object.assign({},this.selection);
     },
     onInfoEdgeDel(edge) {
       grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([edge]));
       this.selection.selectedEdges.delete(edge);
+      this.selection = Object.assign({},this.selection);
       //GrafTools.clear_selection(this.graf, node);
       GrafTools.removeLink(this.graf, edge.id);
       
@@ -251,32 +254,11 @@ export default {
     onInfoEdgeDes(edge) {
       grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([edge]));
       this.selection.selectedEdges.delete(edge);
+      this.selection = Object.assign({},this.selection);
     },
     info(){
-      // this.options.linkLabels = !this.options.linkLabels
-      // this.options = Object.assign({},this.options)
-      // console.log("nodes")
-      // console.log(this.graf.nodes);
-      // console.log("edges")
-      // console.log(this.graf.links);
-      // console.log("data")
-      // console.log(CookieHelpers.compressGraf(JSON.stringify(this.graf)))
-      // console.log(JSON.stringify(this.graf))
-      var selections = Array.from(this.selection.selectedNodes)
-      var data = Algorithms.djikstra2(this.graf, selections[0], selections[1]);
-      var nodePath = data[0];
-      var edgePath = data[1];
 
-      //coloring the nodes
-      for(let n in nodePath) {
-        console.log(this.graf.nodes[n].name)
-        this.graf.nodes[n]._color = "red";
-      }
-      //coloring the edges
-      for(let e in edgePath) {
-        //console.log(e)
-        this.graf.links[e]._color = "red";
-      }      
+
     },
     onAlgorithmChange(alg) {
         this.algType = alg;
