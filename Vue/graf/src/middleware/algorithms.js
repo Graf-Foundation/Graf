@@ -31,24 +31,20 @@ class helperAlgs {
 
     //Dikstras that considers the edge weights in its pathing(I did not want to delete the old one)
     djikstra2(graf, start, end) {
-        //var data = grafhelpers.convertGrafData(graf.links);
         var queue = new Array();
         var visited = new Map();
         var final_path = new Array();
-        var final_links = new Array();
-        queue.push({weight:  0, id: start.id, path: [], links: [], lastlink: ""});
+        var found = 0;
+        queue.push({weight:  0, id: start.id, path: []});
         while(queue.length > 0) {
             var minPath = queue[0];
             minPath.path.push(minPath.id);
-            minPath.links.push(parseInt(minPath.lastlink.substring(minPath.lastlink.length-1)));
             final_path = minPath.path;
-            final_links = minPath.links;
-
             queue.splice(0, 1);
             var minDest = minPath.id;
 
             if(minDest == end.id) {
-                //console.log("found path", minPath.path);
+                found = 1;
                 break;
             }
             if(visited.has(minDest)){
@@ -56,19 +52,16 @@ class helperAlgs {
             }
             for(let e of GrafTools.getChildren(graf, minPath.id)) {
                 if(!visited.has(e[0])){
-                    var temp = {weight:  parseInt(e[3]) + minPath.weight, id: e[0], path: minPath.path, links: minPath.links, lastlink: e[4]};
+                    var tempPath = [...minPath.path];
+                    var temp = {weight:  parseInt(e[3]) + minPath.weight, id: e[0], path: tempPath};
                     queue.push(temp);
                 }
             }
             //sort queue by weight
             queue = this.sortQueue(queue);
-            console.log(queue)
             visited.set(minDest, "visited");
         }
-        final_links.splice(0, 1);
-        console.log(final_path);
-        console.log(final_links);
-        return [final_path, final_links];
+        return [final_path, found];
 
     }
 
@@ -86,7 +79,6 @@ class helperAlgs {
             queue[minInt] = queue[i];
             queue[i] = temp;
         }
-        //console.log(queue);
         return queue
     }
 
