@@ -8,7 +8,8 @@
         <sui-button @click="onUndo();" icon="undo" data-tooltip="Ctrl-Z" data-position="bottom center"/>
         <sui-button @click="onRedo();" icon="redo" data-tooltip="Ctrl-Y" data-position="bottom center"/>
         <sui-button @click="clear_selections()" icon ="eye slash" data-tooltip="Esc" data-position="bottom center"/>
-        <sui-button @click="info()" icon ="button" data-position="bottom center"/>
+        <sui-button @click="$root.$emit('openLoad')" icon ="button" data-position="bottom center"/>
+        <Load/>
         <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
         @del-node="onInfoNodeDel"
         @des-node="onInfoNodeDes"
@@ -36,10 +37,6 @@
           <sui-dropdown-item>
             <router-link to="/about">About</router-link>
           </sui-dropdown-item>
-
-          <!-- <sui-dropdown-item>
-            <a @click ="onSettingsOpen()">Settings</a>
-          </sui-dropdown-item> -->
 
           <sui-dropdown-item> 
             <a @click="$root.$emit('openHelp')">Help</a>
@@ -90,6 +87,7 @@ import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
 //import Algorithms from '../middleware/algorithms.js'
 import CookieHelpers from '../middleware/cookieHelper';
+import Load from "../components/Load.vue"
 import Help from "../components/Help.vue";
 import Settings from "../components/Settings.vue"
 import InfoBox from "./InfoBox.vue";
@@ -257,7 +255,7 @@ export default {
       this.selection = Object.assign({},this.selection);
     },
     info(){
-      
+      Load.thing();
 
     },
     onAlgorithmChange(alg) {
