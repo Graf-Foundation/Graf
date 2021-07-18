@@ -257,7 +257,7 @@ export default {
       this.selection = Object.assign({},this.selection);
     },
     info(){
-
+      
 
     },
     onAlgorithmChange(alg) {
