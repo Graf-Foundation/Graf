@@ -12,13 +12,13 @@ class CookieHelper {
 
     if(!this.isCookieEmpty()) {
       if(this.getCookie.length > 3500) {
-        return grafhelpers.loadGraf('{"nodes":[{"id":0,"name":"node 0"}],"links":[],"aggCount":1}');
+        return grafhelpers.loadGraf('{"nodes":[{"id":0,"name":"a"}],"links":[],"aggCount":1}');
       }
       var d = grafhelpers.loadGraf(this.decompressGraf(
                 this.getCookie("GrafData")));
       return d;
     }
-    return grafhelpers.loadGraf('{"nodes":[{"id":0,"name":"node 0"}],"links":[],"aggCount":1}');
+    return grafhelpers.loadGraf('{"nodes":[{"id":0,"name":"a"}],"links":[],"aggCount":1}');
   }
 
 
