@@ -63,7 +63,7 @@
       <Help/>
       <Load
       @Load-File='onLoadGraf'
-      @clique-load='onCliqueLoad'/>
+      @preset-load='onPresetLoad'/>
 
 
     </center>
@@ -120,7 +120,6 @@ export default {
       //}
       
       this.graf = CookieHelpers.mountedCookie();
-      
       //workaround to make edges show on reload
       this.change_tool("Edge");
       this.handle_node_click(this.graf.nodes[0]);
@@ -175,7 +174,7 @@ export default {
       const elem = this.$refs.fileload;
       elem.click();
     },
-    onCliqueLoad(data) {
+    onPresetLoad(data) {
       this.graf = grafhelpers.loadGraf(data);
 
       //workaround to make edges show on load
