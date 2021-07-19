@@ -8,8 +8,7 @@
         <sui-button @click="onUndo();" icon="undo" data-tooltip="Ctrl-Z" data-position="bottom center"/>
         <sui-button @click="onRedo();" icon="redo" data-tooltip="Ctrl-Y" data-position="bottom center"/>
         <sui-button @click="clear_selections()" icon ="eye slash" data-tooltip="Esc" data-position="bottom center"/>
-        <sui-button @click="$root.$emit('openLoad')" icon ="button" data-position="bottom center"/>
-        <Load/>
+        <sui-button @click="info()" icon ="button" data-position="bottom center"/>
         <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
         @del-node="onInfoNodeDel"
         @des-node="onInfoNodeDes"
@@ -62,6 +61,9 @@
         <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
       </div>
       <Help/>
+      <Load
+      @Load-File='onLoadGraf'
+      @clique-load='onCliqueLoad'/>
 
 
     </center>
@@ -88,7 +90,7 @@ import helperFunctions from '../middleware/helperFunctions';
 //import Algorithms from '../middleware/algorithms.js'
 import CookieHelpers from '../middleware/cookieHelper';
 import Load from "../components/Load.vue"
-import Help from "../components/Help.vue";
+import Help from "../components/Help.vue"
 import Settings from "../components/Settings.vue"
 import InfoBox from "./InfoBox.vue";
 
@@ -101,6 +103,7 @@ export default {
     Toolbar,
     Settings,
     Help,
+    Load,
     InfoBox
   },
   mounted () {
@@ -168,9 +171,18 @@ export default {
     onSaveGraf() {
       grafhelpers.saveGraf(this.graf);
     },
-    onLoadGraf() {
-        const elem = this.$refs.fileload;
-        elem.click();
+    onLoadGraf() { 
+      const elem = this.$refs.fileload;
+      elem.click();
+    },
+    onCliqueLoad(data) {
+      this.graf = grafhelpers.loadGraf(data);
+
+      //workaround to make edges show on load
+      this.change_tool("Edge");
+      this.handle_node_click(this.graf.nodes[0]);
+      this.change_tool("Select");
+      this.handle_node_click(this.graf.nodes[0]);
     },
     onFileUpload() {
         if ('files' in this.$refs.fileload) {
@@ -255,7 +267,8 @@ export default {
       this.selection = Object.assign({},this.selection);
     },
     info(){
-      Load.thing();
+      //console.log(CookieHelpers.getCookie("GrafData"))
+      this.$root.$emit('openLoad')
 
     },
     onAlgorithmChange(alg) {
