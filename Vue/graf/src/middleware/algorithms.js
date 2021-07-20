@@ -6,7 +6,7 @@ class helperAlgs {
         var data = grafhelpers.convertGrafData(links);
         var queue = new Array();
         var visited = new Map();
-        var start = {node: selectedNodes[0].index, path:[{id: selectedNodes[0].index}]};
+        var start = {node: selectedNodes[0].id, path:[{id: selectedNodes[0].id}]};
         queue.push(start);
 
         while(queue.length > 0) {
@@ -23,10 +23,9 @@ class helperAlgs {
                 });
                 visited.set(state.node, state.path);
             }
-        }
-
+        } 
         return visited;
-    }
+    } 
 
 
     //Dikstras that considers the edge weights in its pathing(I did not want to delete the old one)
