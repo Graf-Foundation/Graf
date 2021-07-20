@@ -13,7 +13,7 @@ class PathTools {
             //this.shortestPath(graf, selection, data.fun);
             this.shortestPath2(graf, selection);
         }
-    }
+    } 
 
     shortestPath(graf, selection, alg) {
         var path = alg(Array.from(selection.selectedNodes), graf.links);
