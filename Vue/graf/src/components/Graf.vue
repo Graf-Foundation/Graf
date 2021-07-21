@@ -42,7 +42,7 @@
           </sui-dropdown-item>
         </sui-dropdown-menu>
       </sui-dropdown>
-
+      
       <D3Network
         id="grafNet"
         :net-nodes="graf.nodes"
@@ -156,7 +156,7 @@ export default {
             resizeListener: true,
             nodeSize: 20,
             nodeLabels: true,
-            linkLabels:false,
+            linkLabels: false,
             canvas: false,
             linkWidth: 3,
             fontSize: 15
@@ -266,7 +266,7 @@ export default {
       this.selection = Object.assign({},this.selection);
     },
     info(){
-      //console.log(CookieHelpers.getCookie("GrafData"))
+      console.log(this.graf.nodes)
       this.$root.$emit('openLoad')
 
     },
@@ -354,6 +354,7 @@ export default {
       if (event.code == "Escape") {this.clear_selections()}
       if (event.ctrlKey && event.code === "KeyZ") this.onUndo();
       if (event.ctrlKey && event.code === "KeyY") this.onRedo();
+      if (event.ctrlKey && event.code === "KeyC") this.info();
     },
     resize_handler() {
       this.options.size.w = Math.max(1020, window.innerWidth - 200);
@@ -426,4 +427,9 @@ export default {
   background: #25df2c;
   cursor: pointer;
 }
+.node-label {
+	font-size: 120px;
+	fill: cyan;
+}
+
 </style>
