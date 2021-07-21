@@ -54,8 +54,8 @@ class GrafTools {
   }
 
   new_node(graf) {
-    graf.nodes.push({id:graf.aggCount,
-    name: this.getName(graf.aggCount)});
+    graf.nodes.push({"id":graf.aggCount,
+    "name": this.getName(graf.aggCount)});
     graf.aggCount += 1;
   }
 
