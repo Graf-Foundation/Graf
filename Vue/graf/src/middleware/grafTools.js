@@ -54,8 +54,8 @@ class GrafTools {
   }
 
   new_node(graf) {
-    graf.nodes.push({id:graf.aggCount,
-    name: this.getName(graf.aggCount)});
+    graf.nodes.push({"id":graf.aggCount,
+    "name": this.getName(graf.aggCount)});
     graf.aggCount += 1;
   }
 
@@ -212,9 +212,9 @@ class GrafTools {
     let edges = []
     for(let link of graf.links) {
       if(link.sid == nodeId)
-        edges.push([link.tid, link.type, link._svgAttrs]);
+        edges.push([link.tid, link.type, link._svgAttrs, link.name, link.id]);
       if(link.tid == nodeId && link.type != "Directed")
-        edges.push([link.sid, link.type, link._svgAttrs]);
+        edges.push([link.sid, link.type, link._svgAttrs, link.name, link.id]);
     }
     return edges;
   }

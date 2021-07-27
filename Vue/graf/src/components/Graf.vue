@@ -8,7 +8,7 @@
         <sui-button @click="onUndo();" icon="undo" data-tooltip="Ctrl-Z" data-position="bottom center"/>
         <sui-button @click="onRedo();" icon="redo" data-tooltip="Ctrl-Y" data-position="bottom center"/>
         <sui-button @click="clear_selections()" icon ="eye slash" data-tooltip="Esc" data-position="bottom center"/>
-        <sui-button @click="info()" icon ="button" data-position="bottom center"/>
+        <!-- <sui-button @click="info()" icon ="button" data-position="bottom center"/> -->
         <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
         @del-node="onInfoNodeDel"
         @des-node="onInfoNodeDes"
@@ -37,16 +37,12 @@
             <router-link to="/about">About</router-link>
           </sui-dropdown-item>
 
-          <!-- <sui-dropdown-item>
-            <a @click ="onSettingsOpen()">Settings</a>
-          </sui-dropdown-item> -->
-
           <sui-dropdown-item> 
             <a @click="$root.$emit('openHelp')">Help</a>
           </sui-dropdown-item>
         </sui-dropdown-menu>
       </sui-dropdown>
-
+      
       <D3Network
         id="grafNet"
         :net-nodes="graf.nodes"
@@ -65,6 +61,9 @@
         <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
       </div>
       <Help/>
+      <Load
+      @Load-File='onLoadGraf'
+      @preset-load='onPresetLoad'/>
 
 
     </center>
@@ -88,10 +87,13 @@ import Toolbar from '../components/Toolbar.vue'
 import GrafTools from '../middleware/grafTools.js'
 import PathTools from '../middleware/pathTools.js'
 import helperFunctions from '../middleware/helperFunctions';
+//import Algorithms from '../middleware/algorithms.js'
 import CookieHelpers from '../middleware/cookieHelper';
-import Help from "../components/Help.vue";
+import Load from "../components/Load.vue"
+import Help from "../components/Help.vue"
 import Settings from "../components/Settings.vue"
 import InfoBox from "./InfoBox.vue";
+
 //import About from 'About.vue'
 
 export default {
@@ -101,6 +103,7 @@ export default {
     Toolbar,
     Settings,
     Help,
+    Load,
     InfoBox
   },
   mounted () {
@@ -117,7 +120,6 @@ export default {
       //}
       
       this.graf = CookieHelpers.mountedCookie();
-      
       //workaround to make edges show on reload
       this.change_tool("Edge");
       this.handle_node_click(this.graf.nodes[0]);
@@ -154,7 +156,7 @@ export default {
             resizeListener: true,
             nodeSize: 20,
             nodeLabels: true,
-            linkLabels:false,
+            linkLabels: false,
             canvas: false,
             linkWidth: 3,
             fontSize: 15
@@ -168,9 +170,18 @@ export default {
     onSaveGraf() {
       grafhelpers.saveGraf(this.graf);
     },
-    onLoadGraf() {
-        const elem = this.$refs.fileload;
-        elem.click();
+    onLoadGraf() { 
+      const elem = this.$refs.fileload;
+      elem.click();
+    },
+    onPresetLoad(data) {
+      this.graf = grafhelpers.loadGraf(data);
+
+      //workaround to make edges show on load
+      this.change_tool("Edge");
+      this.handle_node_click(this.graf.nodes[0]);
+      this.change_tool("Select");
+      this.handle_node_click(this.graf.nodes[0]);
     },
     onFileUpload() {
         if ('files' in this.$refs.fileload) {
@@ -231,6 +242,7 @@ export default {
           this.selection.selectedEdges.delete(link);
         }
       }
+      this.selection = Object.assign({},this.selection);
       //GrafTools.clear_selection(this.graf, node);
       GrafTools.removeNode(this.graf, node.id);
       
@@ -238,10 +250,12 @@ export default {
     onInfoNodeDes(node) {
       grafhelpers.color_graf(this.graf, 'black', 'node', new Set([node]));
       this.selection.selectedNodes.delete(node);
+      this.selection = Object.assign({},this.selection);
     },
     onInfoEdgeDel(edge) {
       grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([edge]));
       this.selection.selectedEdges.delete(edge);
+      this.selection = Object.assign({},this.selection);
       //GrafTools.clear_selection(this.graf, node);
       GrafTools.removeLink(this.graf, edge.id);
       
@@ -249,17 +263,12 @@ export default {
     onInfoEdgeDes(edge) {
       grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([edge]));
       this.selection.selectedEdges.delete(edge);
+      this.selection = Object.assign({},this.selection);
     },
     info(){
-      // this.options.linkLabels = !this.options.linkLabels
-      // this.options = Object.assign({},this.options)
-      console.log("nodes")
-      console.log(this.graf.nodes);
-      console.log("edges")
-      console.log(this.graf.links);
-      console.log("data")
-      console.log(CookieHelpers.compressGraf(JSON.stringify(this.graf)))
-      console.log(JSON.stringify(this.graf))
+      console.log(this.graf.nodes)
+      this.$root.$emit('openLoad')
+
     },
     onAlgorithmChange(alg) {
         this.algType = alg;
@@ -345,6 +354,7 @@ export default {
       if (event.code == "Escape") {this.clear_selections()}
       if (event.ctrlKey && event.code === "KeyZ") this.onUndo();
       if (event.ctrlKey && event.code === "KeyY") this.onRedo();
+      if (event.ctrlKey && event.code === "KeyC") this.info();
     },
     resize_handler() {
       this.options.size.w = Math.max(1020, window.innerWidth - 200);
@@ -417,4 +427,9 @@ export default {
   background: #25df2c;
   cursor: pointer;
 }
+.node-label {
+	font-size: 120px;
+	fill: cyan;
+}
+
 </style>

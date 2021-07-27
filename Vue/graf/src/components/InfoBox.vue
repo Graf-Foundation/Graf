@@ -25,7 +25,12 @@
           size = "mini"
           icon="angle down" />
         </h5> 
-        <div class = "smallerv2"> Name: <sui-input fluid v-model ="n.name"  @keypress.stop/> </div>
+        <div class = "smallerv2"> 
+          Name: 
+          <sui-input 
+          fluid v-model ="n.name"  
+          @keypress.stop/> 
+        </div>
       </sui-card-content>
       <sui-card-content v-for="e in selected.selectedEdges" v-bind:key="e.id">
         <h5>

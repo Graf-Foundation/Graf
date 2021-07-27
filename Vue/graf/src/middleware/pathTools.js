@@ -10,15 +10,42 @@ class PathTools {
         if(data.type === "search") {
             this.searchAlg(graf, selection, data.fun);
         } else if(data.type === "shortestPath") {
-            this.shortestPath(graf, selection, data.fun);
+            //this.shortestPath(graf, selection, data.fun);
+            this.shortestPath2(graf, selection);
         }
-    }
+    } 
 
     shortestPath(graf, selection, alg) {
         var path = alg(Array.from(selection.selectedNodes), graf.links);
         // Recolor all edges in path
         grafhelpers.color_graf(graf, 'red', 'node', this.match_ids_to_graf(graf, path));
         grafhelpers.color_graf(graf, 'red', 'edge', this.getEdgesFromPath(graf, path));
+    }
+    
+    //sortestPath that considers edge weight(I did not want to delete the old one)
+    shortestPath2(graf, selection){
+        var selections = Array.from(selection.selectedNodes)
+        var data = helperAlgs.djikstra2(graf, selections[0], selections[1]);
+        var nodePath = data[0];
+
+        //if no path was found
+        if(data[1] == 0){
+            return;
+        }
+        var pathData = new Array();
+        for(var a = 0; a < nodePath.length; a++) {
+            pathData.push({id: nodePath[a]});
+        }   
+        //coloring the nodes
+        
+        for(var i = 0; i < nodePath.length; i++){
+            graf.nodes[this.getIndexFromID(graf,nodePath[i])]._color = "red";
+        }
+
+        //coloring the edges
+        var edgeColor = this.getEdgesFromPath(graf, pathData);
+
+        grafhelpers.color_graf(graf, "red", "edge", edgeColor);
     }
 
     searchAlg(graf, selection, alg) {
@@ -71,6 +98,14 @@ class PathTools {
         for(var edge in graf.links) {
             if(graf.links[edge].sid === selection[0].id && graf.links[edge].tid === selection[1].id || graf.links[edge].tid === selection[0].id && graf.links[edge].sid === selection[1].id) {
                 return graf.links[edge];
+            }
+        }
+    }
+
+    getIndexFromID(graf, id){
+        for(let n of graf.nodes) {
+            if(n.id === id) {
+                return n.index;
             }
         }
     }
