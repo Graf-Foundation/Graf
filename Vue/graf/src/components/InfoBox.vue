@@ -49,7 +49,6 @@
           icon="angle down" />
           </h5>
         <div class = "smaller"> Weight: <sui-input fluid v-model ="e.name"  @keypress.stop/> </div>
-        
         <h5>Type: </h5>
         {{ e.type }}
       </sui-card-content>
