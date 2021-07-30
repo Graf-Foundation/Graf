@@ -67,7 +67,7 @@ export default {
             "GitHub" : "https://github.com/N-Desmarais",
           },
           "Max Stewar Steele": {
-            "Title" : "Frontend Developer",
+            "Title" : "Full Stack Developer",
             "Info" : "Made this page.",
             "Email" : "stewam8@rpi.edu",
             "GitHub" : "https://github.com/maxstewartsteele",
