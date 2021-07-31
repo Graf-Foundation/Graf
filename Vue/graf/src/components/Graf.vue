@@ -8,8 +8,9 @@
         <sui-button @click="onUndo();" icon="undo" data-tooltip="Ctrl-Z" data-position="bottom center"/>
         <sui-button @click="onRedo();" icon="redo" data-tooltip="Ctrl-Y" data-position="bottom center"/>
         <sui-button @click="clear_selections()" icon ="eye slash" data-tooltip="Esc" data-position="bottom center"/>
-        <!-- <sui-button @click="info()" icon ="button" data-position="bottom center"/> -->
-        <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
+        <sui-button @click="info()" icon ="button" data-position="bottom center"/>
+        <InfoBox :graf-data="this.graf"
+        v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
         @del-node="onInfoNodeDel"
         @des-node="onInfoNodeDes"
         @del-edge="onInfoEdgeDel"
@@ -266,8 +267,8 @@ export default {
       this.selection = Object.assign({},this.selection);
     },
     info(){
-      console.log(this.graf.nodes)
-      this.$root.$emit('openLoad')
+      console.log(this.graf.links)
+      // this.$root.$emit('openLoad')
 
     },
     onAlgorithmChange(alg) {
