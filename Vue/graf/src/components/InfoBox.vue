@@ -52,19 +52,19 @@
         <div v-if="e.type==='Undirected'">
 
           <div class = "smaller">Name: <br> <h2>{{grafData.nodes[e.source.index].name}} 
-                    - {{grafData.nodes[e.target.index].name}} </h2> <br> </div>
+                    - {{grafData.nodes[e.target.index].name}} </h2> </div>
         </div>
 
         <div v-if="e.type==='Directed'">
 
           <div class = "smaller">Name: <br> <h2>{{grafData.nodes[e.source.index].name}} 
-                     - > {{grafData.nodes[e.target.index].name}} </h2> <br> </div>
+                     - > {{grafData.nodes[e.target.index].name}} </h2> </div>
         </div>
 
         <div v-if="e.type==='Bidirected'">
 
           <div class = "smaller">Name: <br> <h2>{{grafData.nodes[e.source.index].name}} 
-                    &lt; - > {{grafData.nodes[e.target.index].name}} </h2> <br> </div>
+                    &lt; - > {{grafData.nodes[e.target.index].name}} </h2> </div>
         </div>
 
         <div class = "smaller"> Weight: <sui-input fluid v-model ="e.name"  @keypress.stop/> </div>
@@ -149,6 +149,7 @@ export default {
 
 <style scoped>
 h5 {
+  margin-top: 0;
   margin-bottom: 0;
   /* width: 35%; */
 }
@@ -162,7 +163,7 @@ h4 {
   display: block;
   font-size: 10.5pt;
   font-weight: bold;
-  margin-bottom: 0;
+  margin-bottom: 10px;
   width: 35%;
 }
 .smaller h2 {
