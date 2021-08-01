@@ -160,11 +160,13 @@ h4 {
   
 }
 .smaller {
+  margin: auto;
   display: block;
   font-size: 10.5pt;
   font-weight: bold;
   margin-bottom: 10px;
   width: 35%;
+  /* overflow-y: hidden; */
 }
 .smaller h2 {
   display: block;
