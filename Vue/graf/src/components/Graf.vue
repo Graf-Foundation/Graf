@@ -16,13 +16,13 @@
         @del-edge="onInfoEdgeDel"
         @des-edge="onInfoEdgeDes"> </InfoBox>
 
-        <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
+        <!-- <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
          style="margin: 1em 0em 0em"
         >
           <sui-input v-model="selection.selectedLabel.name" @keypress.stop />
           <br />
           Change Label
-        </div>
+        </div> -->
       </header>
 			
 
@@ -267,7 +267,7 @@ export default {
       this.selection = Object.assign({},this.selection);
     },
     info(){
-      console.log(this.graf.links)
+      console.log(CookieHelpers.getCookie("GrafData"));
       // this.$root.$emit('openLoad')
 
     },
