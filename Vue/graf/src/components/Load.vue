@@ -5,7 +5,6 @@
       <sui-modal-content scrolling>
         <sui-button @click ='onLoadFromFile()' icon="file">From File</sui-button>
 
-
         <sui-dropdown
             class="labeled icon"
             icon="connectdevelop"
@@ -37,6 +36,7 @@
                 </sui-dropdown-item>
             </sui-dropdown-menu>
         </sui-dropdown>
+        <sui-button @click="loadit()">hehe</sui-button>
 
         <br>
         <br>
@@ -122,7 +122,12 @@ export default {
         var d = CookieHelpers.decompressGraf(this.cycleLoad[parseInt(value)-3]);
         this.toggle();
         this.$emit('preset-load', d);
-    }
+    }, 
+    loadit(){
+        var d = CookieHelpers.decompressGraf(this.kosaLoad[0]);
+        // this.toggle();
+        this.$emit('preset-load', d);
+    },
   },
   created: function () {
     this.$root.$on('openLoad', () => {
