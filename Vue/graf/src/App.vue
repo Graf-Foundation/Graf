@@ -31,4 +31,5 @@ export default {
   overflow-x: auto;
   overflow-y: auto;
 }
+
 </style>
