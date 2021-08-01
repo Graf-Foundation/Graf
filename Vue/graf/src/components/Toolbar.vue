@@ -70,7 +70,6 @@ export default{
         "Select",
         "Node",
         "Edge",
-        "Label",
         "Erase",
         "Algorithm",
         "Contract"
