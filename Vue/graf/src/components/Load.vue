@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class>
     <sui-modal v-model='open'>
       <sui-modal-header>Load Options</sui-modal-header>
-      <sui-modal-content scrolling>
+      <sui-modal-content>
         <sui-button @click ='onLoadFromFile()' icon="file">From File</sui-button>
-
+        <br><br>
         <sui-dropdown
             class="labeled icon"
             icon="connectdevelop"
@@ -20,6 +20,7 @@
                 </sui-dropdown-item>
             </sui-dropdown-menu>
         </sui-dropdown>
+        <br> <br>
 
         <sui-dropdown
             class="labeled icon"
@@ -36,25 +37,9 @@
                 </sui-dropdown-item>
             </sui-dropdown-menu>
         </sui-dropdown>
+        <br> <br>
+        
         <sui-button @click="loadit()">hehe</sui-button>
-
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-
 
       </sui-modal-content>
     </sui-modal>
@@ -139,9 +124,6 @@ export default {
 </script>
 
 <style> 
-.small{
-    width: 30%;
-}
 
 </style>
 
