@@ -3,7 +3,10 @@ import grafhelpers from '../middleware/helperFunctions';
 
 class PathTools {
 
-    static algs = {"bfs": {"fun": helperAlgs.bfs, "type": "search"}, "dijkstra": {"fun": helperAlgs.djikstra, "type": "shortestPath"}};
+    static algs = {"bfs": {"fun": helperAlgs.bfs, "type": "search"}, 
+                        "dijkstra": {"fun": helperAlgs.djikstra, "type": "shortestPath"},
+                        "kosaraju": {"type": "scc"}
+                };
 
     algorithm(graf, selection, alg) {
         var data = PathTools.algs[alg]
@@ -12,9 +15,11 @@ class PathTools {
         } else if(data.type === "shortestPath") {
             //this.shortestPath(graf, selection, data.fun);
             this.shortestPath2(graf, selection);
+        } else if(data.type === "scc"){
+            this.strongyConnected(graf);
         }
     } 
-
+    //deprecated
     shortestPath(graf, selection, alg) {
         var path = alg(Array.from(selection.selectedNodes), graf.links);
         // Recolor all edges in path
@@ -48,6 +53,25 @@ class PathTools {
         grafhelpers.color_graf(graf, "red", "edge", edgeColor);
     }
 
+    strongyConnected(graf){
+
+        var data = helperAlgs.kosaraju(graf);
+        //TO DO: make this infinitley scaleable so will never run out of colors
+        var colors = ["#0012FF", "#1CFF00" , "#FF0000", "#FFFE00", "#FF007B",
+                        "#00F5FF", "#CAFF00", "#FFAD00", "#C600FF", "#7D7D7D",
+                        "#2E275F", "#275F32", "#5F2727", "#5D5F27", "#5F2756",
+                        "#275F5F", "#425F27", "#5F4B27", "#50275F", "#C1C1C1"
+                    ];
+        for(var i = 0; i < data.length; i++){
+            for(var j = 0; j< data[i].length; j++){
+                graf.nodes[this.getIndexFromID(graf, data[i][j])]._color = colors[i];
+            }
+        }
+        // //Updating BS
+        graf.nodes.push({id: -1});
+        graf.nodes.splice(graf.nodes.length-1,1)
+    }
+
     searchAlg(graf, selection, alg) {
         this.update_distances(graf, data, false);
         var data = alg(Array.from(selection.selectedNodes), graf.links);
@@ -73,6 +97,7 @@ class PathTools {
           data.forEach(function(value, key) {
               let index = graf.nodes.findIndex((node) => { return node.id === key });
               graf.nodes[index].name += sep + (value.length - 1);
+              console.log(index);
           });
       } else {
           for(var node in graf.nodes) {
