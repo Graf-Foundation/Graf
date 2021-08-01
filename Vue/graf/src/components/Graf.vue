@@ -314,6 +314,7 @@ export default {
           break;
         case "Edge":
           GrafTools.new_edge(this.graf, this.selection, this.edgeType);
+          this.$root.$emit('resetColors')
           break;
         case "Algorithm":
           this.selection.selectMultiple = true;
@@ -321,9 +322,11 @@ export default {
           break;
         case "Erase":
           GrafTools.erase(this.graf, this.selection);
+          this.$root.$emit('resetColors')
           break;
         case "Contract":
           GrafTools.contract(this.graf, this.selection);
+          this.$root.$emit('resetColors')
           break;
         default:
           break;
@@ -343,6 +346,7 @@ export default {
         this.selection.selectedCurrent = node;
         this.selection.selectedLabel = node;
         GrafTools.update_selection(this.graf, node, 'node', this.selection);
+        this.$root.$emit('resetColors')
         this.useTool(this.currentTool);
         //Modifying cookie
         CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
@@ -350,6 +354,7 @@ export default {
     handle_edge_click(event,edge) {
         this.selection.selectedLabel = edge;
         GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
+        this.$root.$emit('resetColors')
         this.useTool(this.currentTool);
         //Modifying cookie
         CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
@@ -369,6 +374,8 @@ export default {
     clear_selections(){
         PathTools.update_distances(this.graf, null, false);
         GrafTools.clear_selection(this.graf, this.selection);
+        this.$root.$emit('resetColors')
+
     },
     keyup_handler(event) {
       if (event.code == "Escape") {this.clear_selections()}
