@@ -1,8 +1,8 @@
 import grafhelpers from '../middleware/helperFunctions';
-import GrafTools from '../middleware/grafTools.js'
+import GrafTools from '../middleware/grafTools.js';
 
 class helperAlgs {
-    bfs(selectedNodes, links) {
+    bfs(selectedNodes, links) {        
         var data = grafhelpers.convertGrafData(links);
         var queue = new Array();
         var visited = new Map();
@@ -14,6 +14,12 @@ class helperAlgs {
 
             if (!(visited.has(state.node))) {
                 var fringe = data[state.node];
+                if(fringe == undefined){
+                    var failed = new Map();
+                    failed.set(selectedNodes[0].id, [{id: selectedNodes[0].id}]);
+                    return failed;
+                }
+                
                 fringe.forEach(fNode => {
                     if (!(visited.has(fNode))) {
                         var next_path = JSON.parse(JSON.stringify(state.path));
@@ -64,6 +70,65 @@ class helperAlgs {
 
     }
 
+    reverseGraph(links){
+        var newLinks = [];
+        for(var i = 0; i < links.length; i++){
+            if(links[i].type != "Directed"){
+                newLinks.push(links[i]);
+            } else {
+                var tempLink = Object.assign({},links[i]);
+                var tempID = tempLink.sid;
+                var tempSource =  tempLink.source;
+                tempLink.sid = tempLink.tid;
+                tempLink.source = tempLink.target;
+                tempLink.tid = tempID;
+                tempLink.target = tempSource;
+                newLinks.push(tempLink);
+            }
+        }
+        return newLinks;
+    }
+
+    kosaraju(graf){
+        var starting_point = graf.nodes[0].id;
+        var i = 0;
+        var j = 0;
+        var nodes_counted = 0;
+        var reverse_links = this.reverseGraph(graf.links);
+        var data = this.bfs([{id: starting_point}], graf.links);
+        var rev_data = this.bfs([{id: starting_point}], reverse_links);
+        var total = [];
+        for(i = 0; i< graf.nodes.length; i++) {
+            total.push(graf.nodes[i].id);
+        }
+        var reachable = [];
+        while(nodes_counted < total.length) {
+            const iterator1 = data.keys();
+            reachable.push([]);
+            for(i = 0; i < data.size; i++){
+                var check = iterator1.next().value;
+                if(rev_data.has(check)){
+                    reachable[j].push(check);
+                    total[this.getIndexFromID(graf, check)] = -1;
+                    nodes_counted++;
+                }   
+            }
+            var next_start_point = -1;
+            for(i=0; i < total.length; i++){
+                if(total[i] != -1) {
+                    next_start_point = total[i];
+                    break;
+                }
+            }
+            if(next_start_point != -1){
+                data = this.bfs([{id: next_start_point}], graf.links);
+                rev_data = this.bfs([{id: next_start_point}], reverse_links);
+            }
+            j++;
+        }
+        return reachable;
+    }
+
     sortQueue(queue){
         for(var i = 0; i < queue.length; i++) {
             var minInt = 0;
@@ -79,6 +144,14 @@ class helperAlgs {
             queue[i] = temp;
         }
         return queue
+    }
+
+    getIndexFromID(graf, id){
+        for(let n of graf.nodes) {
+            if(n.id === id) {
+                return n.index;
+            }
+        }
     }
 
     djikstra(selectedNodes, links) {
