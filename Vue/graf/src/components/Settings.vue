@@ -42,6 +42,22 @@
 					<sui-checkbox @change="onEdgeChange()" label="Edge Weights"/>
 					</div>	
 				</sui-menu-item>
+				<sui-menu-item>
+					<div>Node Color</div>
+					<input type="color" @input="onColorChange(nodeCol, 1)" v-model.number = nodeCol value="#000000">
+				</sui-menu-item>
+				<sui-menu-item>
+					<div>Edge Color</div>
+					<input type="color" @input="onColorChange(edgeCol, 2)" v-model.number = edgeCol value="#919191">
+				</sui-menu-item>
+				<sui-menu-item>
+					<div>Node Label Color</div>
+					<input type="color" @input="onColorChange(nLabelCol, 3)" v-model.number = nLabelCol value="#000000">
+				</sui-menu-item>
+				<sui-menu-item>
+					<div>Edge Weight Color</div>
+					<input type="color" @input="onColorChange(eLabelCol, 4)" v-model.number = eLabelCol value="#000000">
+				</sui-menu-item>
 			</sui-menu>
 			<sui-sidebar-pusher>
 				<sui-segment>
@@ -62,6 +78,10 @@ export default {
 			val1: 20,
 			val2: 3,
 			val3: 3,
+			nodeCol: "#000000",
+			edgeCol: "#919191",
+			nLabelCol: "#000000",
+			eLabelCol: "#000000",
 		}
 	},
 	methods: {
@@ -75,8 +95,16 @@ export default {
 			this.val1 = 20;
 			this.val2 = 3;
 			this.val3 = 3;
+			this.nodeCol = "#000000";
+			this.edgeCol = "#000000";
+			this.nLabelCol = "#000000";
+			this.eLabelCol = "#000000"; 
 			this.data = Object.assign({}, this.data)
 
+		}, 
+		onColorChange(color, need){
+			this.$emit('color-change', color, need)
+			console.log(color)
 		}
 	},
 	created: function () {
@@ -117,6 +145,16 @@ export default {
   border-radius: 50%;
   background: #25df2c;
   cursor: pointer;
+}
+
+input[type="color"] {
+	-webkit-appearance: none;
+	border-radius: 16px;
+	/* border-style: groove; */
+	/* border-color: rgb(233, 225, 225); */
+	border: none; 
+	width: 25px;
+	height: 25px;
 }
 
 

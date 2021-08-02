@@ -48,8 +48,26 @@
           size = "mini"
           icon="angle down" />
           </h5>
+          
+        <div v-if="e.type==='Undirected'">
+
+          <div class = "smaller">Name: <br> <h2>{{grafData.nodes[e.source.index].name}} 
+                    - {{grafData.nodes[e.target.index].name}} </h2> </div>
+        </div>
+
+        <div v-if="e.type==='Directed'">
+
+          <div class = "smaller">Name: <br> <h2>{{grafData.nodes[e.source.index].name}} 
+                     - > {{grafData.nodes[e.target.index].name}} </h2> </div>
+        </div>
+
+        <div v-if="e.type==='Bidirected'">
+
+          <div class = "smaller">Name: <br> <h2>{{grafData.nodes[e.source.index].name}} 
+                    &lt; - > {{grafData.nodes[e.target.index].name}} </h2> </div>
+        </div>
+
         <div class = "smaller"> Weight: <sui-input fluid v-model ="e.name"  @keypress.stop/> </div>
-        
         <h5>Type: </h5>
         {{ e.type }}
       </sui-card-content>
@@ -59,6 +77,8 @@
 
 <script>
 
+
+//import PathTools from '../middleware/pathTools.js'
 export default {
   name: "InfoBox",
   mounted: function() {
@@ -107,6 +127,7 @@ export default {
   },
   methods: {
     onDeselectNode(n) {
+      // console.log(this.grafData.nodes[0].name);
       this.$emit('des-node', n);
     },
     onDeleteNode(n) { 
@@ -120,13 +141,15 @@ export default {
     }
 
   },
-  props: ['selected']
+  props: ['selected', 'grafData']
+        
 }
 
 </script>
 
 <style scoped>
 h5 {
+  margin-top: 0;
   margin-bottom: 0;
   /* width: 35%; */
 }
@@ -137,11 +160,20 @@ h4 {
   
 }
 .smaller {
+  margin: auto;
   display: block;
   font-size: 10.5pt;
   font-weight: bold;
-  margin-bottom: 0;
+  margin-bottom: 10px;
   width: 35%;
+  /* overflow-y: hidden; */
+}
+.smaller h2 {
+  display: block;
+  font-size: 10.5pt;
+  font-weight: 100;
+  margin-bottom: 0;
+  margin-top: 0;
 }
 
 .smallerv2 {

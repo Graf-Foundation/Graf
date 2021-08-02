@@ -1,11 +1,10 @@
 <template>
-  <div>
+  <div class>
     <sui-modal v-model='open'>
       <sui-modal-header>Load Options</sui-modal-header>
-      <sui-modal-content scrolling>
+      <sui-modal-content>
         <sui-button @click ='onLoadFromFile()' icon="file">From File</sui-button>
-
-
+        <br><br>
         <sui-dropdown
             class="labeled icon"
             icon="connectdevelop"
@@ -21,6 +20,7 @@
                 </sui-dropdown-item>
             </sui-dropdown-menu>
         </sui-dropdown>
+        <br> <br>
 
         <sui-dropdown
             class="labeled icon"
@@ -37,24 +37,9 @@
                 </sui-dropdown-item>
             </sui-dropdown-menu>
         </sui-dropdown>
-
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-
+        <br> <br>
+        
+        <sui-button @click="loadit()">hehe</sui-button>
 
       </sui-modal-content>
     </sui-modal>
@@ -99,6 +84,11 @@ export default {
             '®¯0°a¯1°b¯2°c¯3°d¯4°e¯5°f¯6°g¯7°h¯8°i¯9°j¯10°k¯11°l¯12°m±²2³1´U°1²0³1´U°1²2³3´U°1²4³5´U°1²3³4´U°1²6³5´U°1²7³6´U°1²8³7´U°1²8³9´U°1²10³9´U°1²11³10´U°1²12³0´U°1²12³11´U°1µ13'
         ],
 
+        kosaLoad: [
+          '®¯0°a¯1°b¯2°c¯3°d¯4°e¯5°f¯6°g¯7°h¯8°i¯9°j¯10°k¯11°l¯12°m¯13°n¯14°o¯15°p¯16°q±²12³8´D°1²8³11´D°1²10³11´D°1²9³1´D°1²11³1´D°1²6³7´D°1²7³3´D°1²3³4´D°1²4³6´D°1²12³4´D°1²2³12´D°1²2³0´D°1²5³6´D°1²5³8´D°1²9³4´D°1²5³0´D°1²10³3´D°1²10³9´D°1²10³5´D°1²7³0´D°1²8³2´D°1²9³7´D°1µ17',
+          
+        ]
+
     }
   },
   methods: {
@@ -117,7 +107,12 @@ export default {
         var d = CookieHelpers.decompressGraf(this.cycleLoad[parseInt(value)-3]);
         this.toggle();
         this.$emit('preset-load', d);
-    }
+    }, 
+    loadit(){
+        var d = CookieHelpers.decompressGraf(this.kosaLoad[0]);
+        // this.toggle();
+        this.$emit('preset-load', d);
+    },
   },
   created: function () {
     this.$root.$on('openLoad', () => {
@@ -129,9 +124,6 @@ export default {
 </script>
 
 <style> 
-.small{
-    width: 30%;
-}
 
 </style>
 

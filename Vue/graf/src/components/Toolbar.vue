@@ -70,7 +70,6 @@ export default{
         "Select",
         "Node",
         "Edge",
-        "Label",
         "Erase",
         "Algorithm",
         "Contract"
@@ -102,6 +101,7 @@ export default{
         "Algorithm" : {
           "bfs" : "BFS Search",
           "dijkstra" : "Dijkstra",
+          "kosaraju" : "Kosaraju's"
         }
       },
       subMenuActive: {

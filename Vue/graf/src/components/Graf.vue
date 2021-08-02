@@ -1,6 +1,8 @@
 <template>
   <div id="app" v-on:mousemove="sideBarCheck">
-    <Settings v-bind:open="Toggled" @slider-change="onSliderChange" @edge-change="onEdgeChange"/>
+    <Settings v-bind:open="Toggled" @slider-change="onSliderChange" 
+          @edge-change="onEdgeChange"
+          @color-change="onColorChange"/>
     <center>
       <header class="fixedTC">
         <Toolbar @tool-change="change_tool" @edge-change="change_edge" @alg-change="onAlgorithmChange"></Toolbar>
@@ -8,20 +10,21 @@
         <sui-button @click="onUndo();" icon="undo" data-tooltip="Ctrl-Z" data-position="bottom center"/>
         <sui-button @click="onRedo();" icon="redo" data-tooltip="Ctrl-Y" data-position="bottom center"/>
         <sui-button @click="clear_selections()" icon ="eye slash" data-tooltip="Esc" data-position="bottom center"/>
-        <!-- <sui-button @click="info()" icon ="button" data-position="bottom center"/> -->
-        <InfoBox v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
+        <sui-button @click="info()" icon ="button" data-position="bottom center"/>
+        <InfoBox :graf-data="this.graf"
+        v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
         @del-node="onInfoNodeDel"
         @des-node="onInfoNodeDes"
         @del-edge="onInfoEdgeDel"
         @des-edge="onInfoEdgeDes"> </InfoBox>
 
-        <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
+        <!-- <div class="labeler"  v-if="currentTool=='Label' && selection.selectedLabel"
          style="margin: 1em 0em 0em"
         >
           <sui-input v-model="selection.selectedLabel.name" @keypress.stop />
           <br />
           Change Label
-        </div>
+        </div> -->
       </header>
 			
 
@@ -228,6 +231,23 @@ export default {
       this.options = Object.assign({},this.options)
       
     },
+    onColorChange(color, need){
+      var r = document.querySelector(':root');
+      if(need == 1) {
+        for(var node in this.graf.nodes){
+          this.graf.nodes[node]._color = color;
+        }
+      }
+      if(need == 2) {
+        for(var edge in this.graf.links){
+          this.graf.links[edge]._color = color;
+        }
+      }
+      if(need == 3) r.style.setProperty('--node', color);
+      if(need == 4) r.style.setProperty('--edge', color);
+      this.graf.nodes.push({ id: -1 });
+      this.graf.nodes.splice(this.graf.nodes.length - 1, 1);
+    },
     onEdgeChange(){
       this.options.linkLabels = !this.options.linkLabels
       this.options = Object.assign({},this.options)
@@ -238,7 +258,7 @@ export default {
       for (let link of this.graf.links) {
         //console.log(link.sid, " ", link.tid);
         if(link.sid == node.id || link.tid == node.id) {
-          grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([link]));
+          grafhelpers.color_graf(this.graf, '#919191', 'edge', new Set([link]));
           this.selection.selectedEdges.delete(link);
         }
       }
@@ -253,7 +273,7 @@ export default {
       this.selection = Object.assign({},this.selection);
     },
     onInfoEdgeDel(edge) {
-      grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([edge]));
+      grafhelpers.color_graf(this.graf, '#919191', 'edge', new Set([edge]));
       this.selection.selectedEdges.delete(edge);
       this.selection = Object.assign({},this.selection);
       //GrafTools.clear_selection(this.graf, node);
@@ -261,14 +281,14 @@ export default {
       
     },
     onInfoEdgeDes(edge) {
-      grafhelpers.color_graf(this.graf, 'black', 'edge', new Set([edge]));
+      grafhelpers.color_graf(this.graf, '#919191', 'edge', new Set([edge]));
       this.selection.selectedEdges.delete(edge);
       this.selection = Object.assign({},this.selection);
     },
     info(){
-      console.log(this.graf.nodes)
+      // console.log(CookieHelpers.getCookie("GrafData"));
       this.$root.$emit('openLoad')
-
+      
     },
     onAlgorithmChange(alg) {
         this.algType = alg;
@@ -427,9 +447,21 @@ export default {
   background: #25df2c;
   cursor: pointer;
 }
-.node-label {
-	font-size: 120px;
-	fill: cyan;
-}
 
+</style>
+
+<style>
+:root{
+  --node: "#000000";
+  --edge: "#000000";
+}
+.node-label{
+  fill: var(--node);
+}
+.link-label{
+  fill: var(--edge);
+  transform: translate(0px,-10px);
+  /* fill: rgb(46, 221, 46); */
+  
+}
 </style>

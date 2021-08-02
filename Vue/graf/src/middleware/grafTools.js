@@ -5,7 +5,7 @@ class GrafTools {
   // Helper
   clear_selection(graf, selection) {
     grafhelpers.color_graf(graf, 'black', 'node', new Set(graf.nodes));
-    grafhelpers.color_graf(graf, 'black', 'edge', new Set(graf.links));
+    grafhelpers.color_graf(graf, "#919191", 'edge', new Set(graf.links));
     selection.selectedNodes = new Set();
     selection.selectedEdges = new Set();
   }
@@ -67,20 +67,20 @@ class GrafTools {
         if(type == "undir")
           graf.links.push({ sid: selection.selectedLast.id,
                             tid: selection.selectedCurrent.id,
-                            _color: 'black',
+                            _color: '#919191',
                             type: "Undirected",
                             name: 1});
         else if(type == "dir")
           graf.links.push({ sid: selection.selectedLast.id,
                             tid: selection.selectedCurrent.id,
-                            _color: 'black',
+                            _color: '#919191',
                             type: "Directed",
                             name: 1,
                             _svgAttrs: {'marker-end': 'url(#target-arrow)'}});
         else if(type == "bidir")
           graf.links.push({ sid: selection.selectedLast.id,
                             tid: selection.selectedCurrent.id,
-                            _color: 'black',
+                            _color: '#919191',
                             type: "Bidirected",
                             name: 1,
                             _svgAttrs: {'marker-start': 'url(#source-arrow)', 'marker-end': 'url(#target-arrow)'}});
