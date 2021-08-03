@@ -70,13 +70,13 @@
 
 
     </center>
-    <svg >
+    <svg>
       <defs>
         <marker id="target-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth" >
-          <path d="M0,0 L0,6 L9,3 z"></path>
+          <path v-bind:fill= edgeColor d="M0,0 L0,6 L9,3 z"></path>
         </marker>
         <marker id="source-arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth" >
-          <path d="M0,3 L9,6 L9,0 z"></path>
+          <path v-bind:fill= edgeColor d="M0,3 L9,6 L9,0 z"></path>
         </marker>
       </defs>
     </svg>
@@ -136,6 +136,7 @@ export default {
         edgeType: "undir",
         grafData: "",
         Toggled: false,
+        edgeColor: "#919191",
         history: {
             previous: [],
             next: []
@@ -239,6 +240,7 @@ export default {
         }
       }
       if(need == 2) {
+        this.edgeColor = color;
         for(var edge in this.graf.links){
           this.graf.links[edge]._color = color;
         }
@@ -314,7 +316,6 @@ export default {
           break;
         case "Edge":
           GrafTools.new_edge(this.graf, this.selection, this.edgeType);
-          this.$root.$emit('resetColors')
           break;
         case "Algorithm":
           this.selection.selectMultiple = true;
