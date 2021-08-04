@@ -114,6 +114,43 @@ class grafhelpers {
     loadGraf(data) {
         return JSON.parse(data);
     }
+    
+        BFS_maxFlow(selectedNodes, data) {
+        console.log("***** IN BFS_maxFlow *****");
+        var queue = new Array();
+        var visited = new Map();
+        var start = {node: selectedNodes[0].index, path:[{id: selectedNodes[0].index}]};
+        queue.push(start);
+
+        while (queue.length > 0) {
+            var state = queue.shift();
+
+            if (!(visited.has(state.node))) {
+                var fringe = data[state.node];
+                for (var fNode in fringe) {
+                    fNode = parseInt( fNode );
+                    if (!(visited.has(fNode))) {
+                        var next_path = JSON.parse(JSON.stringify(state.path));
+                        next_path.push({id: fNode});
+                        queue.push({node: fNode, path: next_path});
+                    }
+                }
+                visited.set(state.node, state.path);
+            }
+        }
+
+        var ret = [];
+        if (!(visited.has(selectedNodes[1].index))) {
+            console.log( "NO PATH -- NOT REACHABLE" );
+            return ret;
+        }
+        var result = visited.get(selectedNodes[1].index);
+        for (let element in result) {
+            ret.push(result[element].id);
+        }
+        console.log(ret);
+        return ret;
+    }
 }
 
 export default new grafhelpers();
