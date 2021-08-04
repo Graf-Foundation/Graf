@@ -42,6 +42,9 @@
         <div>
             <router-link to="/">Return to main site --></router-link>
         </div>
+        <div>
+            <router-link to="/donate">Donate!</router-link>
+        </div>
     </center>
 
   </div>
