@@ -20,6 +20,11 @@ export default new Router({
             path: "/about",
             name: "About",
             component: () => import("./components/About"),
+        },
+        {
+            path: "/donate",
+            name: "Donate",
+            component: () => import("./components/Donate")
         }
     ]
 })
