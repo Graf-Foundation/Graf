@@ -7,7 +7,7 @@ class PathTools {
                    "dfs":         {"fun": helperAlgs.dfs, "type": "search"},
                    "dijkstra":    {"fun": helperAlgs.djikstra, "type": "shortestPath"},
                    "kosaraju":    {"type": "scc"},
-                   "bellmanford": {"fun": helperAlgs.bellmanford, "type": "shortestPath"}
+                   "bellmanford": {"fun": helperAlgs.bellmanford, "type": "shortestPath"},
                    "maxFlow":     {"fun": helperAlgs.maxFlow, "type": "flow"}
     };
 
