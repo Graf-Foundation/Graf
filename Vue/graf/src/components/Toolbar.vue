@@ -100,11 +100,11 @@ export default{
         },
         "Algorithm" : {
           "bfs" : "Breadth First Search",
-	  "dfs" : "Depth First Search",
+	        "dfs" : "Depth First Search",
           "dijkstra" : "Dijkstra",
           "kosaraju" : "Kosaraju's",
-	  "bellmanford" : "Bellman Ford",
-	  "maxFlow" : "Maximum Flow"
+	        "bellmanford" : "Bellman Ford",
+	        "maxFlow" : "Maximum Flow"
         }
       },
       subMenuActive: {
