@@ -3,8 +3,9 @@
     <sui-modal v-model='open'>
       <sui-modal-header>Load Options</sui-modal-header>
       <sui-modal-content>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <sui-button @click ='onLoadFromFile()' icon="file">From File</sui-button>
-        <br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <sui-dropdown
             class="labeled icon"
             icon="connectdevelop"
@@ -20,8 +21,7 @@
                 </sui-dropdown-item>
             </sui-dropdown-menu>
         </sui-dropdown>
-        <br> <br>
-
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <sui-dropdown
             class="labeled icon"
             icon="recycle"
@@ -37,10 +37,12 @@
                 </sui-dropdown-item>
             </sui-dropdown-menu>
         </sui-dropdown>
-        <br> <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         
-        <sui-button @click="loadit()">hehe</sui-button>
-
+        <sui-button @click="loadit(0)" icon="connectdevelop">SCC Example</sui-button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <sui-button @click="loadit(1)" icon ="arrow right"> Path Example</sui-button>
+        <br><br><br><br><br><br><br><br><br><br><br><br>
       </sui-modal-content>
     </sui-modal>
   </div>
@@ -86,6 +88,7 @@ export default {
 
         kosaLoad: [
           '®¯0°a¯1°b¯2°c¯3°d¯4°e¯5°f¯6°g¯7°h¯8°i¯9°j¯10°k¯11°l¯12°m¯13°n¯14°o¯15°p¯16°q±²12³8´D°1²8³11´D°1²10³11´D°1²9³1´D°1²11³1´D°1²6³7´D°1²7³3´D°1²3³4´D°1²4³6´D°1²12³4´D°1²2³12´D°1²2³0´D°1²5³6´D°1²5³8´D°1²9³4´D°1²5³0´D°1²10³3´D°1²10³9´D°1²10³5´D°1²7³0´D°1²8³2´D°1²9³7´D°1µ17',
+          "®¯0°a¯1°b¯2°c¯3°d¯4°e¯5°f¯6°g¯7°h±²5³1´D°20²1³6´D°3²6³0´D°1²0³4´D°13²4³5´D°6²1³3´D°10²3³6´D°6²6³2´D°1²2³0´D°1²4³6´D°1²6³5´D°1²3³2´D°4µ8"
           
         ]
 
@@ -108,9 +111,9 @@ export default {
         this.toggle();
         this.$emit('preset-load', d);
     }, 
-    loadit(){
-        var d = CookieHelpers.decompressGraf(this.kosaLoad[0]);
-        // this.toggle();
+    loadit(i){
+        var d = CookieHelpers.decompressGraf(this.kosaLoad[i]);
+        this.toggle();
         this.$emit('preset-load', d);
     },
   },
