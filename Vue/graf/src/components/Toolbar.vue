@@ -99,9 +99,12 @@ export default{
           "bidir" : "Bidirected"
         },
         "Algorithm" : {
-          "bfs" : "BFS Search",
+          "bfs" : "Breadth First Search",
+	  "dfs" : "Depth First Search",
           "dijkstra" : "Dijkstra",
-          "kosaraju" : "Kosaraju's"
+          "kosaraju" : "Kosaraju's",
+	  "bellmanford" : "Bellman Ford",
+	  "maxFlow" : "Maximum Flow"
         }
       },
       subMenuActive: {
