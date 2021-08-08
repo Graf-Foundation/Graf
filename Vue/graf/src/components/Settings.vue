@@ -96,20 +96,26 @@ export default {
 			this.val2 = 3;
 			this.val3 = 3;
 			this.nodeCol = "#000000";
-			this.edgeCol = "#000000";
+			this.edgeCol = "#919191";
 			this.nLabelCol = "#000000";
 			this.eLabelCol = "#000000"; 
 			this.data = Object.assign({}, this.data)
 
 		}, 
+		onResetColor(){
+			this.nodeCol = "#000000";
+			this.edgeCol = "#919191";
+		},
 		onColorChange(color, need){
 			this.$emit('color-change', color, need)
-			console.log(color)
 		}
 	},
 	created: function () {
     this.$root.$on('resetSliders', () => {
 		this.onReset();
+    });
+	this.$root.$on('resetColors', () => {
+		this.onResetColor();
     });
   },
 	props: ["open"]

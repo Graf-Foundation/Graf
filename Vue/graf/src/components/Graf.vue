@@ -10,7 +10,7 @@
         <sui-button @click="onUndo();" icon="undo" data-tooltip="Ctrl-Z" data-position="bottom center"/>
         <sui-button @click="onRedo();" icon="redo" data-tooltip="Ctrl-Y" data-position="bottom center"/>
         <sui-button @click="clear_selections()" icon ="eye slash" data-tooltip="Esc" data-position="bottom center"/>
-        <sui-button @click="info()" icon ="button" data-position="bottom center"/>
+        <!-- <sui-button @click="info()" icon ="button" data-position="bottom center"/> -->
         <InfoBox :graf-data="this.graf"
         v-if="selection.selectedNodes.size || selection.selectedEdges.size" v-bind:selected="selection" 
         @del-node="onInfoNodeDel"
@@ -58,7 +58,7 @@
       <div class="fixedBC graf-labeler">
         <sui-button @click="onSaveImage();" color="green" content="Save Image"/>
         <sui-button @click="onSaveGraf();" color="green" content="Save Graph"/>
-        <sui-button @click="onLoadGraf();" color="green" content="Load Graph"/>
+        <sui-button @click="onLoad();" color="green" content="Load Graph"/>
         <sui-button @click="onResetGraf();" color="green" content="Reset Graph"/>
         <br>
         <input id="fileload" type="file" style="display:none" ref="fileload" @change="onFileUpload();">
@@ -70,13 +70,13 @@
 
 
     </center>
-    <svg >
+    <svg>
       <defs>
         <marker id="target-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth" >
-          <path d="M0,0 L0,6 L9,3 z"></path>
+          <path v-bind:fill= edgeColor d="M0,0 L0,6 L9,3 z"></path>
         </marker>
         <marker id="source-arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth" >
-          <path d="M0,3 L9,6 L9,0 z"></path>
+          <path v-bind:fill= edgeColor d="M0,3 L9,6 L9,0 z"></path>
         </marker>
       </defs>
     </svg>
@@ -136,6 +136,7 @@ export default {
         edgeType: "undir",
         grafData: "",
         Toggled: false,
+        edgeColor: "#919191",
         history: {
             previous: [],
             next: []
@@ -172,6 +173,9 @@ export default {
     },
     onSaveGraf() {
       grafhelpers.saveGraf(this.graf);
+    },
+    onLoad(){
+      this.$root.$emit('openLoad');
     },
     onLoadGraf() { 
       const elem = this.$refs.fileload;
@@ -239,6 +243,7 @@ export default {
         }
       }
       if(need == 2) {
+        this.edgeColor = color;
         for(var edge in this.graf.links){
           this.graf.links[edge]._color = color;
         }
@@ -285,11 +290,11 @@ export default {
       this.selection.selectedEdges.delete(edge);
       this.selection = Object.assign({},this.selection);
     },
-    info(){
-      // console.log(CookieHelpers.getCookie("GrafData"));
-      this.$root.$emit('openLoad')
+    // info(){
+    //   console.log(CookieHelpers.getCookie("GrafData"));
+    //   // this.$root.$emit('openLoad')
       
-    },
+    // },
     onAlgorithmChange(alg) {
         this.algType = alg;
     },
@@ -321,9 +326,11 @@ export default {
           break;
         case "Erase":
           GrafTools.erase(this.graf, this.selection);
+          this.$root.$emit('resetColors')
           break;
         case "Contract":
           GrafTools.contract(this.graf, this.selection);
+          this.$root.$emit('resetColors')
           break;
         default:
           break;
@@ -343,6 +350,7 @@ export default {
         this.selection.selectedCurrent = node;
         this.selection.selectedLabel = node;
         GrafTools.update_selection(this.graf, node, 'node', this.selection);
+        this.$root.$emit('resetColors')
         this.useTool(this.currentTool);
         //Modifying cookie
         CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
@@ -350,6 +358,7 @@ export default {
     handle_edge_click(event,edge) {
         this.selection.selectedLabel = edge;
         GrafTools.update_selection(this.graf, edge, 'edge', this.selection);
+        this.$root.$emit('resetColors')
         this.useTool(this.currentTool);
         //Modifying cookie
         CookieHelpers.putCookie("GrafData", CookieHelpers.compressGraf(JSON.stringify(this.graf)));
@@ -369,6 +378,8 @@ export default {
     clear_selections(){
         PathTools.update_distances(this.graf, null, false);
         GrafTools.clear_selection(this.graf, this.selection);
+        this.$root.$emit('resetColors')
+
     },
     keyup_handler(event) {
       if (event.code == "Escape") {this.clear_selections()}
