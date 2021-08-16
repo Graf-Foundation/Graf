@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <Settings v-bind:open="Toggled"/>
     <div id="Router">
       <router-view/>
     </div>
@@ -20,10 +19,7 @@ export default {
 </script>
 
 <style>
-* {
-  margin: 10;
-  padding: 10;
-}
+
 #app {
   width: 100%;
   height: 100%;
