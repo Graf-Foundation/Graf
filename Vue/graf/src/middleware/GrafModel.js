@@ -14,8 +14,8 @@ class Graph {
 }
 
 class Node {
-    constructor(label, simulation,style=null) {
-        this.style = (typeof style !== 'undefined') ?  style : null;
+    constructor(label, simulation, style=null) {
+        this.style = style;
         this.nodeLabel = label;
         this.edges = new Set();
         this.sim   = simulation;
@@ -27,37 +27,35 @@ class Node {
         return this.edges;
     }
     getAdjacent() {
-        let adj_set = new Set()
+        let adj_set = new Set();
         for (let edge of this.edges) {
             adj_set.add( (edge.source == this) ?  edge.target : edge.source );
         }
-        return adj_set
+        return adj_set;
     }
     setLabel(l) {
         this.nodeLabel = l;
     }
     setStyle(s) {
-        this.style = s
+        this.style = s;
     }
     delete() {
         // disconnect all edges
-        for (let edge in this.edges) {
-            edge.delete()
+        for (let edge of this.edges) {
+            edge.delete();
         }
     }
-    
 }
 
 class Edge {
-    constructor(v1, v2, dir, style) {
-        this.style = (typeof style !== 'undefined') ?  style : null;
-        dir = (typeof dir !== 'undefined') ?  dir : false;
+    constructor(v1, v2, dir=false, style=null) {
+        this.style = style;
         // dir is true when directed, false otherwise
         this.dir = dir;
         // direction is assumed to be from first input to second input Node
-        this.set_source(v1)
-        this.set_target(v2)
-        this.set_weight(1)
+        this.setSource(v1);
+        this.setTarget(v2);
+        this.setWeight(1);
     }
     getSource() {
         return this.source;
@@ -69,14 +67,14 @@ class Edge {
         return this.weight;
     }
     setSource(v) {
-        this.source.edges.delete(this)
-        this.source = v
-        this.source.edges.add(this)
+        this.source.edges.delete(this);
+        this.source = v;
+        this.source.edges.add(this);
     }
     setTarget(v) {
-        this.target.edges.delete(this)
-        this.target = v
-        this.target.edges.add(this)
+        this.target.edges.delete(this);
+        this.target = v;
+        this.target.edges.add(this);
     }
     setWeight(value) {
         this.weight = value;
@@ -92,16 +90,16 @@ class Edge {
         this.source = this.target;
         this.target = tmp;
     }
-    setStyle() {
-        //stub
+    setStyle(s) {
+        this.style = s;
     }
     toString() {
         return "(" + String(this.source.label) + "," + String(this.target.label) + ")";
     }
     delete() {
         // disconnects edge from its vertices
-        this.source.edges.delete(this)
-        this.target.edges.delete(this)
+        this.source.edges.delete(this);
+        this.target.edges.delete(this);
     }
 }
 
