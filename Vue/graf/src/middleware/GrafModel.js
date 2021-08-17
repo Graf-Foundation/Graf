@@ -1,39 +1,47 @@
 class Graph {
     constructor() {
         this.label = "New Graf";
-        this.vertices = new Set();
-        this.edges = new Set();
+        this.nodes = [];
+        this.edges = [];
     }
+    //TODO JPWEIR: methods for adding/removing both nodes/edges to the graph
+
+    //TODO JPWEIR: methods for contracting/expand** both nodes/edges to the graph
+
+    //TODO NDESMARAIS: selection abstraction
+
+    //TODO NDESMARAIS: style abstraction
 }
 
-class Vertex {
-    constructor(label, style) {
-        this.style = (typeof style !== 'undefined') ?  style : DEFAULT_STYLE;
-        this.label = label;
+class Node {
+    constructor(label, simulation,style=null) {
+        this.style = (typeof style !== 'undefined') ?  style : null;
+        this.nodeLabel = label;
         this.edges = new Set();
+        this.sim   = simulation;
     }
-    get label() {
+    getLabel() {
         return this.label;
     }
-    get edges() {
+    getEdges() {
         return this.edges;
     }
-    get adjacent() {
-        var adj_set = new Set()
-        for (edge in edges) {
+    getAdjacent() {
+        let adj_set = new Set()
+        for (let edge of this.edges) {
             adj_set.add( (edge.source == this) ?  edge.target : edge.source );
         }
         return adj_set
     }
-    set_label(l) {
-        this.label = l;
+    setLabel(l) {
+        this.nodeLabel = l;
     }
-    set_style() {
-        //stub
+    setStyle(s) {
+        this.style = s
     }
     delete() {
         // disconnect all edges
-        for (edge in edges) {
+        for (let edge in this.edges) {
             edge.delete()
         }
     }
@@ -42,52 +50,52 @@ class Vertex {
 
 class Edge {
     constructor(v1, v2, dir, style) {
-        this.style = (typeof style !== 'undefined') ?  style : DEFAULT_STYLE;
+        this.style = (typeof style !== 'undefined') ?  style : null;
         dir = (typeof dir !== 'undefined') ?  dir : false;
         // dir is true when directed, false otherwise
         this.dir = dir;
-        // direction is assumed to be from first input to second input vertex
+        // direction is assumed to be from first input to second input Node
         this.set_source(v1)
         this.set_target(v2)
         this.set_weight(1)
     }
-    get source() {
+    getSource() {
         return this.source;
     }
-    get target() {
+    getTarget() {
         return this.target;
     }
-    get weight() {
+    getWeight() {
         return this.weight;
     }
-    set_source(v) {
+    setSource(v) {
         this.source.edges.delete(this)
         this.source = v
         this.source.edges.add(this)
     }
-    set_target(v) {
+    setTarget(v) {
         this.target.edges.delete(this)
         this.target = v
         this.target.edges.add(this)
     }
-    set_weight(value) {
+    setWeight(value) {
         this.weight = value;
     }
     incident(v) {
         return this.source === v || this.target === v;
     }
-    toggle_dir() {
+    toggleDir() {
         this.dir = !this.dir;
     }
-    reverse_dir() {
-        tmp = this.source;
+    reverseDir() {
+        let tmp = this.source;
         this.source = this.target;
         this.target = tmp;
     }
-    set_style() {
+    setStyle() {
         //stub
     }
-    to_string() {
+    toString() {
         return "(" + String(this.source.label) + "," + String(this.target.label) + ")";
     }
     delete() {
@@ -96,4 +104,9 @@ class Edge {
         this.target.edges.delete(this)
     }
 }
-module.exports = Graph, Vertex, Edge;
+
+export {
+    Graph,
+    Node,
+    Edge
+}

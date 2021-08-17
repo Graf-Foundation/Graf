@@ -38,17 +38,19 @@ export default {
   name: "GrafView",
   data() {
     return {
+      grafModel: null,
       width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
       height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 40,
       simulation: null,
       graph: {
         links: [{id: 0, source: 0, target: 1}, {id: 1, source: 2, target: 0}],
-        nodes: [{id: "A", x: 0, y: 0},{id: "B", x: 0, y: 0},{id: "C",x: 0, y: 0}]
+        nodes: [{id: "A", x: 0, y: 0},{id: "B", x: 100, y: -100},{id: "C",x: -50, y: 50}]
       },
       nodeMoving: null
     };
   },
   mounted() {
+    //TODO NDESMARAIS: simulation-model interface
     console.log("mounted");
     this.simulation = force.forceSimulation(this.graph.nodes);
     this.simulation.on("tick", console.log("ticked"));
@@ -56,7 +58,7 @@ export default {
     this.simulation = this.simulation.force("link", force.forceLink(this.graph.links).distance(100))
         .force("charge", force.forceManyBody().strength(-8))
         .force("collide", force.forceCollide().radius(10))
-        .alpha(.01)
+        .alpha(.5)
         .alphaDecay(0);
   },
   methods: {
