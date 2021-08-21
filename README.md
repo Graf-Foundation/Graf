@@ -1,5 +1,5 @@
 # Graf
-An intuitive, open-source graph editor. Try it [here](https://graf-foundation.github.io/Graf/) (⚠️ Under construction ⚠️)!
+An intuitive, open-source graph editor. Try it [here](https://graf-foundation.github.io/Graf/)! ⚠️ Under construction ⚠️
 
 ![](graf.gif)
 
