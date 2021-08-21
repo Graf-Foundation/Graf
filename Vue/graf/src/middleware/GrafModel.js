@@ -1,10 +1,51 @@
 class Graph {
-    constructor() {
+    constructor(sim) {
         this.label = "New Graf";
-        this.nodes = [];
-        this.edges = [];
+        this.nodes = new Set();
+        this.edges = new Set();
+        this.sim_graph = sim;
+        this.sim_node_map = new Map();
+        this.sim_edge_map = new Map();
     }
-    //TODO JPWEIR: methods for adding/removing both nodes/edges to the graph
+    addNode(label, style=null) {
+        let sim_node = { id: label, x: 0, y: 0 };
+        let node = new Node(label, sim_node, style);
+        this.nodes.add(node)
+        this.sim_graph.nodes.push(sim_node)
+        this.sim_node_map.set(sim_node, node);
+    }
+    removeNode(sim_node) {
+        let node = this.sim_node_map.get(sim_node);
+        const sim_index = this.sim_graph.nodes.indexOf(sim_node);
+        this.sim_graph.nodes.splice(sim_index, 1);
+        for (let edge of node.edges) {
+            sim_link = edge.sim_link;
+            this.removeEdge(sim_link);
+        }
+        this.sim_node_map.delete(sim_node);
+        this.nodes.delete(node);
+    }
+    addEdge(sim_s, sim_t, dir = false, weight = 1, style = null) {
+        let s_index = this.sim_graph.nodes.indexOf(sim_s);
+        let s_node = this.sim_node_map.get(sim_s);
+        let t_index = this.sim_graph.nodes.indexOf(sim_t);
+        let t_node = this.sim_node_map.get(sim_t);
+        let link_id = this.sim_graph.links.size;
+
+        let sim_link = { id: link_id, s_index, t_index };
+        let edge = new Edge(s_node, t_node, sim_link, dir, weight, style);
+        this.edges.add(edge)
+        this.sim_graph.links.push(sim_link);
+        this.sim_edge_map.set(sim_link, edge);
+    }
+    removeEdge(sim_link) {
+        edge = this.sim_edge_map.get(sim_link);
+        const sim_index = this.sim_graph.links.indexOf(sim_link);
+        this.sim_graph.links.splice(sim_index, 1);
+        edge.disconnect();
+        this.sim_edge_map.delete(sim_link);
+        this.edges.delete(edge);
+    }
 
     //TODO JPWEIR: methods for contracting/expand** both nodes/edges to the graph
 
@@ -14,11 +55,11 @@ class Graph {
 }
 
 class Node {
-    constructor(label, simulation, style=null) {
-        this.style = style;
+    constructor(label, sim, style=null) {
+        this.setStyle(style)
         this.nodeLabel = label;
         this.edges = new Set();
-        this.sim   = simulation;
+        this.sim_node = sim;
     }
     getLabel() {
         return this.label;
@@ -36,26 +77,31 @@ class Node {
     setLabel(l) {
         this.nodeLabel = l;
     }
+    getStyle() {
+        return this.style;
+    }
     setStyle(s) {
         this.style = s;
     }
+    /* DEPRECATED
     delete() {
         // disconnect all edges
         for (let edge of this.edges) {
-            edge.delete();
+            edge.disconnect();
         }
-    }
+    }*/
 }
 
 class Edge {
-    constructor(v1, v2, dir=false, style=null) {
-        this.style = style;
+    constructor(s, t, sim, dir = false, weight = 1, style = null) {
+        // direction is assumed to be from first input to second input Node
+        this.setSource(s);
+        this.setTarget(t);
+        this.sim_link = sim;
         // dir is true when directed, false otherwise
         this.dir = dir;
-        // direction is assumed to be from first input to second input Node
-        this.setSource(v1);
-        this.setTarget(v2);
-        this.setWeight(1);
+        this.setWeight(weight);
+        this.setStyle(style);
     }
     getSource() {
         return this.source;
@@ -90,13 +136,16 @@ class Edge {
         this.source = this.target;
         this.target = tmp;
     }
+    getStyle() {
+        return this.style;
+    }
     setStyle(s) {
         this.style = s;
     }
     toString() {
         return "(" + String(this.source.label) + "," + String(this.target.label) + ")";
     }
-    delete() {
+    disconnect() {
         // disconnects edge from its vertices
         this.source.edges.delete(this);
         this.target.edges.delete(this);
