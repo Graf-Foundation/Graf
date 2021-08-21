@@ -1,55 +1,61 @@
+// eslint-disable-next-line no-unused-vars
+
+// TODO JPWEIR: Remove 1 letter variable names / "magic numbers"
+// TODO JPWEIR
+
 class Graph {
     constructor(sim, style=null) {
         this.label = "New Graf";
-        this.nodes = new Set();
-        this.edges = new Set();
-        this.sim_graph = sim;
+        this.sim_wrapper = sim;
         // Maps from IDs to nodes or edges
         this.id_node_map = new Map();
         this.id_edge_map = new Map();
+        // Unique Identifier for nodes and edges
+        // Reset if all nodes are removed
         this.curr_node_id = 0
         this.curr_edge_id = 0
+        // Default node and edge Styles
         this.style = style
-
     }
+
     addNode(label=this.curr_node_id, style=null) {
-        let sim_node = { id: this.curr_node_id, x: 0, y: 0 };
-        let node = new Node(label, sim_node, style);
-        this.nodes.add(node)
-        this.sim_graph.nodes.push(sim_node)
+        let sim_id = `${this.curr_node_id}`;
+        let node = new Node(this.curr_node_id, label, sim_id, style);
+
+        this.sim_wrapper.addSimNode(sim_id)
         this.id_node_map.set(this.curr_node_id, node);
         this.curr_node_id += 1
     }
+
     removeNode(node_id) {
         let node = this.id_node_map.get(node_id);
-        const sim_index = this.sim_graph.nodes.indexOf(node.sim_node);
-        this.sim_graph.nodes.splice(sim_index, 1);
+        let sim_id = `${node_id}`;
+
         for (let edge of node.edges) {
-            this.removeEdge(edge.sim_link[id]);
+            this.removeEdge(edge.getId());
         }
+
         this.id_node_map.delete(node_id);
-        this.nodes.delete(node);
+        this.sim_wrapper.removeSimNode(sim_id)
     }
+
     addEdge(s_id, t_id, dir = false, weight = 1, style = null) {
         let s_node = this.id_node_map.get(s_id);
-        let s_index = this.sim_graph.nodes.indexOf(s_node.sim_node);
         let t_node = this.id_node_map.get(t_id);
-        let t_index = this.sim_graph.nodes.indexOf(t_node.sim_node);
+        let edge = new Edge(this.curr_edge_id, s_node, t_node, dir, weight, style);
 
-        let sim_link = { id: this.curr_edge_id, s_index, t_index };
-        let edge = new Edge(s_node, t_node, sim_link, dir, weight, style);
-        this.edges.add(edge)
-        this.sim_graph.links.push(sim_link);
         this.id_edge_map.set(this.curr_edge_id, edge);
         this.curr_edge_id += 1
+        this.sim_wrapper.addSimLink()
     }
+
     removeEdge(edge_id) {
         let edge = this.id_edge_map.get(edge_id);
-        const sim_index = this.sim_graph.links.indexOf(edge.sim_link);
-        this.sim_graph.links.splice(sim_index, 1);
+
         edge.disconnect();
+
+        this.sim_wrapper.removeEdge(edge_id);
         this.id_edge_map.delete(edge_id);
-        this.edges.delete(edge);
     }
 
     //TODO JPWEIR: methods for contracting/expand** both nodes/edges to the graph
@@ -60,18 +66,29 @@ class Graph {
 }
 
 class Node {
-    constructor(label, sim, style=null) {
+    constructor(id, label = "", style=null) {
         this.setStyle(style)
-        this.nodeLabel = label;
+        this.node_label = label;
         this.edges = new Set();
-        this.sim_node = sim;
+        this.id = id;
     }
+
+    getId() {
+        return this.id;
+    }
+
+    getSimId() {
+        return `${this.id}`;
+    }
+
     getLabel() {
         return this.label;
     }
+
     getEdges() {
         return this.edges;
     }
+
     getAdjacent() {
         let adj_set = new Set();
         for (let edge of this.edges) {
@@ -79,15 +96,19 @@ class Node {
         }
         return adj_set;
     }
+
     setLabel(l) {
-        this.nodeLabel = l;
+        this.node_label = l;
     }
+
     getStyle() {
         return this.style;
     }
+
     setStyle(s) {
         this.style = s;
     }
+
     /* DEPRECATED
     delete() {
         // disconnect all edges
@@ -98,16 +119,25 @@ class Node {
 }
 
 class Edge {
-    constructor(s, t, sim, dir = false, weight = 1, style = null) {
+    constructor(id, s, t, dir = false, weight = 1, style = null) {
+        this.id = id;
         // direction is assumed to be from first input to second input Node
         this.setSource(s);
         this.setTarget(t);
-        this.sim_link = sim;
         // dir is true when directed, false otherwise
         this.dir = dir;
         this.setWeight(weight);
         this.setStyle(style);
     }
+
+    getId() {
+        return this.id;
+    }
+
+    getSimId() {
+        return `${this.id}`;
+    }
+
     getSource() {
         return this.source;
     }

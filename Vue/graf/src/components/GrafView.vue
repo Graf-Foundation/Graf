@@ -32,7 +32,8 @@
 </template>
 
 <script>
-import * as force from "d3-force";
+import {ForceSimWrapper} from "../middleware/GrafForceSim";
+import * as Model from "../middleware/GrafModel"
 
 export default {
   name: "GrafView",
@@ -44,22 +45,20 @@ export default {
       simulation: null,
       graph: {
         links: [{id: 0, source: 0, target: 1}, {id: 1, source: 2, target: 0}],
-        nodes: [{id: "A", x: 0, y: 0},{id: "B", x: 100, y: -100},{id: "C",x: -50, y: 50}]
+        nodes: [{id: "A", x: 0, y: 0},{id: "B", x: 0, y: 0},{id: "C",x: 0, y: 0}]
       },
       nodeMoving: null
     };
   },
   mounted() {
-    //TODO NDESMARAIS: simulation-model interface
     console.log("mounted");
-    this.simulation = force.forceSimulation(this.graph.nodes);
-    this.simulation.on("tick", console.log("ticked"));
-    this.simulation.on("end", console.log("ended"));
-    this.simulation = this.simulation.force("link", force.forceLink(this.graph.links).distance(100))
-        .force("charge", force.forceManyBody().strength(-8))
-        .force("collide", force.forceCollide().radius(10))
-        .alpha(.5)
-        .alphaDecay(0);
+
+    this.simulation = new ForceSimWrapper(null,
+        this.graph.nodes,
+        this.graph.links
+    );
+
+    this.grafModel = new Model.Graph(this.simulation);
   },
   methods: {
     nodeClick(node) {
