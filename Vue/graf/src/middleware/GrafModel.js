@@ -45,8 +45,8 @@ class Graph {
         let edge = new Edge(this.curr_edge_id, s_node, t_node, dir, weight, style);
 
         this.id_edge_map.set(this.curr_edge_id, edge);
+        this.sim_wrapper.addSimLink(this.curr_edge_id, s_id, t_id)
         this.curr_edge_id += 1
-        this.sim_wrapper.addSimLink()
     }
 
     removeEdge(edge_id) {
