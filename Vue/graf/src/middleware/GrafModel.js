@@ -1,49 +1,54 @@
 class Graph {
-    constructor(sim) {
+    constructor(sim, style=null) {
         this.label = "New Graf";
         this.nodes = new Set();
         this.edges = new Set();
         this.sim_graph = sim;
-        this.sim_node_map = new Map();
-        this.sim_edge_map = new Map();
+        // Maps from IDs to nodes or edges
+        this.id_node_map = new Map();
+        this.id_edge_map = new Map();
+        this.curr_node_id = 0
+        this.curr_edge_id = 0
+        this.style = style
+
     }
-    addNode(label, style=null) {
-        let sim_node = { id: label, x: 0, y: 0 };
+    addNode(label=this.curr_node_id, style=null) {
+        let sim_node = { id: this.curr_node_id, x: 0, y: 0 };
         let node = new Node(label, sim_node, style);
         this.nodes.add(node)
         this.sim_graph.nodes.push(sim_node)
-        this.sim_node_map.set(sim_node, node);
+        this.id_node_map.set(this.curr_node_id, node);
+        this.curr_node_id += 1
     }
-    removeNode(sim_node) {
-        let node = this.sim_node_map.get(sim_node);
-        const sim_index = this.sim_graph.nodes.indexOf(sim_node);
+    removeNode(node_id) {
+        let node = this.id_node_map.get(node_id);
+        const sim_index = this.sim_graph.nodes.indexOf(node.sim_node);
         this.sim_graph.nodes.splice(sim_index, 1);
         for (let edge of node.edges) {
-            let sim_link = edge.sim_link;
-            this.removeEdge(sim_link);
+            this.removeEdge(edge.sim_link[id]);
         }
-        this.sim_node_map.delete(sim_node);
+        this.id_node_map.delete(node_id);
         this.nodes.delete(node);
     }
-    addEdge(sim_s, sim_t, dir = false, weight = 1, style = null) {
-        let s_index = this.sim_graph.nodes.indexOf(sim_s);
-        let s_node = this.sim_node_map.get(sim_s);
-        let t_index = this.sim_graph.nodes.indexOf(sim_t);
-        let t_node = this.sim_node_map.get(sim_t);
-        let link_id = this.sim_graph.links.size;
+    addEdge(s_id, t_id, dir = false, weight = 1, style = null) {
+        let s_node = this.id_node_map.get(s_id);
+        let s_index = this.sim_graph.nodes.indexOf(s_node.sim_node);
+        let t_node = this.id_node_map.get(t_id);
+        let t_index = this.sim_graph.nodes.indexOf(t_node.sim_node);
 
-        let sim_link = { id: link_id, s_index, t_index };
+        let sim_link = { id: this.curr_edge_id, s_index, t_index };
         let edge = new Edge(s_node, t_node, sim_link, dir, weight, style);
         this.edges.add(edge)
         this.sim_graph.links.push(sim_link);
-        this.sim_edge_map.set(sim_link, edge);
+        this.id_edge_map.set(this.curr_edge_id, edge);
+        this.curr_edge_id += 1
     }
-    removeEdge(sim_link) {
-        let edge = this.sim_edge_map.get(sim_link);
-        const sim_index = this.sim_graph.links.indexOf(sim_link);
+    removeEdge(edge_id) {
+        edge = this.id_edge_map.get(edge_id);
+        const sim_index = this.sim_graph.links.indexOf(edge.sim_link);
         this.sim_graph.links.splice(sim_index, 1);
         edge.disconnect();
-        this.sim_edge_map.delete(sim_link);
+        this.id_edge_map.delete(edge_id);
         this.edges.delete(edge);
     }
 
