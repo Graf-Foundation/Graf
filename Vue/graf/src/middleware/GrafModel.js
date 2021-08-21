@@ -44,7 +44,7 @@ class Graph {
         this.curr_edge_id += 1
     }
     removeEdge(edge_id) {
-        edge = this.id_edge_map.get(edge_id);
+        let edge = this.id_edge_map.get(edge_id);
         const sim_index = this.sim_graph.links.indexOf(edge.sim_link);
         this.sim_graph.links.splice(sim_index, 1);
         edge.disconnect();
