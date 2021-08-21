@@ -19,7 +19,7 @@ class Graph {
         const sim_index = this.sim_graph.nodes.indexOf(sim_node);
         this.sim_graph.nodes.splice(sim_index, 1);
         for (let edge of node.edges) {
-            sim_link = edge.sim_link;
+            let sim_link = edge.sim_link;
             this.removeEdge(sim_link);
         }
         this.sim_node_map.delete(sim_node);
@@ -39,7 +39,7 @@ class Graph {
         this.sim_edge_map.set(sim_link, edge);
     }
     removeEdge(sim_link) {
-        edge = this.sim_edge_map.get(sim_link);
+        let edge = this.sim_edge_map.get(sim_link);
         const sim_index = this.sim_graph.links.indexOf(sim_link);
         this.sim_graph.links.splice(sim_index, 1);
         edge.disconnect();
