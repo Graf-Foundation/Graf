@@ -1,8 +1,5 @@
 // eslint-disable-next-line no-unused-vars
 
-// TODO JPWEIR: Remove 1 letter variable names / "magic numbers"
-// TODO JPWEIR
-
 class Graph {
     constructor(sim, style=null) {
         this.label = "New Graf";
@@ -97,33 +94,25 @@ class Node {
         return adj_set;
     }
 
-    setLabel(l) {
-        this.node_label = l;
+    setLabel(label) {
+        this.node_label = label;
     }
 
     getStyle() {
         return this.style;
     }
 
-    setStyle(s) {
-        this.style = s;
+    setStyle(style) {
+        this.style = style;
     }
-
-    /* DEPRECATED
-    delete() {
-        // disconnect all edges
-        for (let edge of this.edges) {
-            edge.disconnect();
-        }
-    }*/
 }
 
 class Edge {
-    constructor(id, s, t, dir = false, weight = 1, style = null) {
+    constructor(id, source, target, dir = false, weight = 1, style = null) {
         this.id = id;
         // direction is assumed to be from first input to second input Node
-        this.setSource(s);
-        this.setTarget(t);
+        this.setSource(source);
+        this.setTarget(target);
         // dir is true when directed, false otherwise
         this.dir = dir;
         this.setWeight(weight);
@@ -147,21 +136,21 @@ class Edge {
     getWeight() {
         return this.weight;
     }
-    setSource(v) {
+    setSource(node) {
         this.source.edges.delete(this);
-        this.source = v;
+        this.source = node;
         this.source.edges.add(this);
     }
-    setTarget(v) {
+    setTarget(node) {
         this.target.edges.delete(this);
-        this.target = v;
+        this.target = node;
         this.target.edges.add(this);
     }
     setWeight(value) {
         this.weight = value;
     }
-    incident(v) {
-        return this.source === v || this.target === v;
+    incident(node) {
+        return this.source === node || this.target === node;
     }
     toggleDir() {
         this.dir = !this.dir;
@@ -174,8 +163,8 @@ class Edge {
     getStyle() {
         return this.style;
     }
-    setStyle(s) {
-        this.style = s;
+    setStyle(style) {
+        this.style = style;
     }
     toString() {
         return "(" + String(this.source.label) + "," + String(this.target.label) + ")";
