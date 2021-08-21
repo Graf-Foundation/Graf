@@ -1,7 +1,5 @@
 # Graf
-An intuitive, open-source graph editor. Try it [here](https://graf-foundation.github.io/Graf/)! ⚠️ Under construction ⚠️
-
-![](graf.gif)
+An intuitive, open-source graph editor.⚠️ Under construction ⚠️
 
 ## Installation
 First, install [Node.js](https://nodejs.org/en/).
