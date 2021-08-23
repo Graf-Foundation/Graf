@@ -1,5 +1,11 @@
 <template>
   <div class="svg-container" style="width: 100%">
+    <button value="add node" v-on:click="addNode()"/>
+    <input type="button" value="remove" v-on:click="removeMode()"/>
+    <input type="button" value="add edge" v-on:click="addEdge()"/>
+
+
+
     <svg id="svg" preserveAspectRatio="xMinYMin meet" pointer-events="all"
          :width="width+'px'"
          :height="height+'px'"
