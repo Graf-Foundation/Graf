@@ -9,8 +9,9 @@ class ForceSimWrapper {
         this.nodes = sim_nodes;
         this.links = sim_links;
         this.forces = {};
-        this.simulation = d3.forceSimulation(sim_nodes);
+        this.simulation = d3.forceSimulation();
 
+        //TODO anyone: make these settings dynamic
         this.simulation = this.simulation.alpha(.5)
         this.simulation = this.simulation.alphaDecay(0);
 
@@ -30,6 +31,14 @@ class ForceSimWrapper {
             "collide" : new gf.CollisionForce(),
             "charge" : new gf.ManyBodyForce()
         };
+    }
+
+    stopSim() {
+        this.simulation = this.simulation.stop();
+    }
+
+    restartSim() {
+        this.simulation = this.simulation.restart();
     }
 
     genForces(params) {
@@ -58,6 +67,8 @@ class ForceSimWrapper {
         let node = {id: node_id, x: node_x, y: node_y};
 
         this.nodes.push(node);
+
+        this.simulation = this.simulation.nodes(this.nodes);
     }
 
     removeSimNode(node_id) {
