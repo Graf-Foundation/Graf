@@ -64,7 +64,7 @@ class Graph {
 
 class Node {
     constructor(id, label = "", style=null) {
-        this.setStyle(style)
+        this.style = style;
         this.node_label = label;
         this.edges = new Set();
         this.id = id;
@@ -111,12 +111,14 @@ class Edge {
     constructor(id, source, target, dir = false, weight = 1, style = null) {
         this.id = id;
         // direction is assumed to be from first input to second input Node
+        this.source = source;
         this.setSource(source);
+        this.target = target;
         this.setTarget(target);
         // dir is true when directed, false otherwise
         this.dir = dir;
-        this.setWeight(weight);
-        this.setStyle(style);
+        this.weight = weight;
+        this.style = style;
     }
 
     getId() {
