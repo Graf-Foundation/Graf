@@ -1,7 +1,7 @@
 <template>
   <div class="svg-container" style="width: 100%">
     <graf-editor-toolbar
-      v-on:add-node-tool-click="grafModel.addNode('a')"
+      v-on:add-node-tool-click="this.grafModel.addNode('a')"
     />
 
     <svg id="svg" preserveAspectRatio="xMinYMin meet" pointer-events="all"
