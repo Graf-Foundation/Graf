@@ -1,13 +1,9 @@
 <template>
   <div class="svg-container" style="width: 100%">
     <graf-editor-toolbar
-<<<<<<< Updated upstream
-      v-on:add-node-tool-click="this.grafModel.addNode('a')"
-=======
       v-on:add-node-tool-click="grafModel.addNode('a')"
       v-on:pause-tool-click="simulation.stopSim();"
       v-on:play-tool-click="simulation.restartSim();"
->>>>>>> Stashed changes
     />
 
     <svg id="svg" preserveAspectRatio="xMinYMin meet" pointer-events="all"
