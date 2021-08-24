@@ -1,10 +1,8 @@
 <template>
   <div class="svg-container" style="width: 100%">
-    <v-btn  v-on:click="this.grafModel.addNode('Node');">Add Node</v-btn>
-    <v-btn v-on:click="this.console.log('Remove Mode Clicked');">Remove</v-btn>
-    <v-btn v-on:click="this.console.log('Add Edge Clicked');">Add Edge</v-btn>
-
-
+    <graf-editor-toolbar
+      v-on:add-node-tool-click="grafModel.addNode('a')"
+    />
 
     <svg id="svg" preserveAspectRatio="xMinYMin meet" pointer-events="all"
          :width="width+'px'"
@@ -40,9 +38,13 @@
 <script>
 import {ForceSimWrapper} from "../middleware/GrafForceSim";
 import * as Model from "../middleware/GrafModel"
+import GrafEditorToolbar from "./ui_components/GrafEditorToolbar";
 
 export default {
   name: "GrafView",
+  components: {
+    GrafEditorToolbar
+  },
   data() {
     return {
       grafModel: null,
