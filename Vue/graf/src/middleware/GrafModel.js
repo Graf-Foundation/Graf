@@ -34,6 +34,11 @@ class Graph {
 
         this.id_node_map.delete(node_id);
         this.sim_wrapper.removeSimNode(sim_id)
+
+        if (this.id_node_map.size == 0) {
+            this.curr_node_id = 0;
+            this.curr_edge_id = 0;
+        }
     }
 
     addEdge(s_id, t_id, dir = false, weight = 1, style = null) {
