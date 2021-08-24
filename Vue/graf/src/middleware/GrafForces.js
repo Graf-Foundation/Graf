@@ -43,8 +43,8 @@ class CenteringForce extends Force {
 class CollisionForce extends Force {
     constructor(param_obj = null) {
         let defaults = {
-            "radius" : 10,
-            "str" : 1,
+            "radius" : 50,
+            "str" : 5,
             "itr" : 1,
         };
 
@@ -79,7 +79,7 @@ class LinkForce extends Force {
 class ManyBodyForce extends Force {
     constructor(param_obj = null) {
         let defaults = {
-            "str" : -8,
+            "str" : -10,
             "min" : 1,
             "max" : 0,
             "theta_val" : 0.9

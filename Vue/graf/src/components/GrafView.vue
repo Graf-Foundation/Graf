@@ -1,8 +1,8 @@
 <template>
   <div class="svg-container" style="width: 100%">
-    <button  v-on:click="console.log('Add Node Clicked');">Add Node</button>
-    <button  value="remove" v-on:click="console.log('Remove Mode Clicked');">Remove</button>
-    <button  value="add edge" v-on:click="console.log('Add Edge Clicked');">Add Edge</button>
+    <v-btn  v-on:click="this.grafModel.addNode('Node');">Add Node</v-btn>
+    <v-btn v-on:click="this.console.log('Remove Mode Clicked');">Remove</v-btn>
+    <v-btn v-on:click="this.console.log('Add Edge Clicked');">Add Edge</v-btn>
 
 
 
@@ -57,8 +57,6 @@ export default {
     };
   },
   mounted() {
-    console.log("mounted");
-
     this.simulation = new ForceSimWrapper(null,
         this.graph.nodes,
         this.graph.links
@@ -68,12 +66,10 @@ export default {
   },
   methods: {
     nodeClick(node) {
-      let id = node.id
-      console.log(`Node ${id} Clicked`)
+      this.$emit("Node Clicked", node);
     },
     linkClick(link) {
-      let id = link.id
-      console.log(`Link ${id} Clicked`)
+      this.$emit("Link Clicked", link);
     },
     drag(e) {
       if (this.nodeMoving != null) {
@@ -93,6 +89,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>
