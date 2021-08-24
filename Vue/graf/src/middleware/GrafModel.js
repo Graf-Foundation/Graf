@@ -35,7 +35,7 @@ class Graph {
         this.id_node_map.delete(node_id);
         this.sim_wrapper.removeSimNode(sim_id)
 
-        if (this.id_node_map.size == 0) {
+        if (this.id_node_map.size === 0) {
             this.curr_node_id = 0;
             this.curr_edge_id = 0;
         }
@@ -84,7 +84,7 @@ class Node {
     }
 
     getLabel() {
-        return this.label;
+        return this.node_label;
     }
 
     getEdges() {
@@ -94,7 +94,7 @@ class Node {
     getAdjacent() {
         let adj_set = new Set();
         for (let edge of this.edges) {
-            adj_set.add( (edge.source == this) ?  edge.target : edge.source );
+            adj_set.add( (edge.source === this) ?  edge.target : edge.source );
         }
         return adj_set;
     }
