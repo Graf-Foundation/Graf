@@ -52,8 +52,8 @@ export default {
       height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 40,
       simulation: null,
       graph: {
-        links: [{id: 0, source: 0, target: 1}, {id: 1, source: 2, target: 0}],
-        nodes: [{id: "A", x: 0, y: 0},{id: "B", x: 0, y: 0},{id: "C",x: 0, y: 0}]
+        links: [],
+        nodes: []
       },
       nodeMoving: null
     };
