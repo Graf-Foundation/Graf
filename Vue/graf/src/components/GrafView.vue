@@ -1,8 +1,8 @@
 <template>
   <div class="svg-container" style="width: 100%">
-    <button value="add node" v-on:click="addNode()"/>
-    <input type="button" value="remove" v-on:click="removeMode()"/>
-    <input type="button" value="add edge" v-on:click="addEdge()"/>
+    <button  v-on:click="console.log('Add Node Clicked');">Add Node</button>
+    <button  value="remove" v-on:click="console.log('Remove Mode Clicked');">Remove</button>
+    <button  value="add edge" v-on:click="console.log('Add Edge Clicked');">Add Edge</button>
 
 
 
