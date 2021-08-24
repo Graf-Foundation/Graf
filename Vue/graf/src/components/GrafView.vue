@@ -78,7 +78,7 @@ export default {
     drag(e) {
       if (this.nodeMoving != null) {
         let x = e.clientX - this.width/2;
-        let y = e.clientY - this.height/2;
+        let y = e.clientY - this.height/2 - 64;
         this.nodeMoving.fx = x
         this.nodeMoving.fy = y
       }
