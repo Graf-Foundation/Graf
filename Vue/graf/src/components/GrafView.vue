@@ -1,10 +1,5 @@
 <template>
   <div class="svg-container" style="width: 100%">
-    <graf-editor-toolbar
-      v-on:add-node-tool-click="grafModel.addNode('a')"
-      v-on:pause-tool-click="simulation.stopSim();"
-      v-on:play-tool-click="simulation.restartSim();"
-    />
 
     <svg id="svg" preserveAspectRatio="xMinYMin meet" pointer-events="all"
          :width="width+'px'"
@@ -13,7 +8,7 @@
          @mousemove="drag($event)"
          @mouseup="drop()">
 
-      <line v-for="link in this.graph.links"
+      <line v-for="link in this.simData.links"
             :key="link.id"
             :x1="link.source.x"
             :y1="link.source.y"
@@ -23,7 +18,7 @@
             stroke-width="5"
             v-on:click="linkClick(link)"/>
 
-      <circle v-for="node in this.graph.nodes"
+      <circle v-for="node in this.simData.nodes"
               :key="node.id"
               :cx="node.x"
               :cy="node.y"
@@ -38,35 +33,17 @@
 </template>
 
 <script>
-import {ForceSimWrapper} from "../middleware/GrafForceSim";
-import * as Model from "../middleware/GrafModel"
-import GrafEditorToolbar from "./ui_components/GrafEditorToolbar";
+
 
 export default {
   name: "GrafView",
-  components: {
-    GrafEditorToolbar
-  },
+  props: ['simData'],
   data() {
     return {
-      grafModel: null,
       width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
       height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 40,
-      simulation: null,
-      graph: {
-        links: [],
-        nodes: []
-      },
       nodeMoving: null
     };
-  },
-  mounted() {
-    this.simulation = new ForceSimWrapper(null,
-        this.graph.nodes,
-        this.graph.links
-    );
-
-    this.grafModel = new Model.Graph(this.simulation);
   },
   methods: {
     nodeClick(node) {
