@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@mdi/font": "^5.9.55",
-    "core-js": "^3.16.1",
+    "core-js": "^3.17.1",
     "d3-force": "^3.0.0",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1",

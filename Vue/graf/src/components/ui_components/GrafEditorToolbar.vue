@@ -1,15 +1,63 @@
 <template>
   <v-toolbar>
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
-    <!-- pause and play buttons -->
-    <v-btn icon v-on:click="pauseClick"><v-icon>mdi-pause</v-icon></v-btn>
-    <v-btn icon v-on:click="playClick"><v-icon medium>mdi-play</v-icon></v-btn>
 
-    <!-- tool buttons -->
-    <v-btn v-on:click="addNodeClick">Add Node</v-btn>
-    <v-btn v-on:click="removeModeClick">Remove</v-btn>
-    <v-btn v-on:click="addEdgeClick">Add Edge</v-btn>
+    <v-row>
+      <v-col cols="1">
+        <!-- pause and play buttons -->
+        <v-btn icon v-on:click="emit('pause-tool-click')"><v-icon>mdi-pause</v-icon></v-btn>
+        <v-btn icon v-on:click="emit('play-tool-click')"><v-icon medium>mdi-play</v-icon></v-btn>
+      </v-col>
 
+      <!-- swap toolbar buttons -->
+      <v-col cols="2" style="max-width: 150px;">
+        <!-- tools bar -->
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-on:click="barId=0" v-bind="attrs" v-on="on">
+              <v-icon>mdi-tools</v-icon>
+            </v-btn>
+          </template>
+          <span>Tools</span>
+        </v-tooltip>
+
+        <!-- algorithms bar -->
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-on:click="barId=1" v-bind="attrs" v-on="on">
+              <v-icon>
+                mdi-family-tree
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>Algorithms</span>
+        </v-tooltip>
+
+      </v-col>
+
+      <!-- tools bar -->
+      <v-col cols="9" v-if="barId===0">
+        <v-btn class="tool-btn" v-on:click="emit('add-node-tool-click')">Add Node</v-btn>
+        <v-btn class="tool-btn" v-on:click="emit('add-edge-tool-click')">Add Edge</v-btn>
+        <v-btn class="tool-btn" v-on:click="emit('remove-tool-click')">Delete</v-btn>
+        <v-btn class="tool-btn" v-on:click="emit('expand-tool-click')">Expand</v-btn>
+        <v-btn class="tool-btn" v-on:click="emit('contract-tool-click')">Contract</v-btn>
+      </v-col>
+
+      <!-- algorithms bar -->
+      <v-col cols="9" v-if="barId===1">
+        <v-btn class="tool-btn" v-on:click="() => {}">BFS</v-btn>
+        <v-btn class="tool-btn" v-on:click="() => {}">DFS</v-btn>
+        <v-btn class="tool-btn" v-on:click="() => {}">SCC</v-btn>
+        <v-btn class="tool-btn" v-on:click="() => {}">Top Sort</v-btn>
+      </v-col>
+
+      <!-- options -->
+      <v-col cols="1">
+        <v-btn icon v-on:click="() => {}" style="float: right;"><v-icon medium>mdi-cog</v-icon></v-btn>
+      </v-col>
+
+    </v-row>
 
   </v-toolbar>
 </template>
@@ -17,21 +65,14 @@
 <script>
 export default {
   name: "GrafEditorToolbar",
+  data() {
+    return {
+      barId: 0
+    }
+  },
   methods:  {
-    addNodeClick() {
-      this.$emit("add-node-tool-click");
-    },
-    removeModeClick() {
-      this.$emit("remove-tool-click");
-    },
-    addEdgeClick() {
-      this.$emit("add-edge-tool-click");
-    },
-    pauseClick() {
-      this.$emit("pause-tool-click");
-    },
-    playClick() {
-      this.$emit("play-tool-click");
+    emit(eventString) {
+      this.$emit(eventString);
     }
   }
 }
@@ -39,6 +80,9 @@ export default {
 
 </script>
 
-<style scoped>
-
+<style>
+  .tool-btn {
+    margin-left: 10px;
+    margin-top: 5px;
+  }
 </style>
