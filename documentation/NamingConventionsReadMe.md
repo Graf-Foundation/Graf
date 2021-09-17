@@ -1,3 +1,5 @@
+
+
 # Naming Conventions
 
 ## General Rules
@@ -8,38 +10,56 @@
 
 ## File Names
 
-### Code Files: 
+### Code Files:
     PascalCase.js
 
-### Asset Files: 
+
+### Asset Files:
     lowercase.png
 
 ## JavaScript
 
-### Class Names: 
-    PascalCase
+### Class Names:
+```JavaScript
+class PascalCase {}
+```
+### Function Names:
+```JavaScript
+function camelCase() {}
+```
 
-### Function Names: 
-    camelCase()
-
-### Function Params: 
-    under_scored_lower
-
-### Local Variables: 
-    var under_scored_lower
+### Function Params:
+```JavaScript
+function f(under_scored_lower) {}
+```
+### Local Variables:
+```JavaScript
+var under_scored_lower = 0
+```
 
 ## HTML
 
-### Div Id / Class Names: 
-    <div id="hyphen-lower"></div>
+### Div Id / Class Names:
+```HTML
+<div id="hyphen-lower"></div>
+```
 
 ## Vue
 
-### Component Names: 
-    PascalCase
+### Component Names:
+```vue
+<script>
+  export default { name: "PascalCase" }
+</script>
+```
 
-### Event Names: 
-    this.$emit('hyphen-lower');
+### Event Names:
+```vue
+<script>
+  this.$emit('hyphen-lower');
+</script>
+```
+    
 
 # Adding to your IDE
 
