@@ -9,10 +9,10 @@
 ## File Names
 
 ### Code Files: 
-    PascalCase
+    PascalCase.js
 
 ### Asset Files: 
-    lowercase
+    lowercase.png
 
 ## JavaScript
 
@@ -20,18 +20,18 @@
     PascalCase
 
 ### Function Names: 
-    camelCase
+    camelCase()
 
 ### Function Params: 
     under_scored_lower
 
 ### Local Variables: 
-    under_scored_lower
+    var under_scored_lower
 
 ## HTML
 
 ### Div Id / Class Names: 
-    hyphen-lower
+    <div id="hyphen-lower"></div>
 
 ## Vue
 
@@ -39,7 +39,7 @@
     PascalCase
 
 ### Event Names: 
-    hyphen-lower
+    this.$emit('hyphen-lower');
 
 # Adding to your IDE
 
