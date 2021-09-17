@@ -1,43 +1,52 @@
 # Naming Conventions
 
-### You can find IDE config files for naming conventions in documentation/editor_configs
-
 ## General Rules
 
-* ### No numbers or special characters in names (excepting underscores)
-* ### No 1 letter variable names / magic numbers
-* ### Try to make names descriptive and somewhat concise
+*  No numbers or special characters in names (excepting underscores)
+*  No 1 letter variable names / magic numbers
+*  Try to make names descriptive and somewhat concise
 
 ## File Names
 
-### Code Files: PascalCase
+### Code Files: 
+    PascalCase
 
-### Asset Files: lowercase
+### Asset Files: 
+    lowercase
 
 ## JavaScript
 
-### Class Names: PascalCase
+### Class Names: 
+    PascalCase
 
-### Function Names: camelCase
+### Function Names: 
+    camelCase
 
-### Function Params: under_scored_lower
+### Function Params: 
+    under_scored_lower
 
-### Local Variables: under_scored_lower
+### Local Variables: 
+    under_scored_lower
 
 ## HTML
 
-### Div Id / Class Names: hyphen-lower
+### Div Id / Class Names: 
+    hyphen-lower
 
 ## Vue
 
-### Component Names: PascalCase
+### Component Names: 
+    PascalCase
 
-### Event Names: hyphen-lower
+### Event Names: 
+    hyphen-lower
 
 # Adding to your IDE
 
+### You can find IDE config files for naming conventions in documentation/editor_configs
+
 ## WebStorm
 
-### File > Settings > Editor > Inspections > Click the Gear > Import Profile
+__To Import:__ File > Settings > Editor > Inspections > Click the Gear > Import Profile__
 
 ![](images/WebStormInstructions.png)
