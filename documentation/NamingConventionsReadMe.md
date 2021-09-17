@@ -47,6 +47,6 @@
 
 ## WebStorm
 
-__To Import:__ File > Settings > Editor > Inspections > Click the Gear > Import Profile__
+__To Import:__ File > Settings > Editor > Inspections > Click the Gear > Import Profile
 
 ![](images/WebStormInstructions.png)
