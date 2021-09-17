@@ -40,4 +40,4 @@
 
 ### File > Settings > Editor > Inspections > Click the Gear > Import Profile
 
-![](documentation/WebStormInstructions.png)
+![](WebStormInstructions.png)
