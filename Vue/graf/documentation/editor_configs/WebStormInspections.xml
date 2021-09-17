@@ -1,0 +1,27 @@
+<profile version="1.0">
+  <option name="myName" value="Project Default" />
+  <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="FunctionNamingConventionJS" enabled="true" level="WARNING" enabled_by_default="true">
+    <option name="m_regex" value="[a-z]+([A-Z][a-z]*)+" />
+    <option name="m_minLength" value="4" />
+    <option name="m_maxLength" value="32" />
+  </inspection_tool>
+  <inspection_tool class="JSClassNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
+    <option name="m_regex" value="(^[a-z]|[A-Z])[a-z]*" />
+  </inspection_tool>
+  <inspection_tool class="LocalVariableNamingConventionJS" enabled="true" level="WARNING" enabled_by_default="true">
+    <option name="m_regex" value="([a-z]|[_])+" />
+    <option name="m_minLength" value="2" />
+    <option name="m_maxLength" value="32" />
+  </inspection_tool>
+  <inspection_tool class="ParameterNamingConventionJS" enabled="true" level="WARNING" enabled_by_default="true">
+    <option name="m_regex" value="[a-z]+([A-Z][a-z]*)+" />
+    <option name="m_minLength" value="1" />
+    <option name="m_maxLength" value="32" />
+  </inspection_tool>
+  <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+    <option name="processCode" value="true" />
+    <option name="processLiterals" value="true" />
+    <option name="processComments" value="true" />
+  </inspection_tool>
+</profile>
