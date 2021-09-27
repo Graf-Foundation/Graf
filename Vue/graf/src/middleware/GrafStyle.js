@@ -1,24 +1,24 @@
 
 
 class  GraphStyle {
-    constructor() {
+	constructor() {
 
-    }
+	}
 
 }
 
 class NodeStyle {
-    constructor() {
-    }
+	constructor() {
+	}
 }
 
 class EdgeStyle {
-    constructor() {
-    }
+	constructor() {
+	}
 }
 
 export {
-    GraphStyle,
-    NodeStyle,
-    EdgeStyle
-}
+	GraphStyle,
+	NodeStyle,
+	EdgeStyle
+};
