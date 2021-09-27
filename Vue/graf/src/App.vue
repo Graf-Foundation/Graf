@@ -10,12 +10,12 @@
 
 
 export default {
-  name: 'App',
-  components: {},
-  data() { return { Toggled: false, } },
-  methods: {
-  }
-}
+	name: "App",
+	components: {},
+	data() { return { Toggled: false, }; },
+	methods: {
+	}
+};
 </script>
 
 <style>

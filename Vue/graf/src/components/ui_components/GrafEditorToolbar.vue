@@ -64,18 +64,18 @@
 
 <script>
 export default {
-  name: "GrafEditorToolbar",
-  data() {
-    return {
-      barId: 0
-    }
-  },
-  methods:  {
-    emit(eventString) {
-      this.$emit(eventString);
-    }
-  }
-}
+	name: "GrafEditorToolbar",
+	data() {
+		return {
+			barId: 0
+		};
+	},
+	methods:  {
+		emit(eventString) {
+			this.$emit(eventString);
+		}
+	}
+};
 
 
 </script>
