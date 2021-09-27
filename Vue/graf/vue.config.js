@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 module.exports = {
-    publicPath: process.env.NODE_ENV === 'production'
-    ? '/Graf/'
-    : '/'
-}
+	publicPath: process.env.NODE_ENV === "production"
+		? "/Graf/"
+		: "/"
+};
