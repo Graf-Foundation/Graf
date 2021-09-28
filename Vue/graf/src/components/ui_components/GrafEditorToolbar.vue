@@ -58,7 +58,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn style="float: right" icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
           </template>
-          <GrafSettings/>
+          <GrafSettings v-on:close-dialog="dialog = false"></GrafSettings>
         </v-dialog>
       </v-col>
 
@@ -76,7 +76,8 @@ export default {
   },
   data() {
     return {
-      barId: 0
+      barId: 0,
+      dialog: false
     }
   },
   methods:  {
