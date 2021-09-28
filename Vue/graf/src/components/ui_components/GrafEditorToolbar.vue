@@ -54,7 +54,12 @@
 
       <!-- options -->
       <v-col cols="1">
-        <v-btn icon v-on:click="() => {}" style="float: right;"><v-icon medium>mdi-cog</v-icon></v-btn>
+        <v-dialog v-model="dialog" width="500">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn style="float: right" icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
+          </template>
+          <GrafSettings/>
+        </v-dialog>
       </v-col>
 
     </v-row>
@@ -63,8 +68,12 @@
 </template>
 
 <script>
+import GrafSettings from "./GrafSettings.vue";
 export default {
   name: "GrafEditorToolbar",
+  components: {
+    GrafSettings
+  },
   data() {
     return {
       barId: 0
