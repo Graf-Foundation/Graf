@@ -41,16 +41,16 @@
 
 <script>
 export default {
-  name: "GrafSettings",
-  methods: {
-    emit(eventString) {
-      this.$emit(eventString);
-    }
-  },
-  data: function () {
-    return {
-      theme: "Light"
-    }
-  }
-}
+	name: "GrafSettings",
+	methods: {
+		emit(eventString) {
+			this.$emit(eventString);
+		}
+	},
+	data: function () {
+		return {
+			theme: "Light"
+		};
+	}
+};
 </script>

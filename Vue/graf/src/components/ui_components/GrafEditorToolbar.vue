@@ -70,22 +70,22 @@
 <script>
 import GrafSettings from "./GrafSettings.vue";
 export default {
-  name: "GrafEditorToolbar",
-  components: {
-    GrafSettings
-  },
-  data() {
-    return {
-      barId: 0,
-      dialog: false
-    }
-  },
-  methods:  {
-    emit(eventString) {
-      this.$emit(eventString);
-    }
-  }
-}
+	name: "GrafEditorToolbar",
+	components: {
+		GrafSettings
+	},
+	data() {
+		return {
+			barId: 0,
+			dialog: false
+		};
+	},
+	methods:  {
+		emit(eventString) {
+			this.$emit(eventString);
+		}
+	}
+};
 
 
 </script>

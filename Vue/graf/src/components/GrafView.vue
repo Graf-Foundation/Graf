@@ -36,37 +36,37 @@
 
 
 export default {
-  name: "GrafView",
-  props: ['simData'],
-  data() {
-    return {
-      width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-      height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 40,
-      nodeMoving: null
-    };
-  },
-  methods: {
-    nodeClick(node) {
-      this.$emit("Node Clicked", node);
-    },
-    linkClick(link) {
-      this.$emit("Link Clicked", link);
-    },
-    drag(e) {
-      if (this.nodeMoving != null) {
-        let x = e.clientX - this.width/2;
-        let y = e.clientY - this.height/2 - 64;
-        this.nodeMoving.fx = x
-        this.nodeMoving.fy = y
-      }
-    },
-    drop(){
-      if(this.nodeMoving != null) {
-        delete this.nodeMoving.fx
-        delete this.nodeMoving.fy
-        this.nodeMoving = null
-      }
-    }
-  }
-}
+	name: "GrafView",
+	props: ["simData"],
+	data() {
+		return {
+			width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+			height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 40,
+			nodeMoving: null
+		};
+	},
+	methods: {
+		nodeClick(node) {
+			this.$emit("Node Clicked", node);
+		},
+		linkClick(link) {
+			this.$emit("Link Clicked", link);
+		},
+		drag(e) {
+			if (this.nodeMoving != null) {
+				let x = e.clientX - this.width/2;
+				let y = e.clientY - this.height/2 - 64;
+				this.nodeMoving.fx = x;
+				this.nodeMoving.fy = y;
+			}
+		},
+		drop(){
+			if(this.nodeMoving != null) {
+				delete this.nodeMoving.fx;
+				delete this.nodeMoving.fy;
+				this.nodeMoving = null;
+			}
+		}
+	}
+};
 </script>
