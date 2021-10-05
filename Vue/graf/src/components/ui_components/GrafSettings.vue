@@ -23,7 +23,37 @@
               <v-slider v-model="grafForce"
                         label="Force of the graph"
                         min="0"
-                        max="100"></v-slider>
+                        max="100">
+                <template v-slot:append>
+                  <v-text-field 
+                          v-model="grafForce"
+                          class="mt-0 pt-0"
+                          hide-details
+                          single-line
+                          type="number"
+                          style="width: 60px"
+                          ></v-text-field>
+                </template>
+              </v-slider>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-slider v-model="grafEdgeThickness"
+                        label="EdgeThickness"
+                        min="0"
+                        max="100">
+                <template v-slot:append>
+                  <v-text-field 
+                          v-model="grafEdgeThickness"
+                          class="mt-0 pt-0"
+                          hide-details
+                          single-line
+                          type="number"
+                          style="width: 60px"
+                          ></v-text-field>
+                </template>
+              </v-slider>
             </v-list-item-content>
           </v-list-item>
         </v-list>
