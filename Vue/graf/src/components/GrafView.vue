@@ -47,10 +47,10 @@ export default {
 	},
 	methods: {
 		nodeClick(node) {
-			this.$emit("Node Clicked", node);
+			this.$emit("node-click", node);
 		},
 		linkClick(link) {
-			this.$emit("Link Clicked", link);
+			this.$emit("link-click", link);
 		},
 		drag(e) {
 			if (this.nodeMoving != null) {
