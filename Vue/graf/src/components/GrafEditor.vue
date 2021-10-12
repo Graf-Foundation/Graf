@@ -6,7 +6,11 @@
         v-on:play-tool-click="simulation.restartSim();"
     />
 
-    <GrafView ref="View" :simData="graph"></GrafView>
+    <GrafView 
+		ref="View" :simData="graph"
+		v-on:node-click="modifySelection($event)"
+		v-on:link-click="modifySelection($event)">
+	</GrafView>
   </div>
 </template>
 
@@ -15,6 +19,7 @@ import GrafView from "../components/GrafView.vue";
 import GrafEditorToolbar from "@/components/ui_components/GrafEditorToolbar";
 import {ForceSimWrapper} from "@/middleware/GrafForceSim";
 import * as Model from "@/middleware/GrafModel";
+import * as SelectionModel from "@/middleware/GrafSelection";
 
 export default {
 	name: "GrafEditor",
@@ -29,6 +34,7 @@ export default {
 		);
 
 		this.grafModel = new Model.Graph(this.simulation);
+		this.currSelection = new SelectionModel.Selection();
 	},
 	data() {
 		return {
@@ -41,7 +47,9 @@ export default {
 		};
 	},
 	methods: {
-
+		modifySelection(item) {
+			print(typeof(item))
+		}
 	}
 };
 </script>
