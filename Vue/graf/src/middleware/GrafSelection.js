@@ -1,3 +1,13 @@
+function changeSelection(old_selection, new_selection) {
+	if  (old_selection.getSelectionType() <= new_selection.getSelectionType() &&
+		old_selection.getSelectionAmount() <= new_selection.getSelectionAmount()) {
+		// Copy the selection over and return new_selection
+	}
+	else {
+		return new_selection;
+	}	
+}
+
 class Selection {
 	constructor() {
 		this.node_ids = [];
@@ -174,5 +184,6 @@ export {
 	SingleHybridSelection,
 	ManyHybridSelection,
 	OneEdgeSelection,
-	ManyEdgeSelection
+	ManyEdgeSelection,
+	changeSelection
 };
