@@ -8,8 +8,8 @@
 
     <GrafView 
 		ref="View" :simData="graph"
-		v-on:node-click="modifySelection($event)"
-		v-on:link-click="modifySelection($event)">
+		v-on:node-click="nodeSelectionEvent($event)"
+		v-on:link-click="edgeSelectionEvent($event)">
 	</GrafView>
   </div>
 </template>
@@ -47,8 +47,11 @@ export default {
 		};
 	},
 	methods: {
-		modifySelection(item) {
-			print(typeof(item));
+		nodeSelectionEvent(node) {
+			console.log(node.id);
+		},
+		edgeSelectionEvent(edge) {
+			console.log(edge.id);
 		}
 	}
 };
