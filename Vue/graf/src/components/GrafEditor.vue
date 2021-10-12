@@ -48,7 +48,7 @@ export default {
 	},
 	methods: {
 		modifySelection(item) {
-			print(typeof(item))
+			print(typeof(item));
 		}
 	}
 };
