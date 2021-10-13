@@ -44,13 +44,34 @@ class Graph {
 		}
 	}
 
-	addEdge(s_id, t_id, dir = false, weight = 1, style = null) {
-		let s_node = this.id_node_map.get(s_id);
-		let t_node = this.id_node_map.get(t_id);
+	addEdge() {
+		if (this.selection != null
+			&& this.selection.getSelectionAmount() == 2
+			&& this.selection.getSelectionType() == "Node") {
+			let s_id = this.selection.getSelectedNodeIds()[0];
+			let t_id = this.selection.getSelectedNodeIds()[1];
+			this.addEdgeHelper(s_id, t_id);
+		}
+		else {
+			console.log("WARNING: attempted to add an edge given an invalid selection, attempt ignored");
+		}
+	}
+
+	addEdgeHelper(s_id, t_id, dir = false, weight = 1, style = null) {
+		let s_node = this.id_node_map.get(parseInt(s_id));
+		let t_node = this.id_node_map.get(parseInt(t_id));
+		if (s_node == null || t_node == null) {
+			console.log("ERROR: source or target node not found when trying to add an edge");
+			console.log("id_node_map contents: ");
+			console.log(this.id_node_map);
+			console.log("IDs: ");
+			console.log(s_id);
+			console.log(t_id);
+		}
 		let edge = new Edge(this.curr_edge_id, s_node, t_node, dir, weight, style);
 
 		this.id_edge_map.set(this.curr_edge_id, edge);
-		this.sim_wrapper.addSimLink(this.curr_edge_id, s_id, t_id);
+		this.sim_wrapper.addSimLink(this.curr_edge_id, parseInt(s_id), parseInt(t_id));
 		this.curr_edge_id += 1;
 	}
 

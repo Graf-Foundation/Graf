@@ -1,7 +1,8 @@
 <template>
   <div id="graf-editor">
     <graf-editor-toolbar
-        v-on:add-node-tool-click="grafModel.addNode('a')"
+        v-on:add-node-tool-click="grafModel.addNode('a');"
+		v-on:add-edge-tool-click="grafModel.addEdge();"
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
     />
