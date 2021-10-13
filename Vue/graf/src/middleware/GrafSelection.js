@@ -1,13 +1,3 @@
-function changeSelection(old_selection, new_selection) {
-	if  (old_selection.getSelectionType() <= new_selection.getSelectionType() &&
-		old_selection.getSelectionAmount() <= new_selection.getSelectionAmount()) {
-		// Copy the selection over and return new_selection
-	}
-	else {
-		return new_selection;
-	}	
-}
-
 class Selection {
 	constructor() {
 		this.node_ids = [];
@@ -27,6 +17,24 @@ class Selection {
 
 	getSelectedEdgeIds() {
 		return this.edge_ids;
+	}
+
+	setNodes(node_id_list) {
+		this.node_ids = node_id_list;
+	}
+
+	setEdges(edge_id_list) {
+		this.edge_ids = edge_id_list;
+	}
+
+	removeNode(node_id) {
+		let index = this.node_ids.findIndex(node_id);
+		this.node_ids.splice(index, 1);
+	}
+
+	removeEdge(edge_id) {
+		let index = this.node_ids.findIndex(edge_id);
+		this.edge_ids.splice(index, 1);
 	}
 
 	clearSelection() {
@@ -184,6 +192,5 @@ export {
 	SingleHybridSelection,
 	ManyHybridSelection,
 	OneEdgeSelection,
-	ManyEdgeSelection,
-	changeSelection
+	ManyEdgeSelection
 };
