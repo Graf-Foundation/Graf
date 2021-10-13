@@ -1,4 +1,5 @@
 // eslint-disable-next-line no-unused-vars
+import * as SelectionModel from "@/middleware/GrafSelection";
 
 class Graph {
 	constructor(sim, style=null) {
@@ -13,6 +14,8 @@ class Graph {
 		this.curr_edge_id = 0;
 		// Default node and edge Styles
 		this.style = style;
+
+		this.selection = null;
 	}
 
 	addNode(label=this.curr_node_id, style=null) {
@@ -58,6 +61,124 @@ class Graph {
 
 		this.sim_wrapper.removeEdge(edge_id);
 		this.id_edge_map.delete(edge_id);
+	}
+
+	createSelection(type, amount) {
+		let new_selection = null;
+		if (type == "Node") {
+			if (amount > 2) {
+				new_selection = new SelectionModel.ManyNodeSelection();
+				console.log("Created ManyNodeSelection");
+			}
+			else if (amount > 1) {
+				new_selection = new SelectionModel.TwoNodeSelection();
+				console.log("Created TwoNodeSelection");
+			}
+			else {
+				new_selection = new SelectionModel.OneNodeSelection();
+				console.log("Created OneNodeSelection");
+			}
+		}
+		else if (type == "Edge") {
+			if (amount > 1) {
+				new_selection = new SelectionModel.ManyEdgeSelection();
+				console.log("Created ManyEdgeSelection");
+			}
+			else {
+				new_selection = new SelectionModel.OneEdgeSelection();
+				console.log("Created OneEdgeSelection");
+			}
+		}
+		else {
+			if (amount > 1) {
+				new_selection = new SelectionModel.ManyHybridSelection();
+				console.log("Created ManyHybridSelection");
+			}
+			else {
+				new_selection = new SelectionModel.SingleHybridSelection();
+				console.log("Created SingleHybridSelection");
+			}
+		}
+		return new_selection;
+	}
+
+	updateSelection(type, id, selected) {
+		let new_type = type;
+		let new_amount = 1;
+		if (this.selection != null) {
+			let selection_type = this.selection.getSelectionType();
+			let amount = this.selection.getSelectionAmount();
+			if (!selected) {
+				new_amount = Math.min(amount + 1, 3);
+			}
+			else {
+				new_amount = amount - 1;
+			}
+			let new_type = selection_type;
+			if (type != selection_type && !selected) {
+				new_type == "Hybrid";
+			}
+			else if (type != selection_type && selected) {
+				if (selection_type != "Hybrid") {
+					// Shouldn't happen, hypothetically
+					console.log("ERROR: Tried to remove an invalid type from selection.");
+				}
+				if (type == "Node" && this.selection.getSelectedNodeIds().length == 1) {
+					// Case of removing last node
+					new_type = "Edge";
+				}
+				if (type == "Edge" && this.selection.getSelectedEdgeIds().length == 1) {
+					// Case of removing last edge
+					new_type = "Node";
+				}
+			}
+			if (new_amount == 0) {
+				// Empty selection
+				new_type = null;
+				new_amount = null;
+			}
+			else if (new_type == selection_type && new_amount == amount) {
+				// Selection type remains the same
+				new_type = null;
+				new_amount = null;
+			}
+		}
+		if (new_type != null && new_amount != null) {
+			// Choose new selection type if changed
+			let new_selection = this.createSelection(new_type, new_amount);
+			if (this.selection != null) {
+				new_selection.setNodes(this.selection.getSelectedNodeIds());
+				new_selection.setEdges(this.selection.getSelectedEdgeIds());
+			}
+			this.selection = new_selection;
+		}
+		if (new_amount != null && new_amount == 0) {
+			this.selection = null;
+		}
+		else {
+			if (type == "Node" && !selected) {
+				this.selection.addNode(id);
+			}
+			else if (type == "Edge" && !selected) {
+				this.selection.addEdge(id);
+			}
+			else if (type == "Node" && selected) {
+				this.selection.removeNode(id);
+			}
+			else if (type == "Edge" && selected) {
+				this.selection.removeEdge(id);
+			}
+		}
+	}
+
+	selectNode(node_id) {
+		let selected = this.selection != null && this.selection.getSelectedNodeIds().includes(node_id);
+		this.updateSelection("Node", node_id, selected);
+	}
+
+	selectEdge(edge_id) {
+		let selected = this.selection != null && this.selection.getSelectedEdgeIds().includes(edge_id);
+		this.updateSelection("Edge", edge_id, selected);
 	}
 
 	//TODO JPWEIR: methods for contracting/expand** both nodes/edges to the graph

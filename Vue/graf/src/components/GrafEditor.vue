@@ -19,7 +19,6 @@ import GrafView from "../components/GrafView.vue";
 import GrafEditorToolbar from "@/components/ui_components/GrafEditorToolbar";
 import {ForceSimWrapper} from "@/middleware/GrafForceSim";
 import * as Model from "@/middleware/GrafModel";
-import * as SelectionModel from "@/middleware/GrafSelection";
 
 export default {
 	name: "GrafEditor",
@@ -34,7 +33,6 @@ export default {
 		);
 
 		this.grafModel = new Model.Graph(this.simulation);
-		this.currSelection = new SelectionModel.Selection();
 	},
 	data() {
 		return {
@@ -49,9 +47,11 @@ export default {
 	methods: {
 		nodeSelectionEvent(node) {
 			console.log(node.id);
+			this.grafModel.selectNode(node.id);
 		},
 		edgeSelectionEvent(edge) {
 			console.log(edge.id);
+			this.grafModel.selectEdge(edge.id);
 		}
 	}
 };
