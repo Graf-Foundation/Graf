@@ -82,6 +82,8 @@ class ForceSimWrapper {
 		let link = { id: link_id, source: source_id, target: target_id };
 
 		this.links.push(link);
+		
+		this.simulation = this.simulation.force("link").links(this.links);
 	}
 
 	removeSimLink(link_id) {
