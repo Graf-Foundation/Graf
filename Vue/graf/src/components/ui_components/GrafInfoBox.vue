@@ -12,6 +12,11 @@
 
 <script>
 export default {
-	name: "GrafInfoBox"
+	name: "GrafInfoBox",
+	data() {
+		return {
+			drawer: true
+		};
+	}
 };
 </script>

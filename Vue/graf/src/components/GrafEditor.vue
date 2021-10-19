@@ -6,6 +6,7 @@
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
     />
+		<GrafInfoBox></GrafInfoBox>
 
     <GrafView 
 		ref="View" :simData="graph"
@@ -18,6 +19,7 @@
 <script>
 import GrafView from "../components/GrafView.vue";
 import GrafEditorToolbar from "@/components/ui_components/GrafEditorToolbar";
+import GrafInfoBox from "@/components/ui_components/GrafInfoBox";
 import {ForceSimWrapper} from "@/middleware/GrafForceSim";
 import * as Model from "@/middleware/GrafModel";
 
@@ -25,7 +27,8 @@ export default {
 	name: "GrafEditor",
 	components: {
 		GrafEditorToolbar,
-		GrafView
+		GrafView,
+		GrafInfoBox
 	},
 	mounted () {
 		this.simulation = new ForceSimWrapper(null,

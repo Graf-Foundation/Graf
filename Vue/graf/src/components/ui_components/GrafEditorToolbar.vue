@@ -1,7 +1,6 @@
 <template>
   <v-toolbar>
     <v-app-bar-nav-icon v-on:click="drawer = !drawer"></v-app-bar-nav-icon>
-    <GrafInfoBox></GrafInfoBox>
 
     <v-row>
       <v-col cols="1">
@@ -70,12 +69,10 @@
 
 <script>
 import GrafSettings from "./GrafSettings.vue";
-import GrafInfoBox from "./GrafInfoBox.vue";
 export default {
 	name: "GrafEditorToolbar",
 	components: {
 		GrafSettings,
-		GrafInfoBox
 	},
 	data() {
 		return {
