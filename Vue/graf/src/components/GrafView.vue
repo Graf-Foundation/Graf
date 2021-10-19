@@ -9,7 +9,7 @@
          @mouseup="drop()">
 
       <line v-for="link in this.simData.links"
-            :key="link.id"
+            :key="'L' + link.id"
             :x1="link.source.x"
             :y1="link.source.y"
             :x2="link.target.x"
@@ -19,7 +19,7 @@
             v-on:click="linkClick(link)"/>
 
       <circle v-for="node in this.simData.nodes"
-              :key="node.id"
+              :key="'N' + node.id"
               :cx="node.x"
               :cy="node.y"
               :r="10"
