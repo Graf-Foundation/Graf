@@ -55,6 +55,13 @@ class Graph {
 		else {
 			console.log("WARNING: attempted to add an edge given an invalid selection, attempt ignored");
 		}
+		this.selection = null;
+		console.log("After adding edge...");
+		for (let link of this.sim_wrapper.links) {
+			console.log("link id: " + link.id);
+			console.log("source id: " + link.source);
+			console.log("target id: " + link.target);
+		}
 	}
 
 	addEdgeHelper(s_id, t_id, dir = false, weight = 1, style = null) {
