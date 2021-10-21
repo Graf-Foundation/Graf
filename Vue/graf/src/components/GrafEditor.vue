@@ -5,8 +5,9 @@
 		v-on:add-edge-tool-click="grafModel.addEdge();"
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
+				v-on:drawer-click="drawer = !drawer;"
     />
-		<GrafInfoBox></GrafInfoBox>
+		<GrafInfoBox v-bind:drawer="drawer" v-on:close-drawer="drawer = input"></GrafInfoBox>
 
     <GrafView 
 		ref="View" :simData="graph"
@@ -45,7 +46,8 @@ export default {
 				links: [],
 				nodes: []
 			},
-			simulation: null
+			simulation: null,
+			drawer: false
 		};
 	},
 	methods: {

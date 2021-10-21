@@ -1,6 +1,6 @@
 <template>
   <v-toolbar>
-    <v-app-bar-nav-icon v-on:click="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon v-on:click="emit('drawer-click')"></v-app-bar-nav-icon>
 
     <v-row>
       <v-col cols="1">

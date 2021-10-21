@@ -2,6 +2,7 @@
   <div>
     <v-navigation-drawer
         v-model="drawer"
+				v-on:input="$emit('close-drawer', input)"
         absolute
         bottom
         temporary
@@ -13,10 +14,6 @@
 <script>
 export default {
 	name: "GrafInfoBox",
-	data() {
-		return {
-			drawer: true
-		};
-	}
+	props: ["drawer"]
 };
 </script>
