@@ -28,12 +28,12 @@ class Selection {
 	}
 
 	removeNode(node_id) {
-		let index = this.node_ids.findIndex((id) => { id == node_id; });
+		let index = this.node_ids.indexOf(node_id);
 		this.node_ids.splice(index, 1);
 	}
 
 	removeEdge(edge_id) {
-		let index = this.edge_ids.findIndex((id) => { id == edge_id; });
+		let index = this.edge_ids.indexOf(edge_id);
 		this.edge_ids.splice(index, 1);
 	}
 
