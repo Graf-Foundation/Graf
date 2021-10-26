@@ -23,7 +23,7 @@
               :cx="node.x"
               :cy="node.y"
               :r="10"
-              fill="teal"
+              v-bind:fill="determineColor(model, node)"
               stroke="black"
               stroke-width="4"
               v-on:click="nodeClick(node)"
@@ -37,7 +37,7 @@
 
 export default {
 	name: "GrafView",
-	props: ["simData"],
+	props: ["simData", "model"],
 	data() {
 		return {
 			width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
@@ -66,6 +66,9 @@ export default {
 				delete this.nodeMoving.fy;
 				this.nodeMoving = null;
 			}
+		},
+		determineColor(model, node) {
+			return model.selection && model.selection.getSelectedNodeIds().includes(node.id) ? "red" : "teal";
 		}
 	}
 };
