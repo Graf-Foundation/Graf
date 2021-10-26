@@ -55,6 +55,7 @@ class Graph {
 		else {
 			console.log("WARNING: attempted to add an edge given an invalid selection, attempt ignored");
 		}
+		this.selection = null;
 	}
 
 	addEdgeHelper(s_id, t_id, dir = false, weight = 1, style = null) {
@@ -156,7 +157,6 @@ class Graph {
 			if (new_amount == 0) {
 				// Empty selection
 				new_type = null;
-				new_amount = null;
 			}
 			else if (new_type == selection_type && new_amount == amount) {
 				// Selection type remains the same
@@ -164,7 +164,11 @@ class Graph {
 				new_amount = null;
 			}
 		}
-		if (new_type != null && new_amount != null) {
+		if (new_amount != null && new_amount == 0) {
+			// Nullify selection if new_amount is zero
+			this.selection = null;
+		}
+		else if (new_type != null && new_amount != null) {
 			// Choose new selection type if changed
 			let new_selection = this.createSelection(new_type, new_amount);
 			if (this.selection != null) {
@@ -173,10 +177,8 @@ class Graph {
 			}
 			this.selection = new_selection;
 		}
-		if (new_amount != null && new_amount == 0) {
-			this.selection = null;
-		}
-		else {
+		if (this.selection != null) {
+			// Update selection by adding or removing elements to appropriate arrays
 			if (type == "Node" && !selected) {
 				this.selection.addNode(id);
 			}
