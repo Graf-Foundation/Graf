@@ -143,7 +143,7 @@ class Graph {
 			}
 			
 			if (type != selection_type && !selected) {
-				new_type == "Hybrid";
+				new_type = "Hybrid";
 			}
 			else if (type != selection_type && selected) {
 				// When unselecting changes the selection type
