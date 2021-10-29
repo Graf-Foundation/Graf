@@ -124,7 +124,8 @@ class Graph {
 		return new_selection;
 	}
 
-	updateSelection(type, id, selected) {
+	updateSelection(type, id, was_selected) {
+		// was_selected is whether the node or edge is selected *before* it was clicked
 		let new_type = type;
 		let new_amount = 1;
 		// Default values, i.e. adding one element to an empty selection
@@ -134,7 +135,7 @@ class Graph {
 			let amount = this.selection.getSelectionAmount();
 			let length = this.selection.getSelectionLength();
 
-			if (!selected) {
+			if (!was_selected) {
 				new_amount = Math.min(length + 1, 3);
 				// If adding to the selection, cap the new amount at 3 (many)
 			}
@@ -142,10 +143,10 @@ class Graph {
 				new_amount = Math.min(3, length - 1);
 			}
 			
-			if (type != selection_type && !selected) {
+			if (type != selection_type && !was_selected) {
 				new_type = "Hybrid";
 			}
-			else if (type != selection_type && selected) {
+			else if (type != selection_type && was_selected) {
 				// When unselecting changes the selection type
 				if (type == "Node" && this.selection.getSelectedNodeIds().length == 1) {
 					// Case of removing last node
@@ -186,29 +187,35 @@ class Graph {
 		}
 		if (this.selection != null) {
 			// Update selection by adding or removing elements to appropriate arrays
-			if (type == "Node" && !selected) {
+			if (type == "Node" && !was_selected) {
 				this.selection.addNode(id);
 			}
-			else if (type == "Edge" && !selected) {
+			else if (type == "Edge" && !was_selected) {
 				this.selection.addEdge(id);
 			}
-			else if (type == "Node" && selected) {
+			else if (type == "Node" && was_selected) {
 				this.selection.removeNode(id);
 			}
-			else if (type == "Edge" && selected) {
+			else if (type == "Edge" && was_selected) {
 				this.selection.removeEdge(id);
 			}
 		}
 	}
 
 	selectNode(node_id) {
-		let selected = this.selection != null && this.selection.getSelectedNodeIds().includes(node_id);
-		this.updateSelection("Node", node_id, selected);
+		// was_selected is whether the node or edge is selected *before* it was clicked
+		let was_selected = this.selection != null && this.selection.getSelectedNodeIds().includes(node_id);
+		this.updateSelection("Node", node_id, was_selected);
+		// is_selected = !was_selected
+		return !was_selected;
 	}
 
 	selectEdge(edge_id) {
-		let selected = this.selection != null && this.selection.getSelectedEdgeIds().includes(edge_id);
-		this.updateSelection("Edge", edge_id, selected);
+		// was_selected is whether the node or edge is selected *before* it was clicked
+		let was_selected = this.selection != null && this.selection.getSelectedEdgeIds().includes(edge_id);
+		this.updateSelection("Edge", edge_id, was_selected);
+		// is_selected = !was_selected
+		return !was_selected;
 	}
 
 	//TODO JPWEIR: methods for contracting/expand** both nodes/edges to the graph
