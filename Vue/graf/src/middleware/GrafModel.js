@@ -127,24 +127,26 @@ class Graph {
 	updateSelection(type, id, selected) {
 		let new_type = type;
 		let new_amount = 1;
+		// Default values, i.e. adding one element to an empty selection
+
 		if (this.selection != null) {
 			let selection_type = this.selection.getSelectionType();
 			let amount = this.selection.getSelectionAmount();
+			let length = this.selection.getSelectionLength();
+
 			if (!selected) {
-				new_amount = Math.min(amount + 1, 3);
+				new_amount = Math.min(length + 1, 3);
+				// If adding to the selection, cap the new amount at 3 (many)
 			}
 			else {
-				new_amount = amount - 1;
+				new_amount = Math.min(3, length - 1);
 			}
-			let new_type = selection_type;
+			
 			if (type != selection_type && !selected) {
-				new_type == "Hybrid";
+				new_type = "Hybrid";
 			}
 			else if (type != selection_type && selected) {
-				if (selection_type != "Hybrid") {
-					// Shouldn't happen, hypothetically
-					console.log("ERROR: Tried to remove an invalid type from selection.");
-				}
+				// When unselecting changes the selection type
 				if (type == "Node" && this.selection.getSelectedNodeIds().length == 1) {
 					// Case of removing last node
 					new_type = "Edge";
@@ -153,18 +155,23 @@ class Graph {
 					// Case of removing last edge
 					new_type = "Node";
 				}
+				if (selection_type != "Hybrid") {
+					// Shouldn't happen, hypothetically
+					console.log("ERROR: Tried to remove an invalid type from selection.");
+				}
 			}
-			if (new_amount == 0) {
-				// Empty selection
-				new_type = null;
+			if (new_amount == 2 && (new_type == "Hybrid" || new_type == "Edge")) {
+				new_amount = 3;
+				// Ensure the new amount is correct for Hybrid/Edge selections
 			}
-			else if (new_type == selection_type && new_amount == amount) {
+			if (new_type == selection_type && new_amount == amount) {
 				// Selection type remains the same
 				new_type = null;
 				new_amount = null;
+				// Set new changes to null so we skip the next two if statements
 			}
 		}
-		if (new_amount != null && new_amount == 0) {
+		if (new_amount == 0) {
 			// Nullify selection if new_amount is zero
 			this.selection = null;
 		}

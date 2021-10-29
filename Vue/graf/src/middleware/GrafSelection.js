@@ -19,6 +19,11 @@ class Selection {
 		return this.edge_ids;
 	}
 
+	getSelectionLength() {
+		// Returns the total number of selected elements
+		return this.node_ids.length + this.edge_ids.length;
+	}
+
 	setNodes(node_id_list) {
 		this.node_ids = node_id_list;
 	}
