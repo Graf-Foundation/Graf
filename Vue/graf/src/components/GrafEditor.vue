@@ -8,7 +8,7 @@
     />
 
     <GrafView 
-		ref="View" :simData="graph" :model="grafModel"
+		ref="View" :simData="graph"
 		v-on:node-click="nodeSelectionEvent($event)"
 		v-on:link-click="edgeSelectionEvent($event)">
 	</GrafView>

@@ -23,7 +23,7 @@
               :cx="node.x"
               :cy="node.y"
               :r="10"
-              :fill="nodeColor(node)"
+              fill="teal"
               stroke="black"
               stroke-width="4"
               v-on:click="nodeClick(node)"
@@ -37,7 +37,7 @@
 
 export default {
 	name: "GrafView",
-	props: ["simData", "model"],
+	props: ["simData"],
 	data() {
 		return {
 			width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
@@ -67,12 +67,6 @@ export default {
 				this.nodeMoving = null;
 			}
 		}
-	},
-  computed: {
-	  nodeColor: (node) => {
-      // TODO MDF: replace these hardcoded colors with variables from node style / graf style
-      return this.model.selection?.containsNode(node.id) ? "red" : "teal";
-    }
-  }
+	}
 };
 </script>
