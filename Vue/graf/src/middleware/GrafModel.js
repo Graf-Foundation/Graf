@@ -87,39 +87,38 @@ class Graph {
 
 	createSelection(type, amount) {
 		let new_selection = null;
-		if (type == "Node") {
-			if (amount > 2) {
-				new_selection = new SelectionModel.ManyNodeSelection();
-				console.log("Created ManyNodeSelection");
-			}
-			else if (amount > 1) {
-				new_selection = new SelectionModel.TwoNodeSelection();
-				console.log("Created TwoNodeSelection");
-			}
-			else {
-				new_selection = new SelectionModel.OneNodeSelection();
-				console.log("Created OneNodeSelection");
-			}
+		let is_node = type == "Node";
+		let is_edge = type == "Edge";
+		let is_many = amount > 2;
+		let is_two = amount == 2;
+		let is_one = amount == 1;
+		if (is_node && is_many) {
+			new_selection = new SelectionModel.ManyNodeSelection();
+			console.log("Created ManyNodeSelection");
 		}
-		else if (type == "Edge") {
-			if (amount > 1) {
-				new_selection = new SelectionModel.ManyEdgeSelection();
-				console.log("Created ManyEdgeSelection");
-			}
-			else {
-				new_selection = new SelectionModel.OneEdgeSelection();
-				console.log("Created OneEdgeSelection");
-			}
+		else if (is_node && is_two) {
+			new_selection = new SelectionModel.TwoNodeSelection();
+			console.log("Created TwoNodeSelection");
 		}
-		else {
-			if (amount > 1) {
-				new_selection = new SelectionModel.ManyHybridSelection();
-				console.log("Created ManyHybridSelection");
-			}
-			else {
-				new_selection = new SelectionModel.SingleHybridSelection();
-				console.log("Created SingleHybridSelection");
-			}
+		else if (is_node && is_one) {
+			new_selection = new SelectionModel.OneNodeSelection();
+			console.log("Created OneNodeSelection");
+		}
+		else if (is_edge && (is_many || is_two)) {
+			new_selection = new SelectionModel.ManyEdgeSelection();
+			console.log("Created ManyEdgeSelection");
+		}
+		else if (is_edge && is_one) {
+			new_selection = new SelectionModel.OneEdgeSelection();
+			console.log("Created OneEdgeSelection");
+		}
+		else if (is_many || is_two) {
+			new_selection = new SelectionModel.ManyHybridSelection();
+			console.log("Created ManyHybridSelection");
+		}
+		else if (is_one) {
+			new_selection = new SelectionModel.SingleHybridSelection();
+			console.log("Created SingleHybridSelection");
 		}
 		return new_selection;
 	}
@@ -130,75 +129,92 @@ class Graph {
 		let new_amount = 1;
 		// Default values, i.e. adding one element to an empty selection
 
-		if (this.selection != null) {
-			let selection_type = this.selection.getSelectionType();
-			let amount = this.selection.getSelectionAmount();
-			let length = this.selection.getSelectionLength();
+		let selection_type = null;
+		let amount = 0;
+		let length = 0;
+		let is_empty = this.selection == null;
+		let is_node = type == "Node";
 
-			if (!was_selected) {
-				new_amount = Math.min(length + 1, 3);
-				// If adding to the selection, cap the new amount at 3 (many)
-			}
-			else {
-				new_amount = Math.min(3, length - 1);
-			}
-			
-			if (type != selection_type && !was_selected) {
-				new_type = "Hybrid";
-			}
-			else if (type != selection_type && was_selected) {
-				// When unselecting changes the selection type
-				if (type == "Node" && this.selection.getSelectedNodeIds().length == 1) {
-					// Case of removing last node
-					new_type = "Edge";
-				}
-				if (type == "Edge" && this.selection.getSelectedEdgeIds().length == 1) {
-					// Case of removing last edge
-					new_type = "Node";
-				}
-				if (selection_type != "Hybrid") {
-					// Shouldn't happen, hypothetically
-					console.log("ERROR: Tried to remove an invalid type from selection.");
-				}
-			}
-			if (new_amount == 2 && (new_type == "Hybrid" || new_type == "Edge")) {
-				new_amount = 3;
-				// Ensure the new amount is correct for Hybrid/Edge selections
-			}
-			if (new_type == selection_type && new_amount == amount) {
-				// Selection type remains the same
-				new_type = null;
-				new_amount = null;
-				// Set new changes to null so we skip the next two if statements
-			}
+		if (!is_empty) {
+			selection_type = this.selection.getSelectionType();
+			amount = this.selection.getSelectionAmount();
+			length = this.selection.getSelectionLength();
 		}
+		let types_match = type == selection_type;
+
+		if (!is_empty && !was_selected) {
+			new_amount = Math.min(length + 1, 3);
+			// If adding to the selection, cap the new amount at 3 (many)
+		}
+		else if (!is_empty) {
+			new_amount = Math.min(3, length - 1);
+		}
+		
+		if (!is_empty && !types_match && !was_selected) {
+			new_type = "Hybrid";
+		}
+
+		// When unselecting changes the selection type
+		else if (!is_empty && !types_match && was_selected && is_node && this.selection.getSelectedNodeIds().length == 1) {
+			// Case of removing last node
+			new_type = "Edge";
+		}
+		else if (!is_empty && !types_match && was_selected && !is_node && this.selection.getSelectedEdgeIds().length == 1) {
+			// Case of removing last edge
+			new_type = "Node";
+		}
+		else if (!is_empty && !types_match && was_selected && selection_type != "Hybrid") {
+			// Shouldn't happen, hypothetically
+			console.log("ERROR: Tried to remove an invalid type from selection.");
+		}
+
+		if (!is_empty && new_amount == 2 && (new_type == "Hybrid" || new_type == "Edge")) {
+			new_amount = 3;
+			// Ensure the new amount is correct for Hybrid/Edge selections
+		}
+		if (!is_empty && new_type == selection_type && new_amount == amount) {
+			// Selection type remains the same
+			new_type = null;
+			new_amount = null;
+			// Set new changes to null so we skip the next two if statements
+		}
+		
+		// If the selection type changes
+		let needs_update = new_type != null && new_amount != null;
+
 		if (new_amount == 0) {
 			// Nullify selection if new_amount is zero
 			this.selection = null;
+			is_empty = true;
+			needs_update = false;
 		}
-		else if (new_type != null && new_amount != null) {
+
+		let new_selection = null;
+		if (needs_update) {
 			// Choose new selection type if changed
-			let new_selection = this.createSelection(new_type, new_amount);
-			if (this.selection != null) {
-				new_selection.setNodes(this.selection.getSelectedNodeIds());
-				new_selection.setEdges(this.selection.getSelectedEdgeIds());
-			}
-			this.selection = new_selection;
+			new_selection = this.createSelection(new_type, new_amount);
 		}
-		if (this.selection != null) {
-			// Update selection by adding or removing elements to appropriate arrays
-			if (type == "Node" && !was_selected) {
-				this.selection.addNode(id);
-			}
-			else if (type == "Edge" && !was_selected) {
-				this.selection.addEdge(id);
-			}
-			else if (type == "Node" && was_selected) {
-				this.selection.removeNode(id);
-			}
-			else if (type == "Edge" && was_selected) {
-				this.selection.removeEdge(id);
-			}
+		if (!is_empty && needs_update) {
+			new_selection.setNodes(this.selection.getSelectedNodeIds());
+			new_selection.setEdges(this.selection.getSelectedEdgeIds());
+		}
+		if (needs_update) {
+			this.selection = new_selection;
+			is_empty = false;
+		}
+
+		// Update selection by adding or removing elements to appropriate arrays
+		if (!is_empty && type == "Node" && !was_selected) {
+			this.selection.addNode(id);
+		}
+		else if (!is_empty && type == "Edge" && !was_selected) {
+			this.selection.addEdge(id);
+		}
+		else if (!is_empty && type == "Node" && was_selected) {
+			this.selection.removeNode(id);
+		}
+		else if (!is_empty && type == "Edge" && was_selected) {
+			this.selection.removeEdge(id);
 		}
 	}
 
@@ -206,6 +222,7 @@ class Graph {
 		// was_selected is whether the node or edge is selected *before* it was clicked
 		let was_selected = this.selection != null && this.selection.getSelectedNodeIds().includes(node_id);
 		this.updateSelection("Node", node_id, was_selected);
+
 		// is_selected = !was_selected
 		return !was_selected;
 	}
@@ -214,6 +231,7 @@ class Graph {
 		// was_selected is whether the node or edge is selected *before* it was clicked
 		let was_selected = this.selection != null && this.selection.getSelectedEdgeIds().includes(edge_id);
 		this.updateSelection("Edge", edge_id, was_selected);
+
 		// is_selected = !was_selected
 		return !was_selected;
 	}
