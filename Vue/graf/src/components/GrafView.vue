@@ -23,7 +23,7 @@
               :cx="node.x"
               :cy="node.y"
               :r="10"
-              v-bind:fill="determineColor(model, node)"
+              :fill="nodeColor(node)"
               stroke="black"
               stroke-width="4"
               v-on:click="nodeClick(node)"
@@ -66,10 +66,13 @@ export default {
 				delete this.nodeMoving.fy;
 				this.nodeMoving = null;
 			}
-		},
-		determineColor(model, node) {
-			return model.selection && model.selection.getSelectedNodeIds().includes(node.id) ? "red" : "teal";
 		}
-	}
+	},
+  computed: {
+	  nodeColor: (node) => {
+      // TODO MDF: replace these hardcoded colors with variables from node style / graf style
+      return this.model.selection?.containsNode(node.id) ? "red" : "teal";
+    }
+  }
 };
 </script>
