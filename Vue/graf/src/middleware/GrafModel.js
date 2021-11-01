@@ -155,11 +155,11 @@ class Graph {
 		}
 
 		// When unselecting changes the selection type
-		else if (!is_empty && !types_match && was_selected && is_node && this.selection.getSelectedNodeIds().length == 1) {
+		else if (!is_empty && !types_match && was_selected && is_node && this.selection.getNodeCount() == 1) {
 			// Case of removing last node
 			new_type = "Edge";
 		}
-		else if (!is_empty && !types_match && was_selected && !is_node && this.selection.getSelectedEdgeIds().length == 1) {
+		else if (!is_empty && !types_match && was_selected && !is_node && this.selection.getEdgeCount() == 1) {
 			// Case of removing last edge
 			new_type = "Node";
 		}

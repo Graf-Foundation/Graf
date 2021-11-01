@@ -15,8 +15,16 @@ class Selection {
 		return this.node_ids;
 	}
 
+	getNodeCount() {
+		return this.node_ids.length;
+	}
+
 	getSelectedEdgeIds() {
 		return this.edge_ids;
+	}
+
+	getEdgeCount() {
+		return this.edge_ids.length;
 	}
 
 	getSelectionLength() {
