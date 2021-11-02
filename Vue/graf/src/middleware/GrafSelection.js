@@ -11,20 +11,20 @@ class Selection {
 		};
 	}
 
-	containsNode(node_id) {
-		return this.node_ids.filter(id => id === node_id).length > 0;
-	}
-
-	containsEdge(edge_id) {
-		return this.edge_ids.filter(id => id === edge_id).length > 0;
-	}
-
 	getSelectedNodeIds() {
 		return this.node_ids;
 	}
 
+	getNodeCount() {
+		return this.node_ids.length;
+	}
+
 	getSelectedEdgeIds() {
 		return this.edge_ids;
+	}
+
+	getEdgeCount() {
+		return this.edge_ids.length;
 	}
 
 	getSelectionLength() {
