@@ -3,6 +3,7 @@
     <graf-editor-toolbar
         v-on:add-node-tool-click="grafModel.addNode('a');"
 		v-on:add-edge-tool-click="grafModel.addEdge();"
+		v-on:remove-tool-click="deletion();"
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
     />
@@ -53,6 +54,17 @@ export default {
 		edgeSelectionEvent(edge) {
 			console.log(edge.id);
 			this.grafModel.selectEdge(edge.id);
+		},
+		deletion() {
+			let edge_ids = this.grafModel.selection.getSelectedEdgeIds();
+			let node_ids = this.grafModel.selection.getSelectedNodeIds();
+			for (let e_id of edge_ids) {
+				this.grafModel.removeEdge(parseInt(e_id));
+			}
+			for (let n_id of node_ids) {
+				this.grafModel.removeNode(parseInt(n_id));
+			}
+			this.grafModel.selection = null;
 		}
 	}
 };

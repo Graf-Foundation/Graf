@@ -19,7 +19,7 @@ class Graph {
 	}
 
 	addNode(label=this.curr_node_id, style=null) {
-		let sim_id = `${this.curr_node_id}`;
+		let sim_id = parseInt(`${this.curr_node_id}`);
 		let node = new Node(this.curr_node_id, label, sim_id, style);
 
 		this.sim_wrapper.addSimNode(sim_id);
@@ -29,9 +29,9 @@ class Graph {
 
 	removeNode(node_id) {
 		let node = this.id_node_map.get(node_id);
-		let sim_id = `${node_id}`;
+		let sim_id = parseInt(`${node_id}`);
 
-		for (let edge of node.edges) {
+		for (let edge of node.getEdges()) {
 			this.removeEdge(edge.getId());
 		}
 
