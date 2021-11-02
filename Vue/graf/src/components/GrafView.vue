@@ -68,11 +68,13 @@ export default {
 			}
 		}
 	},
-  computed: {
-	  nodeColor: (node) => {
-      // TODO MDF: replace these hardcoded colors with variables from node style / graf style
-      return this.model.selection?.containsNode(node.id) ? "red" : "teal";
-    }
-  }
+	computed: {
+		nodeColor: function () {
+			// TODO MDF: replace these hardcoded colors with variables from node style / graf style
+			return function (node) {
+				return this.model.selection && this.model.selection.containsNode(node.id) ? "red" : "teal";
+			};
+		}
+	}
 };
 </script>
