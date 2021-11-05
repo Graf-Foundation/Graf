@@ -7,7 +7,7 @@
         v-on:play-tool-click="simulation.restartSim();"
 				v-on:drawer-click="drawer = !drawer;"
     />
-		<GrafInfoBox v-bind:drawer="drawer" v-on:close-drawer="drawer = input"></GrafInfoBox>
+		<GrafInfoBox v-bind:drawer="drawer" :model="grafModel" v-on:close-drawer="drawer = input"></GrafInfoBox>
 
     <GrafView 
 		ref="View" :simData="graph" :model="grafModel"
