@@ -10,7 +10,7 @@
 		<GrafInfoBox v-bind:drawer="drawer" v-on:close-drawer="drawer = input"></GrafInfoBox>
 
     <GrafView 
-		ref="View" :simData="graph"
+		ref="View" :simData="graph" :model="grafModel"
 		v-on:node-click="nodeSelectionEvent($event)"
 		v-on:link-click="edgeSelectionEvent($event)">
 	</GrafView>
