@@ -73,8 +73,7 @@ class ForceSimWrapper {
 
 	removeSimNode(node_id) {
 		// find index of node_id and splice
-		let index = this.nodes.findIndex((node) => { node.id = node_id; });
-
+		let index = this.nodes.findIndex((node) => node.id == node_id);
 		this.nodes.splice(index, 1);
 	}
 
@@ -88,8 +87,7 @@ class ForceSimWrapper {
 
 	removeSimLink(link_id) {
 		// find index of link_id and splice
-		let index = this.links.findIndex((link) => { link.id = link_id; });
-
+		let index = this.links.findIndex((link) => link.id == link_id);
 		this.links.splice(index, 1);
 	}
 }
