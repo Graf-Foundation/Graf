@@ -19,7 +19,7 @@ class Graph {
 	}
 
 	addNode(label=this.curr_node_id, style=null) {
-		let sim_id = `${this.curr_node_id}`;
+		let sim_id = parseInt(`${this.curr_node_id}`);
 		let node = new Node(this.curr_node_id, label, sim_id, style);
 
 		this.sim_wrapper.addSimNode(sim_id);
@@ -29,9 +29,9 @@ class Graph {
 
 	removeNode(node_id) {
 		let node = this.id_node_map.get(node_id);
-		let sim_id = `${node_id}`;
+		let sim_id = parseInt(`${node_id}`);
 
-		for (let edge of node.edges) {
+		for (let edge of node.getEdges()) {
 			this.removeEdge(edge.getId());
 		}
 
@@ -51,11 +51,11 @@ class Graph {
 			let s_id = this.selection.getSelectedNodeIds()[0];
 			let t_id = this.selection.getSelectedNodeIds()[1];
 			this.addEdgeHelper(s_id, t_id);
+			this.selection = null;
 		}
 		else {
 			console.log("WARNING: attempted to add an edge given an invalid selection, attempt ignored");
 		}
-		this.selection = null;
 	}
 
 	addEdgeHelper(s_id, t_id, dir = false, weight = 1, style = null) {
@@ -81,7 +81,7 @@ class Graph {
 
 		edge.disconnect();
 
-		this.sim_wrapper.removeEdge(edge_id);
+		this.sim_wrapper.removeSimLink(edge_id);
 		this.id_edge_map.delete(edge_id);
 	}
 
