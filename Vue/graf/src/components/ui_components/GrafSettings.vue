@@ -6,12 +6,12 @@
         <v-list>
           <v-list-item>
             <v-list-item-action>
-              <v-select :items="['Light', 'Dark']" label="Theme" v-bind:value="theme"></v-select>
+              <v-select :items="['Light']" label="Theme" v-bind:value="theme"></v-select>
             </v-list-item-action>
           </v-list-item>
           <v-list-item>
             <v-list-item-action>
-              <v-checkbox v-model="grafDirected"></v-checkbox>
+              <v-checkbox v-model="grafDirected" :value="grafDirected"></v-checkbox>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>Directionality</v-list-item-title>
@@ -23,7 +23,8 @@
               <v-slider v-model="grafForce"
                         label="Force of the graph"
                         min="0"
-                        max="100">
+                        max="100"
+												:value="grafForce">
                 <template v-slot:append>
                   <v-text-field 
                           v-model="grafForce"
@@ -42,7 +43,8 @@
               <v-slider v-model="grafEdgeThickness"
                         label="EdgeThickness"
                         min="0"
-                        max="100">
+                        max="100"
+												:value="GrafForce">
                 <template v-slot:append>
                   <v-text-field 
                           v-model="grafEdgeThickness"
@@ -77,12 +79,21 @@ export default {
 			this.$emit(eventString);
 		},
 		close() {
-			this.$emit("close-dialog");
+			const settings = {
+				theme: this.theme,
+				grafDirected: this.grafDirected,
+				grafForce: this.grafForce,
+				grafEdgeThickness: this.grafEdgeThickness
+			};
+			this.$emit("settings", settings);
 		}
 	},
 	data: function () {
 		return {
-			theme: "Light"
+			theme: "Light",
+			grafDirected: false,
+			grafForce: 100,
+			grafEdgeThickness: 5
 		};
 	}
 };

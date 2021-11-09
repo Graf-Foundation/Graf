@@ -6,10 +6,11 @@
 		v-on:remove-tool-click="deletion();"
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
+				v-on:update-settings="settings = value"
     />
 
     <GrafView 
-		ref="View" :simData="graph" :model="grafModel"
+		ref="View" :simData="graph" :model="grafModel" :settings="settings"
 		v-on:node-click="nodeSelectionEvent($event)"
 		v-on:link-click="edgeSelectionEvent($event)">
 	</GrafView>
@@ -43,7 +44,13 @@ export default {
 				links: [],
 				nodes: []
 			},
-			simulation: null
+			simulation: null,
+			settings: {
+				theme: "Light",
+				grafDirected: false,
+				grafForce: 100,
+				grafEdgeThickness: 5
+			}
 		};
 	},
 	methods: {
