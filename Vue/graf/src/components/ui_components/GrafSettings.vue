@@ -61,7 +61,7 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" text v-on:click="emit('close-dialog')">
+        <v-btn color="primary" text v-on:click="close()">
           Close
         </v-btn>
       </v-card-actions>
@@ -75,6 +75,9 @@ export default {
 	methods: {
 		emit(eventString) {
 			this.$emit(eventString);
+		},
+		close() {
+			this.$emit("close-dialog");
 		}
 	},
 	data: function () {
