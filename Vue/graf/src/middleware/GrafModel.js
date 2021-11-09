@@ -252,7 +252,7 @@ class Graph {
 			this.selection = null;
 		}
 		else {
-			console.log("WARNING: attempted to add an edge given an invalid selection, attempt ignored");
+			console.log("WARNING: attempted to expand given an invalid selection, attempt ignored");
 		}
 	}
 
@@ -270,6 +270,79 @@ class Graph {
 	//TODO JPWEIR
 	/*
 	expandNode(id) {
+		let node = this.id_node_map.get(id);
+		let adj_set = node.getAdjacent();
+	}
+	*/
+
+	contract() {
+		if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Node") {
+			let id = this.selection.getSelectedNodeIds()[0];
+			this.contractNode(id);
+			this.selection = null;
+		}
+		else if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Edge") {
+			let id = this.selection.getSelectedEdgeIds()[0];
+			this.contractEdge(id);
+			this.selection = null;
+		}
+		else {
+			console.log("WARNING: attempted to contract given an invalid selection, attempt ignored");
+		}
+	}
+
+	contractEdge(id) {
+		let edge = this.id_edge_map.get(id);
+		let source_node = edge.getSource();
+		let source_node_edges = source_node.getEdges();
+		let target_node = edge.getTarget();
+		let target_node_edges = source_node.getEdges();
+
+		let new_node_id = this.curr_node_id;
+		this.addNode();
+		let new_node = this.id_node_map.get(new_node_id);
+
+		// Edges to be replaced in contraction
+		let marked_edge_ids = new Set();
+
+		for (let s_edge of source_node_edges) {
+			if (!s_edge.incident(target_node) && s_edge.source == source_node) {
+				this.addEdgeHelper(new_node, s_edge.target);
+				marked_edge_ids.add(s_edge.id);
+			}
+			else if (!s_edge.incident(target_node) && s_edge.target == source_node) {
+				this.addEdgeHelper(s_edge.source, new_node);
+				marked_edge_ids.add(s_edge.id);
+			}
+		}
+
+		for (let t_edge of target_node_edges) {
+			if (!t_edge.incident(source_node) && t_edge.source == target_node) {
+				this.addEdgeHelper(new_node, t_edge.target);
+				marked_edge_ids.add(t_edge.id);
+			}
+			else if (!t_edge.incident(source_node) && t_edge.target == target_node) {
+				this.addEdgeHelper(t_edge.source, new_node);
+				marked_edge_ids.add(t_edge.id);
+			}
+		}
+
+		for (let e_id of marked_edge_ids) {
+			this.removeEdge(e_id);
+		}
+
+		this.removeEdge(id);
+		this.removeNode(source_node.getId());
+		this.removeNode(target_node.getId());
+	}
+
+	//TODO JPWEIR
+	/*
+	contractNode(id) {
 		let node = this.id_node_map.get(id);
 		let adj_set = node.getAdjacent();
 	}
