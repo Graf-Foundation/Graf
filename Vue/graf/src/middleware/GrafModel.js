@@ -236,6 +236,46 @@ class Graph {
 		return !was_selected;
 	}
 
+	expand() {
+		if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Node") {
+			let id = this.selection.getSelectedNodeIds()[0];
+			this.expandNode(id);
+			this.selection = null;
+		}
+		else if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Edge") {
+			let id = this.selection.getSelectedEdgeIds()[0];
+			this.expandEdge(id);
+			this.selection = null;
+		}
+		else {
+			console.log("WARNING: attempted to add an edge given an invalid selection, attempt ignored");
+		}
+	}
+
+	expandEdge(id) {
+		let edge = this.id_edge_map.get(id);
+		let source_node = edge.getSource();
+		let target_node = edge.getTarget();
+		let new_node_id = this.curr_node_id;
+		this.removeEdge(id);
+		this.addNode();
+		this.addEdgeHelper(source_node.getId(), new_node_id);
+		this.addEdgeHelper(new_node_id, target_node.getId());
+	}
+
+	//TODO JPWEIR
+	/*
+	expandNode(id) {
+		let node = this.id_node_map.get(id);
+		let adj_set = node.getAdjacent();
+	}
+	*/
+
+
 	//TODO JPWEIR: methods for contracting/expand** both nodes/edges to the graph
 
 	//TODO NDESMARAIS: selection abstraction
