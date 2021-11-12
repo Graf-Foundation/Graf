@@ -4,6 +4,8 @@
         v-on:add-node-tool-click="grafModel.addNode('a');"
 		v-on:add-edge-tool-click="grafModel.addEdge();"
 		v-on:remove-tool-click="deletion();"
+		v-on:expand-tool-click="grafModel.expand();"
+		v-on:contract-tool-click="grafModel.contract();"
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
     />
