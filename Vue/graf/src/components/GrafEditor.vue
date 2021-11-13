@@ -6,7 +6,7 @@
 		v-on:remove-tool-click="deletion();"
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
-				v-on:update-settings="settings = value"
+				v-on:update-settings="updateSettings"
     />
 
     <GrafView 
@@ -72,6 +72,11 @@ export default {
 				this.grafModel.removeNode(parseInt(n_id));
 			}
 			this.grafModel.selection = null;
+		},
+		updateSettings(value) {
+			this.settings = value;
+			this.simulation.updateForces({"charge": this.settings.grafForce});
+			this.grafModel = new Model.Graph(this.simulation);
 		}
 	}
 };

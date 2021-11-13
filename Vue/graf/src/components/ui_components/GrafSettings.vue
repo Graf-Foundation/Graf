@@ -44,7 +44,7 @@
                         label="EdgeThickness"
                         min="0"
                         max="100"
-												:value="GrafForce">
+												:value="grafEdgeThickness">
                 <template v-slot:append>
                   <v-text-field 
                           v-model="grafEdgeThickness"

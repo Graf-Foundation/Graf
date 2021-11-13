@@ -58,7 +58,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn style="float: right" icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
           </template>
-          <GrafSettings v-on:settings="updateSettings(value)"></GrafSettings>
+          <GrafSettings v-on:settings="updateSettings"></GrafSettings>
         </v-dialog>
       </v-col>
 
