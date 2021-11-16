@@ -14,8 +14,8 @@
             :y1="link.source.y"
             :x2="link.target.x"
             :y2="link.target.y"
-            stroke="black"
             :stroke-width="settings.grafEdgeThickness"
+						:stroke="edgeColor(link)"
             v-on:click="linkClick(link)"/>
 
       <circle v-for="node in this.simData.nodes"
@@ -73,6 +73,11 @@ export default {
 			// TODO MDF: replace these hardcoded colors with variables from node style / graf style
 			return function (node) {
 				return this.model.selection && this.model.selection.containsNode(node.id) ? "red" : "teal";
+			};
+		},
+		edgeColor: function() {
+			return function (edge) {
+				return this.model.selection && this.model.selection.containsEdge(edge.id) ? "red" : "black";
 			};
 		}
 	}

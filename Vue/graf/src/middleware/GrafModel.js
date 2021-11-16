@@ -236,6 +236,102 @@ class Graph {
 		return !was_selected;
 	}
 
+	expand() {
+		if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Node") {
+			let id = this.selection.getSelectedNodeIds()[0];
+			this.expandNode(id);
+			this.selection = null;
+		}
+		else if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Edge") {
+			let id = this.selection.getSelectedEdgeIds()[0];
+			this.expandEdge(id);
+			this.selection = null;
+		}
+		else {
+			console.log("WARNING: attempted to expand given an invalid selection, attempt ignored");
+		}
+	}
+
+	expandEdge(id) {
+		let edge = this.id_edge_map.get(id);
+		let source_node = edge.getSource();
+		let target_node = edge.getTarget();
+		let new_node_id = this.curr_node_id;
+		this.removeEdge(id);
+		this.addNode();
+		this.addEdgeHelper(source_node.getId(), new_node_id);
+		this.addEdgeHelper(new_node_id, target_node.getId());
+	}
+
+	//TODO JPWEIR
+	/*
+	expandNode(id) {
+		let node = this.id_node_map.get(id);
+		let adj_set = node.getAdjacent();
+	}
+	*/
+
+	contract() {
+		if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Node") {
+			let id = this.selection.getSelectedNodeIds()[0];
+			this.contractNode(id);
+			this.selection = null;
+		}
+		else if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Edge") {
+			let id = this.selection.getSelectedEdgeIds()[0];
+			this.contractEdge(id);
+			this.selection = null;
+		}
+		else {
+			console.log("WARNING: attempted to contract given an invalid selection, attempt ignored");
+		}
+	}
+
+	contractEdge(id) {
+		let edge = this.id_edge_map.get(id);
+		let s_node = edge.getSource();
+		let t_node = edge.getTarget();
+
+		let new_node_id = this.curr_node_id;
+		this.addNode();
+
+		let target_adj = new Set();
+		t_node.getAdjacentOutgoing().forEach(target_adj.add, target_adj);
+		s_node.getAdjacentOutgoing().forEach(target_adj.add, target_adj);
+
+		let source_adj = new Set();
+		t_node.getAdjacentIncoming().forEach(source_adj.add, source_adj);
+		s_node.getAdjacentIncoming().forEach(source_adj.add, source_adj);
+
+		for (let target_node of target_adj) {
+			this.addEdgeHelper(new_node_id, target_node.id);
+		}
+
+		for (let source_node of source_adj) {
+			this.addEdgeHelper(source_node.id, new_node_id);
+		}
+
+		this.removeNode(s_node.getId());
+		this.removeNode(t_node.getId());
+	}
+
+	//TODO JPWEIR
+	/*
+	contractNode(id) {
+		let node = this.id_node_map.get(id);
+		let adj_set = node.getAdjacent();
+	}
+	*/
+
+
 	//TODO JPWEIR: methods for contracting/expand** both nodes/edges to the graph
 
 	//TODO NDESMARAIS: selection abstraction
@@ -268,9 +364,32 @@ class Node {
 	}
 
 	getAdjacent() {
+		// Returns a list of adjacent nodes
 		let adj_set = new Set();
 		for (let edge of this.edges) {
-			adj_set.add( (edge.source === this) ?  edge.target : edge.source );
+			adj_set.add( (edge.getSource() === this) ?  edge.getTarget() : edge.getSource() );
+		}
+		return adj_set;
+	}
+
+	getAdjacentOutgoing() {
+		// For digraphs, returns all adjacent nodes that are the target of an edge from this node
+		let adj_set = new Set();
+		for (let edge of this.edges) {
+			if (edge.getSource() == this) {
+				adj_set.add(edge.getTarget());
+			}
+		}
+		return adj_set;
+	}
+
+	getAdjacentIncoming() {
+		// For digraphs, returns all adjacent nodes that are the source of an edge to this node
+		let adj_set = new Set();
+		for (let edge of this.edges) {
+			if (edge.getTarget() == this) {
+				adj_set.add(edge.getSource());
+			}
 		}
 		return adj_set;
 	}
@@ -292,9 +411,7 @@ class Edge {
 	constructor(id, source, target, dir = false, weight = 1, style = null) {
 		this.id = id;
 		// direction is assumed to be from first input to second input Node
-		this.source = source;
 		this.setSource(source);
-		this.target = target;
 		this.setTarget(target);
 		// dir is true when directed, false otherwise
 		this.dir = dir;
@@ -320,12 +437,16 @@ class Edge {
 		return this.weight;
 	}
 	setSource(node) {
-		this.source.edges.delete(this);
+		if (this.source) {
+			this.source.edges.delete(this);
+		}
 		this.source = node;
 		this.source.edges.add(this);
 	}
 	setTarget(node) {
-		this.target.edges.delete(this);
+		if (this.target) {
+			this.target.edges.delete(this);
+		}
 		this.target = node;
 		this.target.edges.add(this);
 	}
