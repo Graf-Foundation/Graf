@@ -267,13 +267,27 @@ class Graph {
 		this.addEdgeHelper(new_node_id, target_node.getId());
 	}
 
-	//TODO JPWEIR
-	/*
 	expandNode(id) {
 		let node = this.id_node_map.get(id);
-		let adj_set = node.getAdjacent();
+
+		// nodes that will be the targets of new edges
+		let outgoing_set = node.getAdjacentOutgoing();
+		// nodes that will be the sources of new edges
+		let incoming_set = node.getAdjacentIncoming(); 
+
+		let new_node_id = this.curr_node_id;
+		this.addNode();
+
+		for (let adj_node of outgoing_set) {
+			this.addEdgeHelper(new_node_id, adj_node.id);
+		}
+
+		for (let adj_node of incoming_set) {
+			this.addEdgeHelper(adj_node.id, new_node_id);
+		}
+
+		this.addEdgeHelper(new_node_id, id);
 	}
-	*/
 
 	contract() {
 		if (this.selection
@@ -303,10 +317,12 @@ class Graph {
 		let new_node_id = this.curr_node_id;
 		this.addNode();
 
+		// This set contains all nodes v connected to s or t such that s or t is the source node connected to v
 		let target_adj = new Set();
 		t_node.getAdjacentOutgoing().forEach(target_adj.add, target_adj);
 		s_node.getAdjacentOutgoing().forEach(target_adj.add, target_adj);
 
+		// This set contains all nodes v connected to s or t such that s or t is the target node connected to v
 		let source_adj = new Set();
 		t_node.getAdjacentIncoming().forEach(source_adj.add, source_adj);
 		s_node.getAdjacentIncoming().forEach(source_adj.add, source_adj);
@@ -323,13 +339,39 @@ class Graph {
 		this.removeNode(t_node.getId());
 	}
 
-	//TODO JPWEIR
-	/*
 	contractNode(id) {
 		let node = this.id_node_map.get(id);
 		let adj_set = node.getAdjacent();
+
+		let new_node_id = this.curr_node_id;
+		this.addNode();
+
+		this.removeNode(id);
+
+		// nodes that will be the targets of new edges
+		let outgoing_set = new Set();
+		// nodes that will be the sources of new edges
+		let incoming_set = new Set(); 
+
+		for (let adj_node of adj_set) {
+			// add adjacent nodes to the aforementioned sets
+			adj_node.getAdjacentOutgoing().forEach(outgoing_set.add, outgoing_set);
+			adj_node.getAdjacentIncoming().forEach(incoming_set.add, incoming_set);
+		}
+
+		for (let outer_adj_node of outgoing_set) {
+			this.addEdgeHelper(new_node_id, outer_adj_node.id);
+		}
+
+		for (let outer_adj_node of incoming_set) {
+			this.addEdgeHelper(outer_adj_node.id, new_node_id);
+		}
+
+		for (let adj_node of adj_set) {
+			this.removeNode(adj_node.id);
+		}
 	}
-	*/
+	
 
 
 	//TODO JPWEIR: methods for contracting/expand** both nodes/edges to the graph
