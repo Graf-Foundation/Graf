@@ -10,15 +10,6 @@
             </v-list-item-action>
           </v-list-item>
           <v-list-item>
-            <v-list-item-action>
-              <v-checkbox v-model="grafDirected" :value="grafDirected"></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Directionality</v-list-item-title>
-              <v-list-item-subtitle>Enable visualization of arrows on edges</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
             <v-list-item-content>
               <v-slider v-model="grafForce"
                         label="Force of the graph"
