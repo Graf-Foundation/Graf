@@ -267,13 +267,27 @@ class Graph {
 		this.addEdgeHelper(new_node_id, target_node.getId());
 	}
 
-	//TODO JPWEIR
-	/*
 	expandNode(id) {
 		let node = this.id_node_map.get(id);
-		let adj_set = node.getAdjacent();
+
+		// nodes that will be the targets of new edges
+		let outgoing_set = node.getAdjacentOutgoing();
+		// nodes that will be the sources of new edges
+		let incoming_set = node.getAdjacentIncoming(); 
+
+		let new_node_id = this.curr_node_id;
+		this.addNode();
+
+		for (let adj_node of outgoing_set) {
+			this.addEdgeHelper(new_node_id, adj_node.id);
+		}
+
+		for (let adj_node of incoming_set) {
+			this.addEdgeHelper(adj_node.id, new_node_id);
+		}
+
+		this.addEdgeHelper(new_node_id, id);
 	}
-	*/
 
 	contract() {
 		if (this.selection
