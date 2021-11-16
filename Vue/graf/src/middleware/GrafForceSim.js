@@ -58,6 +58,7 @@ class ForceSimWrapper {
 			console.log(this.forces[key].params);
 			console.log(this.forces);
 		}
+		this.applyForces();
 	}
 
 	applyForces() {

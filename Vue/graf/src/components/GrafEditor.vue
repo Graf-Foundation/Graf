@@ -77,8 +77,8 @@ export default {
 		},
 		updateSettings(value) {
 			this.settings = value;
-			this.simulation.updateForces({"charge": this.settings.grafForce});
-			this.grafModel = new Model.Graph(this.simulation);
+			console.log(this.grafModel);
+			this.grafModel.sim_wrapper.updateForces({"charge": this.settings.grafForce});
 		}
 	}
 };
