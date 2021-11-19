@@ -6,24 +6,16 @@
         <v-list>
           <v-list-item>
             <v-list-item-action>
-              <v-select :items="['Light', 'Dark']" label="Theme" v-bind:value="theme"></v-select>
+              <v-select :items="['Light']" label="Theme" v-bind:value="theme"></v-select>
             </v-list-item-action>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-action>
-              <v-checkbox v-model="grafDirected"></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Directionality</v-list-item-title>
-              <v-list-item-subtitle>Enable visualization of arrows on edges</v-list-item-subtitle>
-            </v-list-item-content>
           </v-list-item>
           <v-list-item>
             <v-list-item-content>
               <v-slider v-model="grafForce"
                         label="Force of the graph"
                         min="0"
-                        max="100">
+                        max="100"
+												:value="grafForce">
                 <template v-slot:append>
                   <v-text-field 
                           v-model="grafForce"
@@ -42,7 +34,8 @@
               <v-slider v-model="grafEdgeThickness"
                         label="EdgeThickness"
                         min="0"
-                        max="100">
+                        max="100"
+												:value="grafEdgeThickness">
                 <template v-slot:append>
                   <v-text-field 
                           v-model="grafEdgeThickness"
@@ -61,7 +54,7 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" text v-on:click="emit('close-dialog')">
+        <v-btn color="primary" text v-on:click="close()">
           Close
         </v-btn>
       </v-card-actions>
@@ -75,11 +68,23 @@ export default {
 	methods: {
 		emit(eventString) {
 			this.$emit(eventString);
+		},
+		close() {
+			const settings = {
+				theme: this.theme,
+				grafDirected: this.grafDirected,
+				grafForce: this.grafForce,
+				grafEdgeThickness: this.grafEdgeThickness
+			};
+			this.$emit("settings", settings);
 		}
 	},
 	data: function () {
 		return {
-			theme: "Light"
+			theme: "Light",
+			grafDirected: false,
+			grafForce: 5,
+			grafEdgeThickness: 5
 		};
 	}
 };
