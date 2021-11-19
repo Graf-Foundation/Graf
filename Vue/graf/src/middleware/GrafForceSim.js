@@ -52,6 +52,15 @@ class ForceSimWrapper {
 		this.forces = forces;
 	}
 
+	updateForces(params) {
+		for (const [key, value] of Object.entries(params)) {
+			this.forces[key].addOrUpdateParam("str", value); 
+			console.log(this.forces[key].params);
+			console.log(this.forces);
+		}
+		this.applyForces();
+	}
+
 	applyForces() {
 		let sim = this.simulation;
 

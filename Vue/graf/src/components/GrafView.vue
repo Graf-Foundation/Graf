@@ -14,8 +14,8 @@
             :y1="link.source.y"
             :x2="link.target.x"
             :y2="link.target.y"
+            :stroke-width="settings.grafEdgeThickness"
 						:stroke="edgeColor(link)"
-            stroke-width="5"
             v-on:click="linkClick(link)"/>
 
       <circle v-for="node in this.simData.nodes"
@@ -37,7 +37,7 @@
 
 export default {
 	name: "GrafView",
-	props: ["simData", "model"],
+	props: ["simData", "model", "settings"],
 	data() {
 		return {
 			width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),

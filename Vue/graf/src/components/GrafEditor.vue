@@ -8,10 +8,11 @@
 		v-on:contract-tool-click="grafModel.contract();"
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
+				v-on:update-settings="updateSettings"
     />
 
     <GrafView 
-		ref="View" :simData="graph" :model="grafModel"
+		ref="View" :simData="graph" :model="grafModel" :settings="settings"
 		v-on:node-click="nodeSelectionEvent($event)"
 		v-on:link-click="edgeSelectionEvent($event)">
 	</GrafView>
@@ -45,7 +46,13 @@ export default {
 				links: [],
 				nodes: []
 			},
-			simulation: null
+			simulation: null,
+			settings: {
+				theme: "Light",
+				grafDirected: false,
+				grafForce: 5,
+				grafEdgeThickness: 5
+			}
 		};
 	},
 	methods: {
@@ -67,6 +74,11 @@ export default {
 				this.grafModel.removeNode(parseInt(n_id));
 			}
 			this.grafModel.selection = null;
+		},
+		updateSettings(value) {
+			this.settings = value;
+			console.log(this.grafModel);
+			this.grafModel.sim_wrapper.updateForces({"charge": this.settings.grafForce});
 		}
 	}
 };
