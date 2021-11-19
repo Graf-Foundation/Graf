@@ -50,7 +50,7 @@ export default {
 			settings: {
 				theme: "Light",
 				grafDirected: false,
-				grafForce: 100,
+				grafForce: 5,
 				grafEdgeThickness: 5
 			}
 		};
