@@ -19,7 +19,7 @@ class Graph {
 	}
 
 	addNode(label=this.curr_node_id, style=null) {
-		let sim_id = `${this.curr_node_id}`;
+		let sim_id = parseInt(`${this.curr_node_id}`);
 		let node = new Node(this.curr_node_id, label, sim_id, style);
 
 		this.sim_wrapper.addSimNode(sim_id);
@@ -29,9 +29,9 @@ class Graph {
 
 	removeNode(node_id) {
 		let node = this.id_node_map.get(node_id);
-		let sim_id = `${node_id}`;
+		let sim_id = parseInt(`${node_id}`);
 
-		for (let edge of node.edges) {
+		for (let edge of node.getEdges()) {
 			this.removeEdge(edge.getId());
 		}
 
@@ -51,11 +51,11 @@ class Graph {
 			let s_id = this.selection.getSelectedNodeIds()[0];
 			let t_id = this.selection.getSelectedNodeIds()[1];
 			this.addEdgeHelper(s_id, t_id);
+			this.selection = null;
 		}
 		else {
 			console.log("WARNING: attempted to add an edge given an invalid selection, attempt ignored");
 		}
-		this.selection = null;
 	}
 
 	addEdgeHelper(s_id, t_id, dir = false, weight = 1, style = null) {
@@ -81,7 +81,7 @@ class Graph {
 
 		edge.disconnect();
 
-		this.sim_wrapper.removeEdge(edge_id);
+		this.sim_wrapper.removeSimLink(edge_id);
 		this.id_edge_map.delete(edge_id);
 	}
 
@@ -236,6 +236,144 @@ class Graph {
 		return !was_selected;
 	}
 
+	expand() {
+		if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Node") {
+			let id = this.selection.getSelectedNodeIds()[0];
+			this.expandNode(id);
+			this.selection = null;
+		}
+		else if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Edge") {
+			let id = this.selection.getSelectedEdgeIds()[0];
+			this.expandEdge(id);
+			this.selection = null;
+		}
+		else {
+			console.log("WARNING: attempted to expand given an invalid selection, attempt ignored");
+		}
+	}
+
+	expandEdge(id) {
+		let edge = this.id_edge_map.get(id);
+		let source_node = edge.getSource();
+		let target_node = edge.getTarget();
+		let new_node_id = this.curr_node_id;
+		this.removeEdge(id);
+		this.addNode();
+		this.addEdgeHelper(source_node.getId(), new_node_id);
+		this.addEdgeHelper(new_node_id, target_node.getId());
+	}
+
+	expandNode(id) {
+		let node = this.id_node_map.get(id);
+
+		// nodes that will be the targets of new edges
+		let outgoing_set = node.getAdjacentOutgoing();
+		// nodes that will be the sources of new edges
+		let incoming_set = node.getAdjacentIncoming(); 
+
+		let new_node_id = this.curr_node_id;
+		this.addNode();
+
+		for (let adj_node of outgoing_set) {
+			this.addEdgeHelper(new_node_id, adj_node.id);
+		}
+
+		for (let adj_node of incoming_set) {
+			this.addEdgeHelper(adj_node.id, new_node_id);
+		}
+
+		this.addEdgeHelper(new_node_id, id);
+	}
+
+	contract() {
+		if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Node") {
+			let id = this.selection.getSelectedNodeIds()[0];
+			this.contractNode(id);
+			this.selection = null;
+		}
+		else if (this.selection
+			&& this.selection.getSelectionAmount() == 1
+			&& this.selection.getSelectionType() == "Edge") {
+			let id = this.selection.getSelectedEdgeIds()[0];
+			this.contractEdge(id);
+			this.selection = null;
+		}
+		else {
+			console.log("WARNING: attempted to contract given an invalid selection, attempt ignored");
+		}
+	}
+
+	contractEdge(id) {
+		let edge = this.id_edge_map.get(id);
+		let s_node = edge.getSource();
+		let t_node = edge.getTarget();
+
+		let new_node_id = this.curr_node_id;
+		this.addNode();
+
+		// This set contains all nodes v connected to s or t such that s or t is the source node connected to v
+		let target_adj = new Set();
+		t_node.getAdjacentOutgoing().forEach(target_adj.add, target_adj);
+		s_node.getAdjacentOutgoing().forEach(target_adj.add, target_adj);
+
+		// This set contains all nodes v connected to s or t such that s or t is the target node connected to v
+		let source_adj = new Set();
+		t_node.getAdjacentIncoming().forEach(source_adj.add, source_adj);
+		s_node.getAdjacentIncoming().forEach(source_adj.add, source_adj);
+
+		for (let target_node of target_adj) {
+			this.addEdgeHelper(new_node_id, target_node.id);
+		}
+
+		for (let source_node of source_adj) {
+			this.addEdgeHelper(source_node.id, new_node_id);
+		}
+
+		this.removeNode(s_node.getId());
+		this.removeNode(t_node.getId());
+	}
+
+	contractNode(id) {
+		let node = this.id_node_map.get(id);
+		let adj_set = node.getAdjacent();
+
+		let new_node_id = this.curr_node_id;
+		this.addNode();
+
+		this.removeNode(id);
+
+		// nodes that will be the targets of new edges
+		let outgoing_set = new Set();
+		// nodes that will be the sources of new edges
+		let incoming_set = new Set(); 
+
+		for (let adj_node of adj_set) {
+			// add adjacent nodes to the aforementioned sets
+			adj_node.getAdjacentOutgoing().forEach(outgoing_set.add, outgoing_set);
+			adj_node.getAdjacentIncoming().forEach(incoming_set.add, incoming_set);
+		}
+
+		for (let outer_adj_node of outgoing_set) {
+			this.addEdgeHelper(new_node_id, outer_adj_node.id);
+		}
+
+		for (let outer_adj_node of incoming_set) {
+			this.addEdgeHelper(outer_adj_node.id, new_node_id);
+		}
+
+		for (let adj_node of adj_set) {
+			this.removeNode(adj_node.id);
+		}
+	}
+	
+
+
 	//TODO JPWEIR: methods for contracting/expand** both nodes/edges to the graph
 
 	//TODO NDESMARAIS: selection abstraction
@@ -268,9 +406,32 @@ class Node {
 	}
 
 	getAdjacent() {
+		// Returns a list of adjacent nodes
 		let adj_set = new Set();
 		for (let edge of this.edges) {
-			adj_set.add( (edge.source === this) ?  edge.target : edge.source );
+			adj_set.add( (edge.getSource() === this) ?  edge.getTarget() : edge.getSource() );
+		}
+		return adj_set;
+	}
+
+	getAdjacentOutgoing() {
+		// For digraphs, returns all adjacent nodes that are the target of an edge from this node
+		let adj_set = new Set();
+		for (let edge of this.edges) {
+			if (edge.getSource() == this) {
+				adj_set.add(edge.getTarget());
+			}
+		}
+		return adj_set;
+	}
+
+	getAdjacentIncoming() {
+		// For digraphs, returns all adjacent nodes that are the source of an edge to this node
+		let adj_set = new Set();
+		for (let edge of this.edges) {
+			if (edge.getTarget() == this) {
+				adj_set.add(edge.getSource());
+			}
 		}
 		return adj_set;
 	}
@@ -292,9 +453,7 @@ class Edge {
 	constructor(id, source, target, dir = false, weight = 1, style = null) {
 		this.id = id;
 		// direction is assumed to be from first input to second input Node
-		this.source = source;
 		this.setSource(source);
-		this.target = target;
 		this.setTarget(target);
 		// dir is true when directed, false otherwise
 		this.dir = dir;
@@ -320,12 +479,16 @@ class Edge {
 		return this.weight;
 	}
 	setSource(node) {
-		this.source.edges.delete(this);
+		if (this.source) {
+			this.source.edges.delete(this);
+		}
 		this.source = node;
 		this.source.edges.add(this);
 	}
 	setTarget(node) {
-		this.target.edges.delete(this);
+		if (this.target) {
+			this.target.edges.delete(this);
+		}
 		this.target = node;
 		this.target.edges.add(this);
 	}

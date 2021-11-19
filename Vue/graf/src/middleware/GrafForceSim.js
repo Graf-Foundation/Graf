@@ -44,7 +44,7 @@ class ForceSimWrapper {
 	genForces(params) {
 		let forces = {};
 
-		if("links" in params) forces["links"] = new gf.LinkForce(params.links);
+		if("link" in params) forces["link"] = new gf.LinkForce(params.links);
 		if("collide" in params) forces["collide"] = new gf.CollisionForce(params.collide);
 		if("charge" in params) forces["charge"] = new gf.ManyBodyForce(params.charge);
 		if("center" in params) forces["center"] = new gf.CenteringForce(params.center);
@@ -73,8 +73,7 @@ class ForceSimWrapper {
 
 	removeSimNode(node_id) {
 		// find index of node_id and splice
-		let index = this.nodes.findIndex((node) => { node.id = node_id; });
-
+		let index = this.nodes.findIndex((node) => node.id == node_id);
 		this.nodes.splice(index, 1);
 	}
 
@@ -83,13 +82,14 @@ class ForceSimWrapper {
 
 		this.links.push(link);
 		
-		this.simulation.force("link").links(this.links);
+		// this.simulation = this.simulation.force("link", d3.forceLink(this.links).id(function (n) { return n.id; }));
+		// Must specify that nodes are indexed by id, not index, via:  .id(function (n) { return n.id; })
+		this.simulation.force("link").id(function (n) { return n.id; }).links(this.links);
 	}
 
 	removeSimLink(link_id) {
 		// find index of link_id and splice
-		let index = this.links.findIndex((link) => { link.id = link_id; });
-
+		let index = this.links.findIndex((link) => link.id == link_id);
 		this.links.splice(index, 1);
 	}
 }
