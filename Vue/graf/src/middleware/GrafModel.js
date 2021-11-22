@@ -18,6 +18,7 @@ class Graph {
 		this.selection = null;
 	}
 
+	// Adds a node both to the graph model and the simulation
 	addNode(label=this.curr_node_id, style=null) {
 		let sim_id = parseInt(`${this.curr_node_id}`);
 		let node = new Node(this.curr_node_id, label, sim_id, style);
@@ -27,6 +28,7 @@ class Graph {
 		this.curr_node_id += 1;
 	}
 
+	// Removes node corresponding to node_id from the graph model and the simulation
 	removeNode(node_id) {
 		let node = this.id_node_map.get(node_id);
 		let sim_id = parseInt(`${node_id}`);
@@ -44,6 +46,7 @@ class Graph {
 		}
 	}
 
+	// Wrapper to check if an edge can be added to the given selection, calls helper if it can
 	addEdge() {
 		if (this.selection != null
 			&& this.selection.getSelectionAmount() == 2
@@ -58,6 +61,7 @@ class Graph {
 		}
 	}
 
+	// Adds an edge from node s to node t, both in the graph model and the smulation
 	addEdgeHelper(s_id, t_id, dir = false, weight = 1, style = null) {
 		let s_node = this.id_node_map.get(parseInt(s_id));
 		let t_node = this.id_node_map.get(parseInt(t_id));
@@ -76,6 +80,7 @@ class Graph {
 		this.curr_edge_id += 1;
 	}
 
+	// Removes edge corresponding to edge_id from graph model and simulation
 	removeEdge(edge_id) {
 		let edge = this.id_edge_map.get(edge_id);
 
@@ -85,6 +90,7 @@ class Graph {
 		this.id_edge_map.delete(edge_id);
 	}
 
+	// Helper function to create a new selection model given a type and quantity
 	createSelection(type, amount) {
 		let new_selection = null;
 		let is_node = type == "Node";
@@ -123,6 +129,7 @@ class Graph {
 		return new_selection;
 	}
 
+	// Given a newly selected/unselected element, updates the selection correspondingly
 	updateSelection(type, id, was_selected) {
 		// was_selected is whether the node or edge is selected *before* it was clicked
 		let new_type = type;
@@ -218,6 +225,7 @@ class Graph {
 		}
 	}
 
+	// Handles a select event for nodes
 	selectNode(node_id) {
 		// was_selected is whether the node or edge is selected *before* it was clicked
 		let was_selected = this.selection != null && this.selection.getSelectedNodeIds().includes(node_id);
@@ -227,6 +235,7 @@ class Graph {
 		return !was_selected;
 	}
 
+	// Handles a select event for edges
 	selectEdge(edge_id) {
 		// was_selected is whether the node or edge is selected *before* it was clicked
 		let was_selected = this.selection != null && this.selection.getSelectedEdgeIds().includes(edge_id);
@@ -236,6 +245,7 @@ class Graph {
 		return !was_selected;
 	}
 
+	// Wrapper to check if the selection is valid for expansion, calls corresponding helper if it is
 	expand() {
 		if (this.selection
 			&& this.selection.getSelectionAmount() == 1
@@ -256,6 +266,7 @@ class Graph {
 		}
 	}
 
+	// Expands an edge into two edges and a node
 	expandEdge(id) {
 		let edge = this.id_edge_map.get(id);
 		let source_node = edge.getSource();
@@ -267,6 +278,8 @@ class Graph {
 		this.addEdgeHelper(new_node_id, target_node.getId());
 	}
 
+	// Expands a node into two nodes connected by an edge
+	// These two new nodes are adjacent to all nodes the original node was adjacent to
 	expandNode(id) {
 		let node = this.id_node_map.get(id);
 
@@ -289,6 +302,7 @@ class Graph {
 		this.addEdgeHelper(new_node_id, id);
 	}
 
+	// Wrapper to check if selection is valid for contraction, calls corresponding helper function
 	contract() {
 		if (this.selection
 			&& this.selection.getSelectionAmount() == 1
@@ -309,6 +323,7 @@ class Graph {
 		}
 	}
 
+	// Contracts an edge, merging its two neighboring nodes
 	contractEdge(id) {
 		let edge = this.id_edge_map.get(id);
 		let s_node = edge.getSource();
@@ -339,6 +354,7 @@ class Graph {
 		this.removeNode(t_node.getId());
 	}
 
+	// Contracts a node, connecting its adjacent nodes to each other directly
 	contractNode(id) {
 		let node = this.id_node_map.get(id);
 		let adj_set = node.getAdjacent();
