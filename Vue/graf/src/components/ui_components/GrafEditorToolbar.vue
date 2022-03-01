@@ -37,7 +37,7 @@
 
       <!-- tools bar -->
       <v-col cols="9" v-if="barId===0">
-        <v-btn class="tool-btn" v-on:click="emit('add-node-tool-click')">Add Node</v-btn>
+        <v-btn class="tool-btn" v-on:click="emit('add-node-tool-click')">Add NodeNODe</v-btn>
         <v-btn class="tool-btn" v-on:click="emit('add-edge-tool-click')">Add Edge</v-btn>
         <v-btn class="tool-btn" v-on:click="emit('remove-tool-click')">Delete</v-btn>
         <v-btn class="tool-btn" v-on:click="emit('expand-tool-click')">Expand</v-btn>
