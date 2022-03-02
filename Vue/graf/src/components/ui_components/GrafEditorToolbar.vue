@@ -25,7 +25,7 @@
         <!-- tools bar -->
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-on:click="barId=0" v-bind="attrs" v-on="on">
+            <v-btn v-bind:class="{active: barId===0}" icon v-on:click="barId=0" v-bind="attrs" v-on="on">
               <v-icon>mdi-tools</v-icon>
             </v-btn>
           </template>
@@ -35,7 +35,7 @@
         <!-- algorithms bar -->
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-on:click="barId=1" v-bind="attrs" v-on="on">
+            <v-btn v-bind:class="{active: barId===1}" icon v-on:click="barId=1" v-bind="attrs" v-on="on">
               <v-icon>
                 mdi-family-tree
               </v-icon>
@@ -59,7 +59,7 @@
       </v-col>
 
       <!-- algorithms bar -->
-      <v-col cols="9" v-if="barId===1">
+      <v-col cols="9" v-if="barId===1" md="8">
         <v-btn class="tool-btn" v-on:click="() => {}">BFS</v-btn>
         <v-btn class="tool-btn" v-on:click="() => {}">DFS</v-btn>
         <v-btn class="tool-btn" v-on:click="() => {}">SCC</v-btn>
@@ -112,5 +112,8 @@ export default {
   .tool-btn {
     margin-left: 10px;
     margin-top: 5px;
+  }
+  .active {
+	background-color:rgba(179, 179, 179, 0.527);
   }
 </style>
