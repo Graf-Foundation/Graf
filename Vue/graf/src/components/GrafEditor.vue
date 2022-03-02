@@ -9,7 +9,7 @@
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
 		v-on:update-settings="updateSettings"
-		v-on:reset-graf="grafModel.reset()"
+		v-on:reset-graf="resetGraph()"
     />
 
     <GrafView 
@@ -82,6 +82,18 @@ export default {
 			console.log(this.grafModel);
 			this.grafModel.sim_wrapper.updateForces({"charge": this.settings.grafForce});
 		},
+		resetGraph() {
+			this.graphModel = null;
+			this.graph = {links:[], nodes:[]};
+			this.simulation = null;
+			this.settings = {
+				theme: "Light",
+				grafDirected: false,
+				grafForce: 5,
+				grafEdgeThickness: 5,
+				nodeSize: 10
+			};
+		}
 	}
 };
 </script>

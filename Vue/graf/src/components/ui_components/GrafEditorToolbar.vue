@@ -9,11 +9,11 @@
 			<v-btn icon v-on:click="emit('play-tool-click')"><v-icon medium>mdi-play</v-icon></v-btn>
 		</v-col>
 		<!-- <v-col> -->
-		<div style= "padding-top: 12px; padding-right: 20px; padding-left: 20px">
+		<div style= "padding-top: 12px; padding-right: 16px; padding-left: 12px">
 		<v-tooltip bottom>
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn icon v-on:click="emit('reset-graf')" v-bind="attrs" v-on="on">
-					<v-icon>mdi-tools</v-icon>
+					<v-icon>mdi-sync</v-icon>
 				</v-btn>
 			</template>
 			<span>Reset Graph</span>
