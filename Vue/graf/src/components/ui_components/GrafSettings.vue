@@ -15,7 +15,7 @@
                         label="Force of the graph"
                         min="0"
                         max="100"
-												:value="grafForce">
+						:value="grafForce">
                 <template v-slot:append>
                   <v-text-field 
                           v-model="grafForce"
@@ -32,13 +32,33 @@
           <v-list-item>
             <v-list-item-content>
               <v-slider v-model="grafEdgeThickness"
-                        label="EdgeThickness"
+                        label="Edge Thickness"
                         min="0"
                         max="100"
-												:value="grafEdgeThickness">
+						:value="grafEdgeThickness">
                 <template v-slot:append>
                   <v-text-field 
                           v-model="grafEdgeThickness"
+                          class="mt-0 pt-0"
+                          hide-details
+                          single-line
+                          type="number"
+                          style="width: 60px"
+                          ></v-text-field>
+                </template>
+              </v-slider>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-slider v-model="nodeSize"
+                        label="Node Size"
+                        min="1"
+                        max="100"
+						:value="nodeSize">
+                <template v-slot:append>
+                  <v-text-field 
+                          v-model="nodeSize"
                           class="mt-0 pt-0"
                           hide-details
                           single-line
@@ -55,7 +75,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" text v-on:click="close()">
-          Close
+          Apply
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -74,7 +94,8 @@ export default {
 				theme: this.theme,
 				grafDirected: this.grafDirected,
 				grafForce: this.grafForce,
-				grafEdgeThickness: this.grafEdgeThickness
+				grafEdgeThickness: this.grafEdgeThickness,
+				nodeSize: this.nodeSize
 			};
 			this.$emit("settings", settings);
 		}
@@ -84,7 +105,8 @@ export default {
 			theme: "Light",
 			grafDirected: false,
 			grafForce: 5,
-			grafEdgeThickness: 5
+			grafEdgeThickness: 5,
+			nodeSize: 10
 		};
 	}
 };

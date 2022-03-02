@@ -15,14 +15,14 @@
             :x2="link.target.x"
             :y2="link.target.y"
             :stroke-width="settings.grafEdgeThickness"
-						:stroke="edgeColor(link)"
+			:stroke="edgeColor(link)"
             v-on:click="linkClick(link)"/>
 
       <circle v-for="node in this.simData.nodes"
               :key="'N' + node.id"
               :cx="node.x"
               :cy="node.y"
-              :r="10"
+              :r="settings.nodeSize"
               :fill="nodeColor(node)"
               stroke="black"
               stroke-width="4"
