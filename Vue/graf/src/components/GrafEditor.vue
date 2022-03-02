@@ -33,6 +33,7 @@ export default {
 		GrafView
 	},
 	mounted () {
+		document.addEventListener("keyup", this.keyupHandler, false);
 		this.simulation = new ForceSimWrapper(null,
 			this.graph.nodes,
 			this.graph.links
@@ -93,6 +94,11 @@ export default {
 				grafEdgeThickness: 5,
 				nodeSize: 10
 			};
+		},
+		keyupHandler(event) {
+			if(event.code == "Escape" && this.grafModel.selection) {
+				this.grafModel.selection.clearSelection();
+			}
 		}
 	}
 };
