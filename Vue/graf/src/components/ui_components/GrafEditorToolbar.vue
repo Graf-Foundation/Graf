@@ -3,14 +3,25 @@
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
     <v-row>
-      <v-col cols="1">
-        <!-- pause and play buttons -->
-        <v-btn icon v-on:click="emit('pause-tool-click')"><v-icon>mdi-pause</v-icon></v-btn>
-        <v-btn icon v-on:click="emit('play-tool-click')"><v-icon medium>mdi-play</v-icon></v-btn>
-      </v-col>
-
+		<v-col cols="1">
+			<!-- pause and play buttons -->
+			<v-btn icon v-on:click="emit('pause-tool-click')"><v-icon>mdi-pause</v-icon></v-btn>
+			<v-btn icon v-on:click="emit('play-tool-click')"><v-icon medium>mdi-play</v-icon></v-btn>
+		</v-col>
+		<!-- <v-col> -->
+		<div style= "padding-top: 12px; padding-right: 20px; padding-left: 20px">
+		<v-tooltip bottom>
+			<template v-slot:activator="{ on, attrs }">
+				<v-btn icon v-on:click="emit('reset-graf')" v-bind="attrs" v-on="on">
+					<v-icon>mdi-tools</v-icon>
+				</v-btn>
+			</template>
+			<span>Reset Graph</span>
+		</v-tooltip>
+		</div>
+		<!-- </v-col> -->
       <!-- swap toolbar buttons -->
-      <v-col cols="2" style="max-width: 150px;">
+      <v-col cols="1">
         <!-- tools bar -->
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
@@ -35,8 +46,11 @@
 
       </v-col>
 
+	
+	
+
       <!-- tools bar -->
-      <v-col cols="9" v-if="barId===0">
+      <v-col v-if="barId===0" md="8">
         <v-btn class="tool-btn" v-on:click="emit('add-node-tool-click')">Add Node</v-btn>
         <v-btn class="tool-btn" v-on:click="emit('add-edge-tool-click')">Add Edge</v-btn>
         <v-btn class="tool-btn" v-on:click="emit('remove-tool-click')">Delete</v-btn>
@@ -53,7 +67,7 @@
       </v-col>
 
       <!-- options -->
-      <v-col cols="1">
+      <v-col cols="1" md="1">
         <v-dialog v-model="dialog" width="500">
           <template v-slot:activator="{ on, attrs }">
             <v-btn style="float: right" icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>

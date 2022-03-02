@@ -9,6 +9,7 @@
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
 		v-on:update-settings="updateSettings"
+		v-on:reset-graf="grafModel.reset()"
     />
 
     <GrafView 
