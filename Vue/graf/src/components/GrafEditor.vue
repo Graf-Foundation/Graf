@@ -8,7 +8,8 @@
 		v-on:contract-tool-click="grafModel.contract();"
         v-on:pause-tool-click="simulation.stopSim();"
         v-on:play-tool-click="simulation.restartSim();"
-				v-on:update-settings="updateSettings"
+		v-on:update-settings="updateSettings"
+		v-on:reset-graf="resetGraph()"
     />
 
     <GrafView 
@@ -32,6 +33,7 @@ export default {
 		GrafView
 	},
 	mounted () {
+		document.addEventListener("keyup", this.keyupHandler, false);
 		this.simulation = new ForceSimWrapper(null,
 			this.graph.nodes,
 			this.graph.links
@@ -51,7 +53,8 @@ export default {
 				theme: "Light",
 				grafDirected: false,
 				grafForce: 5,
-				grafEdgeThickness: 5
+				grafEdgeThickness: 5,
+				nodeSize: 10
 			}
 		};
 	},
@@ -79,6 +82,23 @@ export default {
 			this.settings = value;
 			console.log(this.grafModel);
 			this.grafModel.sim_wrapper.updateForces({"charge": this.settings.grafForce});
+		},
+		resetGraph() {
+			this.graphModel = null;
+			this.graph = {links:[], nodes:[]};
+			this.simulation = null;
+			this.settings = {
+				theme: "Light",
+				grafDirected: false,
+				grafForce: 5,
+				grafEdgeThickness: 5,
+				nodeSize: 10
+			};
+		},
+		keyupHandler(event) {
+			if(event.code == "Escape" && this.grafModel.selection) {
+				this.grafModel.selection.clearSelection();
+			}
 		}
 	}
 };

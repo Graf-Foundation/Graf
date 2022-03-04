@@ -3,18 +3,27 @@
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
     <v-row>
-      <v-col cols="1">
-        <!-- pause and play buttons -->
-        <v-btn icon v-on:click="emit('pause-tool-click')"><v-icon>mdi-pause</v-icon></v-btn>
-        <v-btn icon v-on:click="emit('play-tool-click')"><v-icon medium>mdi-play</v-icon></v-btn>
-      </v-col>
-
+		<v-col cols="1">
+			<!-- pause and play buttons -->
+			<v-btn icon v-on:click="emit('pause-tool-click')"><v-icon>mdi-pause</v-icon></v-btn>
+			<v-btn icon v-on:click="emit('play-tool-click')"><v-icon medium>mdi-play</v-icon></v-btn>
+		</v-col>
+		<v-col cols="1">
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn icon v-on:click="emit('reset-graf')" v-bind="attrs" v-on="on">
+						<v-icon>mdi-sync</v-icon>
+					</v-btn>
+				</template>
+				<span>Reset Graph</span>
+			</v-tooltip>
+		</v-col>
       <!-- swap toolbar buttons -->
-      <v-col cols="2" style="max-width: 150px;">
+      <v-col cols="1">
         <!-- tools bar -->
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-on:click="barId=0" v-bind="attrs" v-on="on">
+            <v-btn v-bind:class="{active: barId===0}" icon v-on:click="barId=0" v-bind="attrs" v-on="on">
               <v-icon>mdi-tools</v-icon>
             </v-btn>
           </template>
@@ -24,7 +33,7 @@
         <!-- algorithms bar -->
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-on:click="barId=1" v-bind="attrs" v-on="on">
+            <v-btn v-bind:class="{active: barId===1}" icon v-on:click="barId=1" v-bind="attrs" v-on="on">
               <v-icon>
                 mdi-family-tree
               </v-icon>
@@ -36,7 +45,7 @@
       </v-col>
 
       <!-- tools bar -->
-      <v-col cols="9" v-if="barId===0">
+      <v-col v-if="barId===0" cols="8" >
         <v-btn class="tool-btn" v-on:click="emit('add-node-tool-click')">Add Node</v-btn>
         <v-btn class="tool-btn" v-on:click="emit('add-edge-tool-click')">Add Edge</v-btn>
         <v-btn class="tool-btn" v-on:click="emit('remove-tool-click')">Delete</v-btn>
@@ -45,7 +54,7 @@
       </v-col>
 
       <!-- algorithms bar -->
-      <v-col cols="9" v-if="barId===1">
+      <v-col v-if="barId===1" cols="8">
         <v-btn class="tool-btn" v-on:click="() => {}">BFS</v-btn>
         <v-btn class="tool-btn" v-on:click="() => {}">DFS</v-btn>
         <v-btn class="tool-btn" v-on:click="() => {}">SCC</v-btn>
@@ -98,5 +107,8 @@ export default {
   .tool-btn {
     margin-left: 10px;
     margin-top: 5px;
+  }
+  .active {
+	background-color:rgba(179, 179, 179, 0.527);
   }
 </style>
