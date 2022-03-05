@@ -46,11 +46,11 @@
 
       <!-- tools bar -->
       <v-col v-if="barId===0" cols="8" >
-        <v-btn class="tool-btn" v-on:click="emit('add-node-tool-click')">Add Node</v-btn>
-        <v-btn class="tool-btn" v-on:click="emit('add-edge-tool-click')">Add Edge</v-btn>
-        <v-btn class="tool-btn" v-on:click="emit('remove-tool-click')">Delete</v-btn>
-        <v-btn class="tool-btn" v-on:click="emit('expand-tool-click')">Expand</v-btn>
-        <v-btn class="tool-btn" v-on:click="emit('contract-tool-click')">Contract</v-btn>
+        <v-btn class="tool-btn" :depressed="this.toolCode==='add-node'" v-on:click="emit('tool-click', 'add-node')">Add Node</v-btn>
+        <v-btn class="tool-btn" :depressed="this.toolCode==='add-edge'" v-on:click="emit('tool-click', 'add-edge')">Add Edge</v-btn>
+        <v-btn class="tool-btn" :depressed="this.toolCode==='delete'" v-on:click="emit('tool-click', 'delete')">Delete</v-btn>
+        <v-btn class="tool-btn" :depressed="this.toolCode==='expand'" v-on:click="emit('tool-click', 'expand')">Expand</v-btn>
+        <v-btn class="tool-btn" :depressed="this.toolCode==='contract'" v-on:click="emit('tool-click', 'contract')">Contract</v-btn>
       </v-col>
 
       <!-- algorithms bar -->
@@ -80,6 +80,7 @@
 import GrafSettings from "./GrafSettings.vue";
 export default {
 	name: "GrafEditorToolbar",
+	props: ["toolCode"],
 	components: {
 		GrafSettings
 	},
@@ -90,8 +91,8 @@ export default {
 		};
 	},
 	methods:  {
-		emit(eventString) {
-			this.$emit(eventString);
+		emit(eventString, value) {
+			this.$emit(eventString, value);
 		},
 		updateSettings(value) {
 			this.$emit("update-settings", value);

@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import * as SelectionModel from "@/middleware/GrafSelection";
+import {ManyHybridSelection} from "@/middleware/GrafSelection";
 
 class Graph {
 	constructor(sim, style=null) {
@@ -14,17 +14,17 @@ class Graph {
 		this.curr_edge_id = 0;
 		// Default node and edge Styles
 		this.style = style;
-
-		this.selection = null;
+		// Empty selection
+		this.selection = new ManyHybridSelection();
 	}
 
 	// Adds a node both to the graph model and the simulation
 	addNode(label=this.curr_node_id, style=null) {
-		let sim_id = parseInt(`${this.curr_node_id}`);
-		let node = new Node(this.curr_node_id, label, sim_id, style);
+		let sim_id = this.curr_node_id;
+		let node = new Node(sim_id, label, sim_id, style);
 
 		this.sim_wrapper.addSimNode(sim_id);
-		this.id_node_map.set(this.curr_node_id, node);
+		this.id_node_map.set(sim_id, node);
 		this.curr_node_id += 1;
 	}
 
@@ -48,31 +48,21 @@ class Graph {
 
 	// Wrapper to check if an edge can be added to the given selection, calls helper if it can
 	addEdge() {
-		if (this.selection != null
-			&& this.selection.getSelectionAmount() == 2
-			&& this.selection.getSelectionType() == "Node") {
-			let s_id = this.selection.getSelectedNodeIds()[0];
-			let t_id = this.selection.getSelectedNodeIds()[1];
-			this.addEdgeHelper(s_id, t_id);
-			this.selection = null;
-		}
-		else {
-			console.log("WARNING: attempted to add an edge given an invalid selection, attempt ignored");
-		}
+		if(this.selection == null || this.selection.getNodeCount() !== 2) throw "Select 2 nodes";
+
+		let ids = this.selection.getSelectedNodeIds();
+		let s_id = ids[0];
+		let t_id = ids[1];
+		this.addEdgeHelper(s_id, t_id);
+		this.selection.clearSelection();
 	}
 
 	// Adds an edge from node s to node t, both in the graph model and the smulation
 	addEdgeHelper(s_id, t_id, dir = false, weight = 1, style = null) {
 		let s_node = this.id_node_map.get(parseInt(s_id));
 		let t_node = this.id_node_map.get(parseInt(t_id));
-		if (s_node == null || t_node == null) {
-			console.log("ERROR: source or target node not found when trying to add an edge");
-			console.log("id_node_map contents: ");
-			console.log(this.id_node_map);
-			console.log("IDs: ");
-			console.log(s_id);
-			console.log(t_id);
-		}
+		if (s_node == null || t_node == null) throw `Cannot create edge between ${s_node} and ${t_node}`;
+
 		let edge = new Edge(this.curr_edge_id, s_node, t_node, dir, weight, style);
 
 		this.id_edge_map.set(this.curr_edge_id, edge);
@@ -88,140 +78,25 @@ class Graph {
 
 		this.sim_wrapper.removeSimLink(edge_id);
 		this.id_edge_map.delete(edge_id);
-	}
 
-	// Helper function to create a new selection model given a type and quantity
-	createSelection(type, amount) {
-		let new_selection = null;
-		let is_node = type == "Node";
-		let is_edge = type == "Edge";
-		let is_many = amount > 2;
-		let is_two = amount == 2;
-		let is_one = amount == 1;
-		if (is_node && is_many) {
-			new_selection = new SelectionModel.ManyNodeSelection();
-			console.log("Created ManyNodeSelection");
+		if (this.id_edge_map.size === 0) {
+			this.curr_edge_id = 0;
 		}
-		else if (is_node && is_two) {
-			new_selection = new SelectionModel.TwoNodeSelection();
-			console.log("Created TwoNodeSelection");
-		}
-		else if (is_node && is_one) {
-			new_selection = new SelectionModel.OneNodeSelection();
-			console.log("Created OneNodeSelection");
-		}
-		else if (is_edge && (is_many || is_two)) {
-			new_selection = new SelectionModel.ManyEdgeSelection();
-			console.log("Created ManyEdgeSelection");
-		}
-		else if (is_edge && is_one) {
-			new_selection = new SelectionModel.OneEdgeSelection();
-			console.log("Created OneEdgeSelection");
-		}
-		else if (is_many || is_two) {
-			new_selection = new SelectionModel.ManyHybridSelection();
-			console.log("Created ManyHybridSelection");
-		}
-		else if (is_one) {
-			new_selection = new SelectionModel.SingleHybridSelection();
-			console.log("Created SingleHybridSelection");
-		}
-		return new_selection;
 	}
 
 	// Given a newly selected/unselected element, updates the selection correspondingly
 	updateSelection(type, id, was_selected) {
-		// was_selected is whether the node or edge is selected *before* it was clicked
-		let new_type = type;
-		let new_amount = 1;
-		// Default values, i.e. adding one element to an empty selection
-
-		let selection_type = null;
-		let amount = 0;
-		let length = 0;
-		let is_empty = this.selection == null;
-		let is_node = type == "Node";
-
-		if (!is_empty) {
-			selection_type = this.selection.getSelectionType();
-			amount = this.selection.getSelectionAmount();
-			length = this.selection.getSelectionLength();
-		}
-		let types_match = type == selection_type;
-
-		if (!is_empty && !was_selected) {
-			new_amount = Math.min(length + 1, 3);
-			// If adding to the selection, cap the new amount at 3 (many)
-		}
-		else if (!is_empty) {
-			new_amount = Math.min(3, length - 1);
-		}
-		
-		if (!is_empty && !types_match && !was_selected) {
-			new_type = "Hybrid";
-		}
-
-		// When unselecting changes the selection type
-		else if (!is_empty && !types_match && was_selected && is_node && this.selection.getNodeCount() == 1) {
-			// Case of removing last node
-			new_type = "Edge";
-		}
-		else if (!is_empty && !types_match && was_selected && !is_node && this.selection.getEdgeCount() == 1) {
-			// Case of removing last edge
-			new_type = "Node";
-		}
-		else if (!is_empty && !types_match && was_selected && selection_type != "Hybrid") {
-			// Shouldn't happen, hypothetically
-			console.log("ERROR: Tried to remove an invalid type from selection.");
-		}
-
-		if (!is_empty && new_amount == 2 && (new_type == "Hybrid" || new_type == "Edge")) {
-			new_amount = 3;
-			// Ensure the new amount is correct for Hybrid/Edge selections
-		}
-		if (!is_empty && new_type == selection_type && new_amount == amount) {
-			// Selection type remains the same
-			new_type = null;
-			new_amount = null;
-			// Set new changes to null so we skip the next two if statements
-		}
-		
-		// If the selection type changes
-		let needs_update = new_type != null && new_amount != null;
-
-		if (new_amount == 0) {
-			// Nullify selection if new_amount is zero
-			this.selection = null;
-			is_empty = true;
-			needs_update = false;
-		}
-
-		let new_selection = null;
-		if (needs_update) {
-			// Choose new selection type if changed
-			new_selection = this.createSelection(new_type, new_amount);
-		}
-		if (!is_empty && needs_update) {
-			new_selection.setNodes(this.selection.getSelectedNodeIds());
-			new_selection.setEdges(this.selection.getSelectedEdgeIds());
-		}
-		if (needs_update) {
-			this.selection = new_selection;
-			is_empty = false;
-		}
-
-		// Update selection by adding or removing elements to appropriate arrays
-		if (!is_empty && type == "Node" && !was_selected) {
-			this.selection.addNode(id);
-		}
-		else if (!is_empty && type == "Edge" && !was_selected) {
-			this.selection.addEdge(id);
-		}
-		else if (!is_empty && type == "Node" && was_selected) {
+		if(type === "Node" && was_selected) {
 			this.selection.removeNode(id);
 		}
-		else if (!is_empty && type == "Edge" && was_selected) {
+		else if(type === "Node" && !was_selected) {
+			this.selection.addNode(id);
+		}
+		else if(type === "Edge" && was_selected) {
 			this.selection.removeEdge(id);
+		}
+		else if(type === "Edge" && !was_selected) {
+			this.selection.addEdge(id);
 		}
 	}
 
@@ -247,22 +122,18 @@ class Graph {
 
 	// Wrapper to check if the selection is valid for expansion, calls corresponding helper if it is
 	expand() {
-		if (this.selection
-			&& this.selection.getSelectionAmount() == 1
-			&& this.selection.getSelectionType() == "Node") {
+		if(this.selection.getNodeCount() === 1) {
 			let id = this.selection.getSelectedNodeIds()[0];
 			this.expandNode(id);
-			this.selection = null;
+			this.selection.clearSelection();
 		}
-		else if (this.selection
-			&& this.selection.getSelectionAmount() == 1
-			&& this.selection.getSelectionType() == "Edge") {
+		else if(this.selection.getEdgeCount() === 1) {
 			let id = this.selection.getSelectedEdgeIds()[0];
 			this.expandEdge(id);
-			this.selection = null;
+			this.selection.clearSelection();
 		}
 		else {
-			console.log("WARNING: attempted to expand given an invalid selection, attempt ignored");
+			throw "WARNING: attempted to expand given an invalid selection, attempt ignored";
 		}
 	}
 
@@ -304,22 +175,18 @@ class Graph {
 
 	// Wrapper to check if selection is valid for contraction, calls corresponding helper function
 	contract() {
-		if (this.selection
-			&& this.selection.getSelectionAmount() == 1
-			&& this.selection.getSelectionType() == "Node") {
+		if (this.selection.getNodeCount() === 1) {
 			let id = this.selection.getSelectedNodeIds()[0];
 			this.contractNode(id);
-			this.selection = null;
+			this.selection.clearSelection();
 		}
-		else if (this.selection
-			&& this.selection.getSelectionAmount() == 1
-			&& this.selection.getSelectionType() == "Edge") {
+		else if (this.selection.getEdgeCount() === 1) {
 			let id = this.selection.getSelectedEdgeIds()[0];
 			this.contractEdge(id);
-			this.selection = null;
+			this.selection.clearSelection();
 		}
 		else {
-			console.log("WARNING: attempted to contract given an invalid selection, attempt ignored");
+			throw "WARNING: attempted to contract given an invalid selection, attempt ignored";
 		}
 	}
 
@@ -434,7 +301,7 @@ class Node {
 		// For digraphs, returns all adjacent nodes that are the target of an edge from this node
 		let adj_set = new Set();
 		for (let edge of this.edges) {
-			if (edge.getSource() == this) {
+			if (edge.getSource() === this) {
 				adj_set.add(edge.getTarget());
 			}
 		}
@@ -445,7 +312,7 @@ class Node {
 		// For digraphs, returns all adjacent nodes that are the source of an edge to this node
 		let adj_set = new Set();
 		for (let edge of this.edges) {
-			if (edge.getTarget() == this) {
+			if (edge.getTarget() === this) {
 				adj_set.add(edge.getSource());
 			}
 		}

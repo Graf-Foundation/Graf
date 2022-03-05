@@ -86,7 +86,7 @@ class OneNodeSelection extends Selection {
 
 class TwoNodeSelection extends Selection {
 	addNode(node_id) {
-		if(this.node_ids.length === 2) {
+		if(this.getNodeCount() === 2) {
 			this.node_ids.splice(0,1);
 		}
 		this.node_ids.push(node_id);
@@ -125,7 +125,7 @@ class ManyNodeSelection extends Selection {
 
 class SingleHybridSelection extends Selection {
 	addNode(node_id) {
-		if(this.node_ids.length === 1 || this.node_ids.length === 1) {
+		if(this.getNodeCount() || this.getEdgeCount()) {
 			this.clearSelection();
 		}
 
@@ -133,7 +133,7 @@ class SingleHybridSelection extends Selection {
 	}
 
 	addEdge(edge_id) {
-		if(this.edge_ids.length === 1 || this.edge_ids.length === 1) {
+		if(this.getNodeCount() || this.getEdgeCount()) {
 			this.clearSelection();
 		}
 
