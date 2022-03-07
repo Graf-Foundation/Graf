@@ -9,6 +9,8 @@
 				v-on:reset-graf="resetGraph()"
 		/>
 
+		<ToolTip :tool="this.tool"></ToolTip>
+
 		<GrafView
 				ref="View" :simData="graph" :model="grafModel" :settings="settings"
 				v-on:node-click="nodeSelectionEvent($event)"
@@ -23,12 +25,14 @@ import GrafEditorToolbar from "@/components/ui_components/GrafEditorToolbar";
 import {ForceSimWrapper} from "@/middleware/GrafForceSim";
 import * as Model from "@/middleware/GrafModel";
 import * as Tools from "@/middleware/GrafTools";
+import ToolTip from "@/components/ui_components/ToolTip";
 
 export default {
 	name: "GrafEditor",
 	components: {
 		GrafEditorToolbar,
-		GrafView
+		GrafView,
+		ToolTip
 	},
 	mounted() {
 		document.addEventListener("keyup", this.keyupHandler, false);
@@ -94,12 +98,15 @@ export default {
 				Tools.setTool(toolCode, this, this.grafModel);
 				this.toolCode = toolCode;
 			}
-
 		}
 	}
 };
 </script>
 
 <style>
-
+ .toolTip {
+	position: absolute;
+	margin-left: 20px;
+	margin-top: 20px;
+ }
 </style>

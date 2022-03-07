@@ -41,6 +41,10 @@ class AddNodeTool {
 			A: "Add a new node"
 		};
 	}
+
+	toolName() {
+		return "Add Node Tool";
+	}
 }
 
 class AddEdgeTool{
@@ -56,6 +60,10 @@ class AddEdgeTool{
 			Click: "Select 2 nodes to be joined",
 			A: "Add edge between selected nodes"
 		};
+	}
+
+	toolName() {
+		return "Add Edge Tool";
 	}
 }
 
@@ -80,6 +88,10 @@ class DeleteTool {
 			A: "Delete selection"
 		};
 	}
+
+	toolName() {
+		return "Delete Tool";
+	}
 }
 
 class ExpandTool {
@@ -95,6 +107,10 @@ class ExpandTool {
 			A: "expand selected node or edge"
 		};
 	}
+
+	toolName() {
+		return "Expand Tool";
+	}
 }
 
 class ContractTool {
@@ -109,6 +125,10 @@ class ContractTool {
 			Click: "Select a node or edge to contract",
 			A: "contract selected node or edge"
 		};
+	}
+
+	toolName() {
+		return "Contract Tool";
 	}
 }
 
