@@ -5,8 +5,22 @@
     <v-row>
 		<v-col cols="1">
 			<!-- pause and play buttons -->
-			<v-btn icon v-on:click="emit('pause-tool-click')"><v-icon>mdi-pause</v-icon></v-btn>
-			<v-btn icon v-on:click="emit('play-tool-click')"><v-icon medium>mdi-play</v-icon></v-btn>
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn icon v-on:click="emit('pause-tool-click')" v-bind="attrs" v-on="on">
+						<v-icon>mdi-pause</v-icon>
+					</v-btn>
+				</template>
+				<span>Pause Force Sim</span>
+			</v-tooltip>
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn icon v-on:click="emit('play-tool-click')" v-bind="attrs" v-on="on">
+						<v-icon medium>mdi-play</v-icon>
+					</v-btn>
+				</template>
+				<span>Resume Force Sim</span>
+			</v-tooltip>
 		</v-col>
 		<v-col cols="1">
 			<v-tooltip bottom>

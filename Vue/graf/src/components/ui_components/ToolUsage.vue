@@ -23,7 +23,7 @@
 
 <script>
 export default {
-	name: "ToolTip",
+	name: "ToolUsage",
 	props: ["tool"]
 };
 </script>

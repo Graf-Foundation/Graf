@@ -9,7 +9,7 @@
 				v-on:reset-graf="resetGraph()"
 		/>
 
-		<ToolTip :tool="this.tool"></ToolTip>
+		<ToolUsage :tool="this.tool"></ToolUsage>
 
 		<GrafView
 				ref="View" :simData="graph" :model="grafModel" :settings="settings"
@@ -25,14 +25,14 @@ import GrafEditorToolbar from "@/components/ui_components/GrafEditorToolbar";
 import {ForceSimWrapper} from "@/middleware/GrafForceSim";
 import * as Model from "@/middleware/GrafModel";
 import * as Tools from "@/middleware/GrafTools";
-import ToolTip from "@/components/ui_components/ToolTip";
+import ToolUsage from "@/components/ui_components/ToolUsage";
 
 export default {
 	name: "GrafEditor",
 	components: {
 		GrafEditorToolbar,
 		GrafView,
-		ToolTip
+		ToolUsage
 	},
 	mounted() {
 		document.addEventListener("keyup", this.keyupHandler, false);
