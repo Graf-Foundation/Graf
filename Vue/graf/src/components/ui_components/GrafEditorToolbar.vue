@@ -1,7 +1,7 @@
 <template>
   <v-toolbar>
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
-		<div>
+		<div v-if="playId===0" class = "toolbar-flex" style = "width:5%; margin-left: 12px">
 			<!-- pause and play buttons -->
 			<v-tooltip bottom>
 				<template v-slot:activator="{ on, attrs }">
@@ -11,6 +11,8 @@
 				</template>
 				<span>Pause Force Sim</span>
 			</v-tooltip>
+		</div>
+		<div v-if="playId===1" class = "toolbar-flex" style = "width:5%;">
 			<v-tooltip bottom>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-on:click="emit('play-tool-click')" v-bind="attrs" v-on="on">
@@ -20,7 +22,7 @@
 				<span>Resume Force Sim</span>
 			</v-tooltip>
 		</div>
-		<div>
+		<div class = "toolbar-flex" style = "width:5%">
 			<v-tooltip bottom>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-on:click="emit('reset-graf')" v-bind="attrs" v-on="on">
@@ -32,23 +34,22 @@
 		</div>
       <!-- swap toolbar buttons -->
         <!-- tools bar -->
-		<div>
+		<div v-if="barId===1" class = "toolbar-flex" style = "width:5%">
 			<v-tooltip bottom>
-			<template v-slot:activator="{ on, attrs }">
-				<v-btn v-bind:class="{active: barId===0}" icon v-on:click="barId=0" v-bind="attrs" v-on="on">
-				<v-icon>mdi-tools</v-icon>
-				</v-btn>
-			</template>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn icon v-on:click="barId=0" v-bind="attrs" v-on="on">
+						<v-icon>mdi-tools</v-icon>
+					</v-btn>
+				</template>
 			<span>Tools</span>
 			</v-tooltip>
-
+		</div>
+		<div v-if="barId===0" class = "toolbar-flex" style = "width:5%">
 			<!-- algorithms bar -->
 			<v-tooltip bottom>
 			<template v-slot:activator="{ on, attrs }">
-				<v-btn v-bind:class="{active: barId===1}" icon v-on:click="barId=1" v-bind="attrs" v-on="on">
-				<v-icon>
-					mdi-family-tree
-				</v-icon>
+				<v-btn  icon v-on:click="barId=1" v-bind="attrs" v-on="on">
+					<v-icon>mdi-family-tree </v-icon>
 				</v-btn>
 			</template>
 			<span>Algorithms</span>
@@ -56,7 +57,7 @@
 		</div>
 
 		<!-- tools bar -->
-		<div>
+		<div v-if="barId===0" class = "toolbar-flex" style = "width: 80%">
 			<v-btn class="tool-btn" :depressed="this.toolCode==='add-node'" v-on:click="emit('tool-click', 'add-node')">Add Node</v-btn>
 			<v-btn class="tool-btn" :depressed="this.toolCode==='add-edge'" v-on:click="emit('tool-click', 'add-edge')">Add Edge</v-btn>
 			<v-btn class="tool-btn" :depressed="this.toolCode==='delete'" v-on:click="emit('tool-click', 'delete')">Delete</v-btn>
@@ -64,7 +65,7 @@
 			<v-btn class="tool-btn" :depressed="this.toolCode==='contract'" v-on:click="emit('tool-click', 'contract')">Contract</v-btn>
 		</div>
 		<!-- algorithms bar -->
-		<div>
+		<div v-if="barId===1" class = "toolbar-flex" style = "width: 80%">
 			<v-btn class="tool-btn" v-on:click="() => {}">BFS</v-btn>
 			<v-btn class="tool-btn" v-on:click="() => {}">DFS</v-btn>
 			<v-btn class="tool-btn" v-on:click="() => {}">SCC</v-btn>
@@ -72,10 +73,10 @@
 		</div>
 
       <!-- options -->
-	<div>
-        <v-dialog v-model="dialog" width="500">
+	<div class = "toolbar-flex" style = "justify-content: space-between">
+        <v-dialog v-model="dialog">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn style="float: right" icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
+            <v-btn icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
           </template>
           <GrafSettings v-on:settings="updateSettings"></GrafSettings>
         </v-dialog>
@@ -94,6 +95,7 @@ export default {
 	data() {
 		return {
 			barId: 0,
+			playId: 0,
 			dialog: false
 		};
 	},
@@ -116,7 +118,9 @@ export default {
     margin-left: 10px;
     margin-top: 5px;
   }
-  .active {
-	background-color:rgba(179, 179, 179, 0.527);
+  .toolbar-flex {
+	display:flex; 
+	flex-direction:row; 
+	align-items: center;
   }
 </style>
