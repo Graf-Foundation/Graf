@@ -74,7 +74,7 @@
 
       <!-- options -->
 	<div class = "toolbar-flex" style = "justify-content: space-between">
-        <v-dialog v-model="dialog">
+        <v-dialog v-model="dialog" width="500">
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
           </template>
