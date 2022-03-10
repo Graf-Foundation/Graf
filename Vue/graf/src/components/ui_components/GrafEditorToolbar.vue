@@ -5,17 +5,17 @@
 			<!-- pause and play buttons -->
 			<v-tooltip bottom>
 				<template v-slot:activator="{ on, attrs }">
-					<v-btn icon v-on:click="emit('pause-tool-click')" v-bind="attrs" v-on="on">
+					<v-btn icon v-on:click="pause()" v-bind="attrs" v-on="on">
 						<v-icon>mdi-pause</v-icon>
 					</v-btn>
 				</template>
 				<span>Pause Force Sim</span>
 			</v-tooltip>
 		</div>
-		<div v-if="playId===1" class = "toolbar-flex" style = "width:5%;">
+		<div v-if="playId===1" class = "toolbar-flex" style = "width:5%; margin-left: 12px;">
 			<v-tooltip bottom>
 				<template v-slot:activator="{ on, attrs }">
-					<v-btn icon v-on:click="emit('play-tool-click')" v-bind="attrs" v-on="on">
+					<v-btn icon v-on:click="play()" v-bind="attrs" v-on="on">
 						<v-icon medium>mdi-play</v-icon>
 					</v-btn>
 				</template>
@@ -106,6 +106,14 @@ export default {
 		updateSettings(value) {
 			this.$emit("update-settings", value);
 			this.dialog = false;
+		},
+		pause(){
+			this.emit("pause-tool-click");
+			this.playId = 1;
+		},
+		play(){
+			this.emit("play-tool-click");
+			this.playId = 0;
 		}
 	}
 };
