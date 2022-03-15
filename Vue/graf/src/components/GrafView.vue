@@ -96,8 +96,8 @@ export default {
 				let y2 = link.target.y;
 				
 				let slope = (y2 - y1) / (x2 - x1);
-				let base = 5 * this.settings.grafEdgeThickness;
-				let height = 7 * this.settings.grafEdgeThickness;
+				let base = 4 + 3.45 * this.settings.grafEdgeThickness;
+				let height = 20 + 2.5 * this.settings.grafEdgeThickness;
 				let normFactor = 1/(Math.sqrt(1 + Math.pow(slope,2)));
 				
 				let basePointx = x2;
@@ -115,7 +115,6 @@ export default {
 				let base2x = basePointx + (base/2) * normFactor * slope;
 				let base2y = basePointy + (base/2) * normFactor * -1;
 
-				console.log(base1x + "," + base1y + " " + base2x + "," + base2y + " " + x2 + "," + y2);
 				return base1x + "," + base1y + " " + base2x + "," + base2y + " " + x2 + "," + y2;
 			};
 		}
