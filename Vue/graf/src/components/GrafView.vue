@@ -17,6 +17,14 @@
             :stroke-width="settings.grafEdgeThickness"
 			:stroke="edgeColor(link)"
             v-on:click="linkClick(link)"/>
+		
+	<polygon v-for="link in this.simData.links"
+		:key="'D' + link.id"
+		:points="arrowBuild(link)"
+		:fill="edgeColor(link)"
+		:stroke="edgeColor(link)"
+		v-on:click="linkClick(link)"
+		/>
 
       <circle v-for="node in this.simData.nodes"
               :key="'N' + node.id"
@@ -78,6 +86,37 @@ export default {
 		edgeColor: function() {
 			return function (edge) {
 				return this.model.selection && this.model.selection.containsEdge(edge.id) ? "red" : "black";
+			};
+		},
+		arrowBuild: function(){
+			return function (link) {
+				let x1 = link.source.x;
+				let y1 = link.source.y;
+				let x2 = link.target.x;
+				let y2 = link.target.y;
+				
+				let slope = (y2 - y1) / (x2 - x1);
+				let base = 5 * this.settings.grafEdgeThickness;
+				let height = 7 * this.settings.grafEdgeThickness;
+				let normFactor = 1/(Math.sqrt(1 + Math.pow(slope,2)));
+				
+				let basePointx = x2;
+				let basePointy = y2 ;
+				if(x2-x1 < 0) {
+					basePointx += height * normFactor;
+					basePointy += height * normFactor * slope;
+				} else {
+					basePointx -= height * normFactor;
+					basePointy -= height * normFactor * slope;
+				}
+
+				let base1x = basePointx + (base/2) * normFactor * slope * - 1;
+				let base1y = basePointy + (base/2) * normFactor; 
+				let base2x = basePointx + (base/2) * normFactor * slope;
+				let base2y = basePointy + (base/2) * normFactor * -1;
+
+				console.log(base1x + "," + base1y + " " + base2x + "," + base2y + " " + x2 + "," + y2);
+				return base1x + "," + base1y + " " + base2x + "," + base2y + " " + x2 + "," + y2;
 			};
 		}
 	}
