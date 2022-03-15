@@ -1,6 +1,6 @@
 <template>
 	<div id="graf-editor">
-		<graf-editor-toolbar
+		<graf-editor-toolbar ref="toolbar"
 				:tool-code="this.toolCode"
 				v-on:tool-click="setTool($event)"
 				v-on:pause-tool-click="simulation.stopSim();"
@@ -83,6 +83,7 @@ export default {
 				grafEdgeThickness: 5,
 				nodeSize: 10
 			};
+			this.$refs.toolbar.play();
 		},
 		keyupHandler(event) {
 			if (event.code === "Escape" && this.grafModel.selection) {
