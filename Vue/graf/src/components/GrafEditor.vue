@@ -89,6 +89,15 @@ export default {
 			if (event.code === "Escape" && this.grafModel.selection) {
 				this.grafModel.selection.clearSelection();
 			}
+			if (event.code === "Space") {
+				if(this.$refs.toolbar.playId === 0) {
+					this.simulation.stopSim();
+					this.$refs.toolbar.playId = 1;
+				} else {
+					this.simulation.restartSim();
+					this.$refs.toolbar.playId = 0;
+				}
+			}
 			if(this.tool) this.tool.handleKey(event, this.grafModel);
 		},
 		setTool(toolCode) {

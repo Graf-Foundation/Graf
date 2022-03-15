@@ -9,7 +9,7 @@
 						<v-icon>mdi-pause</v-icon>
 					</v-btn>
 				</template>
-				<span>Pause Force Sim</span>
+				<span>Pause Force Sim (Space)</span>
 			</v-tooltip>
 		</div>
 		<div v-if="playId===1" class = "toolbar-flex" style = "width:5%; margin-left: 12px;">
@@ -19,7 +19,7 @@
 						<v-icon medium>mdi-play</v-icon>
 					</v-btn>
 				</template>
-				<span>Resume Force Sim</span>
+				<span>Resume Force Sim (Space)</span>
 			</v-tooltip>
 		</div>
 		<div class = "toolbar-flex" style = "width:5%">
@@ -29,7 +29,7 @@
 						<v-icon>mdi-sync</v-icon>
 					</v-btn>
 				</template>
-				<span>Reset Graph</span>
+				<span>Reset Graph (Esc)</span>
 			</v-tooltip>
 		</div>
       <!-- swap toolbar buttons -->
