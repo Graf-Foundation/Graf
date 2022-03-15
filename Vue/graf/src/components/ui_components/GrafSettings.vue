@@ -14,7 +14,7 @@
               <v-slider v-model="grafForce"
                         label="Force of the graph"
                         min="0"
-                        max="100"
+                        max="15"
 						:value="grafForce">
                 <template v-slot:append>
                   <v-text-field 
@@ -33,8 +33,8 @@
             <v-list-item-content>
               <v-slider v-model="grafEdgeThickness"
                         label="Edge Thickness"
-                        min="0"
-                        max="100"
+                        min="1"
+                        max="15"
 						:value="grafEdgeThickness">
                 <template v-slot:append>
                   <v-text-field 
@@ -54,7 +54,7 @@
               <v-slider v-model="nodeSize"
                         label="Node Size"
                         min="1"
-                        max="100"
+                        max="15"
 						:value="nodeSize">
                 <template v-slot:append>
                   <v-text-field 
