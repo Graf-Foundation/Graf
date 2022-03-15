@@ -5,7 +5,7 @@
         <v-icon medium>mdi-chevron-up</v-icon>
       </v-btn>
     </v-card-actions>
-    <v-card v-if="open" style="width: 275px">
+    <v-card v-if="open" style="width: 17vw">
       <v-card-title>
         {{ this.tool.toolName() }}
         <v-btn v-if="open" icon @click="open = false" style="margin-left: auto;">
