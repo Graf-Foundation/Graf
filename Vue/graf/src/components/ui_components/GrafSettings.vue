@@ -54,7 +54,7 @@
               <v-slider v-model="nodeSize"
                         label="Node Size"
                         min="1"
-                        max="15"
+                        max="25"
 						:value="nodeSize">
                 <template v-slot:append>
                   <v-text-field 
@@ -98,7 +98,15 @@ export default {
 				nodeSize: this.nodeSize
 			};
 			this.$emit("settings", settings);
-		}
+		},
+		resetSettings() {
+			this.theme = "Light";
+			this.grafDirected =false;
+			this.grafForce = 5;
+			this.grafEdgeThickness = 5;
+			this.nodeSize = 10;
+
+		}	
 	},
 	data: function () {
 		return {

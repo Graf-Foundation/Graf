@@ -29,7 +29,7 @@
 						<v-icon>mdi-sync</v-icon>
 					</v-btn>
 				</template>
-				<span>Reset Graph (Esc)</span>
+				<span>Reset Graph</span>
 			</v-tooltip>
 		</div>
       <!-- swap toolbar buttons -->
