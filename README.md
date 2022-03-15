@@ -5,6 +5,8 @@ An intuitive, open-source graph editor.⚠️ Under construction ⚠️
 
 Graf Founders James Weir (left) and Nicholas Desmarais (right)
 
+Check it out [here!](https://graf-foundation.github.io/Graf/#/)
+
 ## Installation
 First, install [Node.js](https://nodejs.org/en/).
 Clone the repository and navigate to `Graf/Vue/graf` in the command line.
