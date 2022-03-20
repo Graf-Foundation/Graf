@@ -10,12 +10,26 @@
 		/>
 
 		<ToolUsage :tool="this.tool"></ToolUsage>
-
+		<v-snackbar
+			:timeout=4000
+			v-model="snackbar">
+			Error: ({{ snackbarText }})
+			<template v-slot:action="{ attrs }">
+				<v-btn
+					color="red"
+					text
+					v-bind="attrs"
+					@click="snackbar = false">
+				Close
+				</v-btn>
+			</template>
+		</v-snackbar>	
 		<GrafView
 				ref="View" :simData="graph" :model="grafModel" :settings="settings"
 				v-on:node-click="nodeSelectionEvent($event)"
 				v-on:link-click="edgeSelectionEvent($event)">
 		</GrafView>
+		
 	</div>
 </template>
 
@@ -56,7 +70,8 @@ export default {
 			},
 			tool: null,
 			toolCode: "",
-			alert: true
+			snackbar: false,
+			snackbarText: "",
 		};
 	},
 	methods: {
@@ -105,7 +120,8 @@ export default {
 				try{
 					this.tool.handleKey(event, this.grafModel);
 				} catch(err) {
-					console.log(err);
+					this.snackbar = true;
+					this.snackbarText = err;
 				}
 			}
 		},
