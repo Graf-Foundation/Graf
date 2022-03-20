@@ -105,7 +105,6 @@ export default {
 			this.grafForce = 5;
 			this.grafEdgeThickness = 5;
 			this.nodeSize = 10;
-
 		}	
 	},
 	data: function () {

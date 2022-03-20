@@ -1,6 +1,5 @@
 <template>
-  <div class="svg-container" style="width: 100%">
-
+  <div class="svg-container" style="width: 100%;">
     <svg id="svg" preserveAspectRatio="xMinYMin meet" pointer-events="all"
          :width="width+'px'"
          :height="height+'px'"

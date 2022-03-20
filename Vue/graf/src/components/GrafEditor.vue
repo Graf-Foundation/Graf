@@ -16,7 +16,6 @@
 				v-on:node-click="nodeSelectionEvent($event)"
 				v-on:link-click="edgeSelectionEvent($event)">
 		</GrafView>
-		<Settings ref="settings"></Settings>
 	</div>
 </template>
 
@@ -27,7 +26,6 @@ import {ForceSimWrapper} from "@/middleware/GrafForceSim";
 import * as Model from "@/middleware/GrafModel";
 import * as Tools from "@/middleware/GrafTools";
 import ToolUsage from "@/components/ui_components/ToolUsage";
-import Settings from "@/components/ui_components/GrafSettings";
 
 export default {
 	name: "GrafEditor",
@@ -35,7 +33,6 @@ export default {
 		GrafEditorToolbar,
 		GrafView,
 		ToolUsage,
-		Settings
 	},
 	mounted() {
 		document.addEventListener("keyup", this.keyupHandler, false);
@@ -58,7 +55,8 @@ export default {
 				nodeSize: 10
 			},
 			tool: null,
-			toolCode: ""
+			toolCode: "",
+			alert: true
 		};
 	},
 	methods: {
@@ -87,7 +85,7 @@ export default {
 				nodeSize: 10
 			};
 			this.$refs.toolbar.play();
-			this.$refs.settings.resetSettings();
+			this.$refs.toolbar.resetSettings();
 
 		},
 		keyupHandler(event) {
@@ -103,7 +101,13 @@ export default {
 					this.$refs.toolbar.playId = 0;
 				}
 			}
-			if(this.tool) this.tool.handleKey(event, this.grafModel);
+			if(this.tool) {
+				try{
+					this.tool.handleKey(event, this.grafModel);
+				} catch(err) {
+					console.log(err);
+				}
+			}
 		},
 		setTool(toolCode) {
 			if(this.toolCode === toolCode) {
