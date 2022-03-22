@@ -85,13 +85,14 @@ export default {
 		drop(){
 			for(let linkInd = 0; linkInd < this.simData.links.length; linkInd++) {
 				let link = this.simData.links[linkInd];
-				if(this.pointInDragBox(link.source.x, link.source.y) && this.pointInDragBox(link.target.x, link.target.y)) {
+				if(this.pointInDragBox(link.source.x, link.source.y) && this.pointInDragBox(link.target.x, link.target.y) 
+												&& !this.model.selection.containsEdge(link.id)) {
 					this.$emit("link-click", link);
 				}
 			}
 			for(let nodeInd = 0; nodeInd < this.simData.nodes.length; nodeInd++) {
 				let node = this.simData.nodes[nodeInd];
-				if(this.pointInDragBox(node.x, node.y)) {
+				if(this.pointInDragBox(node.x, node.y) && !this.model.selection.containsNode(node.id) ) {
 					this.$emit("node-click", node);
 				}
 			}
