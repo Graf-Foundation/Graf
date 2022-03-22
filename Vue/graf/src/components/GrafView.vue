@@ -5,8 +5,13 @@
          :height="height+'px'"
          :viewBox="[-width/2, -height/2, width, height]"
          @mousemove="drag($event)"
-         @mouseup="drop()">
-
+         @mouseup="drop()"
+		@mousedown="startDrag($event)">
+		<polygon
+			:points="dragBox()"
+			:stroke="'rgba(0, 123, 255, 1)'"
+			:fill="'rgba(0, 123, 255, 0.33)'"/>
+		/>
       <line v-for="link in this.simData.links"
             :key="'L' + link.id"
             :x1="link.source.x"
@@ -49,7 +54,12 @@ export default {
 		return {
 			width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
 			height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 40,
-			nodeMoving: null
+			nodeMoving: null,
+			isDragging: false,
+			startDragX: 0,
+			startDragY: 0,
+			endDragX: 0,
+			endDragY: 0
 		};
 	},
 	methods: {
@@ -65,14 +75,62 @@ export default {
 				let y = e.clientY - this.height/2 - 64;
 				this.nodeMoving.fx = x;
 				this.nodeMoving.fy = y;
+			} else if(this.isDragging) {
+				let x = e.clientX - this.width/2;
+				let y = e.clientY - this.height/2 - 64;
+				this.endDragX = x;
+				this.endDragY = y;
 			}
 		},
 		drop(){
+			for(let linkInd = 0; linkInd < this.simData.links.length; linkInd++) {
+				let link = this.simData.links[linkInd];
+				if(this.pointInDragBox(link.source.x, link.source.y) && this.pointInDragBox(link.target.x, link.target.y)) {
+					this.$emit("link-click", link);
+				}
+			}
+			for(let nodeInd = 0; nodeInd < this.simData.nodes.length; nodeInd++) {
+				let node = this.simData.nodes[nodeInd];
+				if(this.pointInDragBox(node.x, node.y)) {
+					this.$emit("node-click", node);
+				}
+			}
+			this.isDragging = false;
+			this.startDragX = 0;
+			this.startDragY = 0;
+			this.endDragX = 0;
+			this.endDragY = 0;
 			if(this.nodeMoving != null) {
 				delete this.nodeMoving.fx;
 				delete this.nodeMoving.fy;
 				this.nodeMoving = null;
 			}
+		},
+		startDrag(e){
+			if(this.nodeMoving == null) {
+				let x = e.clientX - this.width/2;
+				let y = e.clientY - this.height/2 - 64;
+				this.endDragX = x;
+				this.endDragY = y;
+				this.startDragX = x;
+				this.startDragY = y;
+				this.isDragging = true;
+			}
+		}, 
+		pointInDragBox(x, y) {
+			let withinX = false;
+			let withinY = false;
+			if(this.startDragX < this.endDragX && x > this.startDragX && x< this.endDragX) {
+				withinX = true;
+			} else if(this.startDragX > this.endDragX && x < this.startDragX && x > this.endDragX){
+				withinX = true;
+			}
+			if(this.startDragY < this.endDragY && y > this.startDragY && y < this.endDragY){
+				withinY = true;
+			} else if(this.startDragY > this.endDragY && y < this.startDragY && y > this.endDragY){
+				withinY = true;
+			}
+			return withinX && withinY;
 		}
 	},
 	computed: {
@@ -118,6 +176,16 @@ export default {
 					return base1x + "," + base1y + " " + base2x + "," + base2y + " " + x2 + "," + y2;
 				} else {
 					return "0,0 0,0 0,0";
+				}
+			};
+		},
+		dragBox: function(){
+			return function() {
+				if (this.isDragging) {
+					return this.startDragX + "," + this.startDragY + " " + this.startDragX + "," + this.endDragY + " " 
+							+ this.endDragX + "," + this.endDragY + " " + this.endDragX + "," + this.startDragY;
+				} else {
+					return "0,0";
 				}
 			};
 		}
