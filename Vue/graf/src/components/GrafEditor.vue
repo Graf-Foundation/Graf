@@ -10,12 +10,26 @@
 		/>
 
 		<ToolUsage :tool="this.tool"></ToolUsage>
-
+		<v-snackbar
+			:timeout=4000
+			v-model="snackbar">
+			Error: ({{ snackbarText }})
+			<template v-slot:action="{ attrs }">
+				<v-btn
+					color="red"
+					text
+					v-bind="attrs"
+					@click="snackbar = false">
+				Close
+				</v-btn>
+			</template>
+		</v-snackbar>	
 		<GrafView
 				ref="View" :simData="graph" :model="grafModel" :settings="settings"
 				v-on:node-click="nodeSelectionEvent($event)"
 				v-on:link-click="edgeSelectionEvent($event)">
 		</GrafView>
+		
 	</div>
 </template>
 
@@ -32,7 +46,7 @@ export default {
 	components: {
 		GrafEditorToolbar,
 		GrafView,
-		ToolUsage
+		ToolUsage,
 	},
 	mounted() {
 		document.addEventListener("keyup", this.keyupHandler, false);
@@ -55,7 +69,9 @@ export default {
 				nodeSize: 10
 			},
 			tool: null,
-			toolCode: ""
+			toolCode: "",
+			snackbar: false,
+			snackbarText: "",
 		};
 	},
 	methods: {
@@ -84,12 +100,30 @@ export default {
 				nodeSize: 10
 			};
 			this.$refs.toolbar.play();
+			this.$refs.toolbar.resetSettings();
+
 		},
 		keyupHandler(event) {
 			if (event.code === "Escape" && this.grafModel.selection) {
 				this.grafModel.selection.clearSelection();
 			}
-			if(this.tool) this.tool.handleKey(event, this.grafModel);
+			if (event.code === "Space") {
+				if(this.$refs.toolbar.playId === 0) {
+					this.simulation.stopSim();
+					this.$refs.toolbar.playId = 1;
+				} else {
+					this.simulation.restartSim();
+					this.$refs.toolbar.playId = 0;
+				}
+			}
+			if(this.tool) {
+				try{
+					this.tool.handleKey(event, this.grafModel);
+				} catch(err) {
+					this.snackbar = true;
+					this.snackbarText = err;
+				}
+			}
 		},
 		setTool(toolCode) {
 			if(this.toolCode === toolCode) {

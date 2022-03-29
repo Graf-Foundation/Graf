@@ -9,7 +9,7 @@
 						<v-icon>mdi-pause</v-icon>
 					</v-btn>
 				</template>
-				<span>Pause Force Sim</span>
+				<span>Pause Force Sim (Space)</span>
 			</v-tooltip>
 		</div>
 		<div v-if="playId===1" class = "toolbar-flex" style = "width:5%; margin-left: 12px;">
@@ -19,7 +19,7 @@
 						<v-icon medium>mdi-play</v-icon>
 					</v-btn>
 				</template>
-				<span>Resume Force Sim</span>
+				<span>Resume Force Sim (Space)</span>
 			</v-tooltip>
 		</div>
 		<div class = "toolbar-flex" style = "width:5%">
@@ -78,7 +78,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
           </template>
-          <GrafSettings v-on:settings="updateSettings"></GrafSettings>
+          <GrafSettings ref="settings" v-on:settings="updateSettings"></GrafSettings>
         </v-dialog>
 	</div>
   </v-toolbar>
@@ -114,7 +114,10 @@ export default {
 		play(){
 			this.emit("play-tool-click");
 			this.playId = 0;
-		}
+		},
+		resetSettings() {
+			this.$refs.settings.resetSettings();
+		},
 	}
 };
 

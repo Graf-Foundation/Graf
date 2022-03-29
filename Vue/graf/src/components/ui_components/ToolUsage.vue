@@ -1,5 +1,5 @@
 <template>
-  <v-card v-card v-if="this.tool" class="toolTip" elevation="2">
+  <v-card v-if="this.tool" class="toolTip" elevation="2">
     <v-card-actions v-if="open === false">
       <v-btn icon @click="open = true">
         <v-icon medium>mdi-chevron-up</v-icon>
