@@ -10,6 +10,7 @@
 		/>
 
 		<ToolUsage :tool="this.tool"></ToolUsage>
+		<InfoBox :graph="this.graph"></InfoBox>
 		<v-snackbar
 			:timeout=4000
 			v-model="snackbar">
@@ -40,6 +41,7 @@ import {ForceSimWrapper} from "@/middleware/GrafForceSim";
 import * as Model from "@/middleware/GrafModel";
 import * as Tools from "@/middleware/GrafTools";
 import ToolUsage from "@/components/ui_components/ToolUsage";
+import InfoBox from "@/components/ui_components/InfoBox";
 
 export default {
 	name: "GrafEditor",
@@ -47,6 +49,7 @@ export default {
 		GrafEditorToolbar,
 		GrafView,
 		ToolUsage,
+		InfoBox
 	},
 	mounted() {
 		document.addEventListener("keyup", this.keyupHandler, false);
