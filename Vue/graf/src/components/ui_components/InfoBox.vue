@@ -26,7 +26,19 @@
 						>
 							<v-expansion-panel-header>{{value.id}}</v-expansion-panel-header>
 							<v-expansion-panel-content>
+								<v-row>
+								<v-col>
 								Info about the node I guess
+								</v-col>
+								<div class = "toolbar-flex" style = "justify-content: space-between">
+									<v-dialog v-model="dialog" width="500">
+										<template v-slot:activator="{ on, attrs }">
+											<v-btn icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
+										</template>
+									<InfoBoxSettings></InfoBoxSettings>
+									</v-dialog>
+								</div>
+								</v-row>
 							</v-expansion-panel-content>
 						</v-expansion-panel>
 					</v-expansion-panels>
@@ -57,9 +69,13 @@
 </template>
 
 <script>
+import InfoBoxSettings from "./InfoBoxSettings.vue";
 export default {
 	name: "InfoBox",
 	props: ["graph"],
+	components: {
+		InfoBoxSettings
+	},
 	data: () => ({
 		open: true,
 	}),
