@@ -5,17 +5,17 @@
         <v-icon medium>mdi-chevron-up</v-icon>
       </v-btn>
     </v-card-actions>
-    <v-card v-if="open" style="width: 25vw">
+    <v-card v-if="open" style="width: 22vw">
       <v-card-title>
-        INFO BOX
+        Info Box
         <v-btn v-if="open" icon @click="open = false" style="margin-left: auto;">
           <v-icon medium>mdi-chevron-down</v-icon>
         </v-btn>
       </v-card-title>
       <v-card-text>
-		<v-expansion-panels>
+		<v-expansion-panels flat>
 			<v-expansion-panel>
-				<v-expansion-panel-header>
+				<v-expansion-panel-header class = "v-expansion-panel-header-flat">
 					Nodes
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
@@ -33,7 +33,7 @@
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 			<v-expansion-panel>
-				<v-expansion-panel-header>
+				<v-expansion-panel-header class = "v-expansion-panel-header-flat">
 					Links
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
@@ -69,7 +69,12 @@ export default {
 <style scoped>
 .infoBox {
 	position: absolute;
-	/* margin-left: 20px; */
+	right: 20px;
 	margin-top: 20px;
  }
+ .v-expansion-panel-header-flat{
+	padding: 0;
+	padding-left: 12px;
+	padding-right: 18px;
+}
 </style>
