@@ -27,17 +27,19 @@
 							<v-expansion-panel-header>{{value.id}}</v-expansion-panel-header>
 							<v-expansion-panel-content>
 								<v-row>
-								<v-col>
-								Info about the node I guess
-								</v-col>
-								<div class = "toolbar-flex" style = "justify-content: space-between">
-									<v-dialog v-model="dialog" width="500">
-										<template v-slot:activator="{ on, attrs }">
-											<v-btn icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
-										</template>
-									<InfoBoxSettings></InfoBoxSettings>
-									</v-dialog>
-								</div>
+									<v-col style="margin-top: 8px">
+										Info about the node I guess
+									</v-col>
+									<v-col cols = 3>
+										<div class = "toolbar-flex" style = "justify-content: space-between">
+											<v-dialog v-model="nodeDialog" width="500">
+												<template v-slot:activator="{ on, attrs }">
+													<v-btn icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
+												</template>
+											<InfoBoxSettings :info="value" v-on:updateNode="updateNode"></InfoBoxSettings>
+											</v-dialog>
+										</div>
+									</v-col>
 								</v-row>
 							</v-expansion-panel-content>
 						</v-expansion-panel>
@@ -56,7 +58,21 @@
 						>
 							<v-expansion-panel-header>{{value.id}}</v-expansion-panel-header>
 							<v-expansion-panel-content>
-								Info about the link I guess
+								<v-row>
+									<v-col style="margin-top: 8px">
+										Info about the link I guess
+									</v-col>
+									<v-col cols = 3>
+										<div class = "toolbar-flex" style = "justify-content: space-between">
+											<v-dialog v-model="linkDialog" width="500">
+												<template v-slot:activator="{ on, attrs }">
+													<v-btn icon v-bind="attrs" v-on="on"><v-icon medium>mdi-cog</v-icon></v-btn>
+												</template>
+											<InfoBoxSettings :info="value" v-on:updateLink="updateLink"></InfoBoxSettings>
+											</v-dialog>
+										</div>
+									</v-col>
+								</v-row>
 							</v-expansion-panel-content>
 						</v-expansion-panel>
 					</v-expansion-panels>
@@ -78,7 +94,17 @@ export default {
 	},
 	data: () => ({
 		open: true,
+		nodeDialog: false,
+		linkDialog: true
 	}),
+	methods: {
+		updateNode() {
+			this.nodeDialog = false;
+		},
+		updateLink() {
+			this.linkDialog = false;
+		}
+	}
 };
 </script>
 
