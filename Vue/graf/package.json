@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "sh deploy.sh"
+    "deploy": "sh deploy.sh",
+    "debug": "node --inspect-brk ./node_modules/@vue/cli-service/bin/vue-cli-service.js serve"
   },
   "dependencies": {
     "@mdi/font": "^5.9.55",
