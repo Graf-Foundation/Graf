@@ -5,10 +5,11 @@ extends:
   - "plugin:vue/essential"
 parserOptions:
   ecmaVersion: 12
-  parser: "esprima"
+  parser: "@typescript-eslint/parser"
   sourceType: module
 plugins:
   - vue
+  - "@typescript-eslint"
 rules:
   indent:
     - error

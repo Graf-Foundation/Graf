@@ -57,7 +57,7 @@ class Graph {
 		this.selection.clearSelection();
 	}
 
-	// Adds an edge from node s to node t, both in the graph model and the smulation
+	// Adds an edge from node s to node t, both in the graph model and the simulation
 	addEdgeHelper(s_id, t_id, dir = false, weight = 1, style = null) {
 		let s_node = this.id_node_map.get(parseInt(s_id));
 		let t_node = this.id_node_map.get(parseInt(t_id));
@@ -70,7 +70,7 @@ class Graph {
 		this.curr_edge_id += 1;
 	}
 
-	// Removes edge corresponding to edge_id from graph model and simulation
+	// Removes edge corresponding to edge_id from graph model and simulationsim_wrapper
 	removeEdge(edge_id) {
 		let edge = this.id_edge_map.get(edge_id);
 
