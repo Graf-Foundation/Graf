@@ -1,30 +1,33 @@
-import {ForceSimWrapper} from "./GrafForceSim"
+import {ForceSimWrapper} from "@/middleware/GrafForceSim";
 
 type Nullable<T> = T | null;
 
-/** A simple graph structure. May be directed or undirected. */
+/**
+ * A simple graph structure. May be directed or undirected.
+ * Can be attached to a `ForceSimWrapper`, in which case it will keep the simulation updated as
+ * the graph is modified.
+ */
 class Graph {
-	public readonly label: string;
-	private readonly isDirected: boolean;
 	private readonly _nodes: Set<Node>;
 	private readonly _edges: Set<Edge>;
-	private _simulation: ForceSimWrapper;
+	private _simulation: Nullable<ForceSimWrapper>;
 
+	public readonly label: string;
+	public readonly isDirected: boolean;
 	public get nodes(): ReadonlySet<Node> { return this._nodes; }
 	public get edges(): ReadonlySet<Edge> { return this._edges; }
 	public get edgeCount() { return this.edges.size; }
 	public get nodeCount() { return this.nodes.size; }
 	public get simulation() { return this._simulation; }
-	/** Whether this Graph object is actually being visualized and simulated in the editor. */
 	public get isSimulated() { return this.simulation !== null; }
 
 	/**
 	 * Constructs a new Graph.
 	 * @param {string} label The label to give this graph
 	 * @param {boolean} directed Whether to make this graph directed (true) or undirected (false). By default, false.
-	 * @param {ForceSimWrapper} sim The ForceSimWrapper to attach this graph to, if any.
+	 * @param {?ForceSimWrapper} sim The ForceSimWrapper to attach this graph to, if any.
 	 */
-	public constructor(label = "New Graf", directed = false, sim: ForceSimWrapper = null) {
+	public constructor(label = "New Graf", directed = false, sim: Nullable<ForceSimWrapper> = null) {
 		this.label = label;
 		this._nodes = new Set();
 		this._edges = new Set();
@@ -40,7 +43,7 @@ class Graph {
 	public addNode(label = this.nodeCount.toString()): number {
 		const node = new Node(this.nodeCount, label);
 		this._nodes.add(node);
-		this.simulation.addSimNode()
+		this.simulation?.addSimNode(node.id);
 		return node.id;
 	}
 	/**
@@ -51,7 +54,7 @@ class Graph {
 	 * @return {number} the id of the given edge.
 	 */
 	addEdge(source: number, target: number): number {
-		const edge = (this.isDirected) ?
+
 	}
 	/**
 	 * Removes the node with the given `id` and any edges connected to it, if it exists. Otherwise, does nothing and
@@ -78,29 +81,31 @@ class Graph {
 }
 
 class Node {
-	private readonly _id: number;
-	private readonly _label: string;
 	private readonly _edges: Set<Edge>;
+	private _data: object;
 
-	public constructor(id: number, label: string = "") {
-		this._id = id;
-		this._label = label;
-		this._edges = new Set();
-	}
-
-	/** The id of this node. */
-	public get id() { return this._id; }
-	/** The label of this node. */
-	public get label() { return this._label; }
-	/** The edge list of this node. */
+	public readonly id: number;
+	public readonly label: string;
 	public get edges(): ReadonlySet<Edge> { return this._edges; }
+	public get outEdges(): ReadonlySet<Edge> { return this._edges; }
+	public get inEdges(): ReadonlySet<Edge> { return this._edges; }
+
+	public constructor(id: number, label: string = "", data = Object.entries({})) {
+		this.id = id;
+		this.label = label;
+		this._edges = new Set();
+		this._data = data;
+	}
 }
 
 class Edge {
 	private readonly _source: Node;
 	private readonly _target: Node;
-	private _data: object;
-	private _isDirected: boolean;
+
+	public isDirected: boolean;
+	public data: object;
+	public get source() { return this._source; }
+	public get target() { return this._target; }
 
 	/**
 	 * Constructs a new Edge. If this edge is undirected and `target.id` is less than `source.id`, then `target`
@@ -112,17 +117,18 @@ class Edge {
 	 * @param {object} data A JSON representing any properties of this edge, e.g. weight, label, etc.
 	 */
 	public constructor(id: number, source: Node, target: Node, directed = false, data = Object.entries({ weight: 1 })) {
-		this._source = source;
-		this._target = target;
-		this._data = data;
-		this._isDirected = directed;
+		this.isDirected = directed;
+		if(directed || source.id < target.id) {
+			this._source = source;
+			this._target = target;
+		}
+		else {
+			this._source = target;
+			this._target = source;
+		}
+		this.data = data;
 	}
 
-
-	public get source() { return this._source; }
-	public get target() { return this._target; }
-	public get sourceId() { return this._source.id; }
-	public get targetId() { return this._target.id; }
 }
 
-export { Graph, Node, Edge }
+export { Graph, Node, Edge };
